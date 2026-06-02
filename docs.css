@@ -1,0 +1,100 @@
+/* ============================================================
+   Metatron — docs page layout (rides on styles.css design tokens)
+   ============================================================ */
+
+.docs-wrap { max-width: 1140px; margin-inline: auto; padding-inline: var(--gut); }
+
+.docs-shell {
+  display: grid;
+  grid-template-columns: 232px minmax(0, 1fr);
+  gap: clamp(28px, 5vw, 64px);
+  padding-block: clamp(40px, 6vw, 72px) clamp(70px, 10vw, 120px);
+  align-items: start;
+}
+
+/* ---- sidebar ---- */
+.docs-side { position: sticky; top: 86px; align-self: start; }
+.docs-side nav { display: flex; flex-direction: column; gap: 2px; }
+.docs-side .side-group {
+  font-family: var(--mono); font-size: 10.5px; letter-spacing: .14em;
+  text-transform: uppercase; color: var(--ink-faint);
+  margin: 22px 0 8px; padding-left: 12px;
+}
+.docs-side .side-group:first-child { margin-top: 0; }
+.docs-side a {
+  display: block; font-size: 14px; color: var(--ink-soft);
+  padding: 6px 12px; border-radius: 8px; border-left: 2px solid transparent;
+  transition: color .18s, background .18s, border-color .18s;
+}
+.docs-side a:hover { color: var(--ink); background: var(--bg-2); }
+.docs-side a.active { color: var(--accent); border-left-color: var(--accent); background: var(--accent-wash); }
+
+/* ---- main column ---- */
+.doc-main { min-width: 0; max-width: 760px; }
+.doc-main h1 { font-size: clamp(34px, 5vw, 52px); letter-spacing: -.03em; }
+.doc-lede { color: var(--ink-soft); font-size: clamp(17px, 1.9vw, 19px); margin-top: 18px; text-wrap: pretty; }
+.doc-sec { padding-top: clamp(40px, 6vw, 64px); scroll-margin-top: 86px; }
+.doc-sec > h2 { font-size: clamp(24px, 3.2vw, 32px); letter-spacing: -.02em; }
+.doc-sec > h3 { font-size: 18px; margin-top: 34px; color: var(--ink); }
+.doc-sec p { color: var(--ink-soft); margin-top: 16px; line-height: 1.65; text-wrap: pretty; }
+.doc-sec p code, .doc-sec li code, td code, .doc-sec h3 code {
+  font-family: var(--mono); font-size: .88em; color: var(--accent-bright);
+  background: var(--bg-2); border: 1px solid var(--line); border-radius: 6px; padding: 1px 6px;
+}
+.doc-sec ul { margin-top: 16px; padding-left: 20px; color: var(--ink-soft); line-height: 1.6; }
+.doc-sec ul li { margin-bottom: 8px; }
+.doc-sec ul li::marker { color: var(--accent); }
+.doc-sec a.inline { color: var(--accent); }
+.doc-sec a.inline:hover { text-decoration: underline; }
+
+/* code blocks */
+.doc-code {
+  margin-top: 20px; background: #060708; border: 1px solid var(--line-strong);
+  border-radius: var(--radius); overflow: hidden;
+}
+.doc-code .doc-code-bar {
+  display: flex; align-items: center; gap: 8px; padding: 9px 14px;
+  border-bottom: 1px solid var(--line); font-family: var(--mono);
+  font-size: 11.5px; color: var(--ink-faint);
+}
+.doc-code .doc-code-bar .dots { display: flex; gap: 6px; }
+.doc-code .doc-code-bar .dots i { width: 10px; height: 10px; border-radius: 50%; background: var(--bg-3); display: block; }
+.doc-code pre {
+  margin: 0; padding: 18px 20px; overflow-x: auto;
+  font-family: var(--mono); font-size: 13px; line-height: 1.75; color: var(--ink-soft);
+}
+.doc-code .pr { color: var(--accent); }       /* prompt $ */
+.doc-code .cm { color: var(--ink); }            /* command */
+.doc-code .ot { color: var(--ink-mute); }       /* output */
+.doc-code .hl { color: var(--accent-bright); }
+.doc-code .c  { color: var(--ink-faint); }      /* comment */
+.doc-code .k  { color: var(--accent); }
+.doc-code .s  { color: #e3c08a; }
+
+/* tables */
+.doc-table { width: 100%; border-collapse: collapse; margin-top: 22px; font-size: 14px; }
+.doc-table th, .doc-table td { text-align: left; padding: 11px 14px; border-bottom: 1px solid var(--line); vertical-align: top; }
+.doc-table th { font-family: var(--mono); font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-faint); font-weight: 500; }
+.doc-table td { color: var(--ink-soft); }
+.doc-table td:first-child { white-space: nowrap; }
+
+/* callout */
+.callout {
+  margin-top: 22px; display: flex; gap: 12px; padding: 16px 18px;
+  background: var(--accent-wash); border: 1px solid color-mix(in oklab, var(--accent) 30%, transparent);
+  border-radius: var(--radius-sm); color: var(--ink-soft); font-size: 14.5px; line-height: 1.55;
+}
+.callout .mono { color: var(--accent); }
+
+/* breadcrumb / back */
+.doc-back { font-family: var(--mono); font-size: 12.5px; color: var(--ink-mute); display: inline-flex; align-items: center; gap: 7px; }
+.doc-back:hover { color: var(--accent); }
+
+@media (max-width: 880px) {
+  .docs-shell { grid-template-columns: 1fr; }
+  .docs-side { position: static; top: auto; border-bottom: 1px solid var(--line); padding-bottom: 18px; margin-bottom: 8px; }
+  .docs-side nav { flex-flow: row wrap; gap: 4px 6px; }
+  .docs-side .side-group { width: 100%; margin: 12px 0 4px; }
+  .docs-side a { border-left: none; }
+  .docs-side a.active { border-left: none; }
+}

@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Docs — Metatron</title>
+<meta name="description" content="Documentation for Metatron: install, configure, bootstrap candidate priors, curate them, and serve them to AI coding agents over MCP." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Hanken+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="/styles.css" />
+<link rel="stylesheet" href="/docs.css" />
+</head>
+<body>
+
+<!-- ============ NAV ============ -->
+<header class="nav">
+  <div class="nav-inner">
+    <a class="brand" href="/" aria-label="Metatron home">
+      <span data-cube-mark style="width:26px;height:26px;display:block"></span>
+      Metatron
+    </a>
+    <nav class="nav-links" aria-label="Primary">
+      <a href="/#problem">Problem</a>
+      <a href="/#how">How it works</a>
+      <a href="/#anatomy">Anatomy</a>
+      <a href="/#opensource">Open source</a>
+      <a href="/docs" aria-current="page">Docs</a>
+    </nav>
+    <div class="nav-cta">
+      <a class="btn btn-ghost btn-sm" href="https://github.com/getmetatron/metatron" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.7.5.5 5.7.5 12c0 5.1 3.3 9.4 7.9 10.9.6.1.8-.3.8-.6v-2c-3.2.7-3.9-1.5-3.9-1.5-.5-1.3-1.3-1.7-1.3-1.7-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.7 1.3 3.4 1 .1-.8.4-1.3.7-1.6-2.6-.3-5.3-1.3-5.3-5.7 0-1.3.5-2.3 1.2-3.1-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0c2.3-1.5 3.3-1.2 3.3-1.2.6 1.6.2 2.8.1 3.1.8.8 1.2 1.8 1.2 3.1 0 4.4-2.7 5.4-5.3 5.7.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6 4.6-1.5 7.9-5.8 7.9-10.9C23.5 5.7 18.3.5 12 .5Z"/></svg>
+        GitHub
+      </a>
+      <a class="btn btn-primary btn-sm" href="/#updates">Get updates</a>
+    </div>
+    <button class="nav-burger" aria-label="Menu">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+    </button>
+  </div>
+</header>
+
+<div class="docs-wrap">
+  <div class="docs-shell">
+
+    <!-- ============ SIDEBAR ============ -->
+    <aside class="docs-side">
+      <a class="doc-back" href="/">← Back to home</a>
+      <nav aria-label="Docs">
+        <span class="side-group">Start</span>
+        <a href="#overview">Overview</a>
+        <a href="#loop">The loop</a>
+        <a href="#install">Install</a>
+        <a href="#configure">Configure</a>
+        <a href="#quickstart">Quick start</a>
+        <span class="side-group">Commands</span>
+        <a href="#ingest">ingest</a>
+        <a href="#candidates">candidates</a>
+        <a href="#triage">triage</a>
+        <a href="#serve">serve</a>
+        <a href="#ui">ui</a>
+        <a href="#refine">refine-feedback</a>
+        <span class="side-group">Agents</span>
+        <a href="#connect">Connect an agent</a>
+        <a href="#tools">MCP tools</a>
+        <a href="#privacy">Privacy</a>
+      </nav>
+    </aside>
+
+    <!-- ============ CONTENT ============ -->
+    <main class="doc-main">
+      <h1>Documentation</h1>
+      <p class="doc-lede">
+        Metatron captures your codebase's real implementation decisions as structured
+        <strong>priors</strong> and serves them to AI coding agents over MCP. Bootstrap once,
+        curate what's worth keeping, serve it to your agent — and let the agent's feedback
+        feed the next round of candidates.
+      </p>
+
+      <!-- OVERVIEW -->
+      <section class="doc-sec" id="overview">
+        <h2>Overview</h2>
+        <p>
+          A prior is a typed record — <code>pattern</code>, <code>scope</code>,
+          <code>rationale</code>, <code>confidence</code>, <code>source_refs</code> — not a prose
+          doc. Metatron is self-hosted and runs against a private codebase: extraction sends only
+          <em>structural</em> signals (imports, decorators, base classes, commit subjects) to the
+          model, never raw source, and agent feedback is stored only in your local SQLite database.
+        </p>
+        <div class="callout">
+          <span class="mono">▲</span>
+          <span><strong>Nothing becomes canonical without a human.</strong> Bootstrapped,
+          agent-submitted, and feedback-refined priors all start as <em>candidates</em> for
+          curation. None self-promote.</span>
+        </div>
+      </section>
+
+      <!-- THE LOOP -->
+      <section class="doc-sec" id="loop">
+        <h2>The loop</h2>
+        <p>
+          Bootstrap with <code>ingest</code>, curate candidates into the canonical set, then
+          <code>serve</code> them to your agent over MCP. As the agent works it reports gaps via
+          <code>submit_feedback</code>; <code>refine-feedback</code> reshapes those gaps into new
+          candidate priors — closing the loop on the conventions extraction can't see
+          (cross-file and workflow rules). Crucially, feedback returns as <em>candidates</em>, so
+          the human gate is never bypassed.
+        </p>
+        <div class="doc-code">
+          <div class="doc-code-bar"><span class="dots"><i></i><i></i><i></i></span> the loop</div>
+<pre>            <span class="c">┌─────────── ingest ───────────┐</span>
+ your repo <span class="c">─┤</span>  parse (tree-sitter) + git    <span class="c">├─▶</span> candidate priors
+            <span class="c">└──────── LLM extraction ───────┘</span>          <span class="c">│</span>
+                                                       <span class="c">▼</span>
+                                              curate (<span class="hl">human</span>)  <span class="c">◀──</span> triage (advisory)
+                                                       <span class="c">│</span>  approve / reject
+                                                       <span class="c">▼</span>
+ coding agent <span class="c">◀──── serve (MCP) ──── canonical priors</span>
+       <span class="c">│</span>
+       <span class="c">└──</span> <span class="k">submit_feedback</span> <span class="c">──▶ refine-feedback ──▶ candidate priors ──▶ curate</span></pre>
+        </div>
+      </section>
+
+      <!-- INSTALL -->
+      <section class="doc-sec" id="install">
+        <h2>Install</h2>
+        <p>You need <a class="inline" href="https://docs.astral.sh/uv/" target="_blank" rel="noopener">uv</a>,
+          Python 3.12+, and an Anthropic API key (only for the LLM steps —
+          <code>serve</code>, <code>ui</code>, and <code>candidates</code> are fully local).</p>
+        <div class="doc-code">
+          <div class="doc-code-bar"><span class="dots"><i></i><i></i><i></i></span> clone &amp; sync</div>
+<pre><span class="pr">$</span> <span class="cm">git clone https://github.com/getmetatron/metatron.git</span>
+<span class="pr">$</span> <span class="cm">cd metatron</span>
+<span class="pr">$</span> <span class="cm">uv sync</span>            <span class="c"># create the venv and install dependencies</span></pre>
+        </div>
+        <p>Run the CLI without installing globally with <code>uv run metatron --help</code>, or put
+          it on your PATH everywhere:</p>
+        <div class="doc-code">
+          <div class="doc-code-bar"><span class="dots"><i></i><i></i><i></i></span> global tool</div>
+<pre><span class="pr">$</span> <span class="cm">uv tool install .</span>       <span class="c"># then just: metatron --help</span></pre>
+        </div>
+        <div class="callout"><span class="mono">›</span><span>The examples below use <code>uv run metatron</code>. If you installed globally, drop the <code>uv run</code> prefix.</span></div>
+      </section>
+
+      <!-- CONFIGURE -->
+      <section class="doc-sec" id="configure">
+        <h2>Configure</h2>
+        <p><strong>Secrets</strong> come from the environment only. The CLI auto-loads a
+          <code>.env</code> from the working directory (it never overrides an already-exported
+          variable, and <code>.env</code> is gitignored):</p>
+        <div class="doc-code">
+          <div class="doc-code-bar"><span class="dots"><i></i><i></i><i></i></span> .env</div>
+<pre><span class="k">ANTHROPIC_API_KEY</span>=<span class="s">sk-ant-...</span></pre>
+        </div>
+        <p><strong>Non-secret settings</strong> live in an optional <code>metatron.toml</code>.
+          Environment variables <code>METATRON_DB</code> / <code>METATRON_MODEL</code> override it.</p>
+        <div class="doc-code">
+          <div class="doc-code-bar"><span class="dots"><i></i><i></i><i></i></span> metatron.toml</div>
+<pre><span class="c">[metatron]</span>
+<span class="k">db_path</span> = <span class="s">"metatron.db"</span>        <span class="c"># one SQLite file holds many repos</span>
+<span class="k">model</span>   = <span class="s">"claude-sonnet-4-6"</span>  <span class="c"># default extraction model</span></pre>
+        </div>
+      </section>
+
+      <!-- QUICK START -->
+      <section class="doc-sec" id="quickstart">
+        <h2>Quick start</h2>
+        <div class="doc-code">
+          <div class="doc-code-bar"><span class="dots"><i></i><i></i><i></i></span> three steps</div>
+<pre><span class="pr">$</span> <span class="cm">uv run metatron ingest /path/to/your/repo</span>      <span class="c"># 1. bootstrap candidates (needs API key)</span>
+<span class="pr">$</span> <span class="cm">uv run metatron candidates list</span>                <span class="c"># 2. review …</span>
+<span class="pr">$</span> <span class="cm">uv run metatron candidates approve &lt;id&gt;</span>        <span class="c">#    … and curate</span>
+<span class="pr">$</span> <span class="cm">uv run metatron serve --repo &lt;id&gt;</span>              <span class="c"># 3. serve canonical priors over MCP</span></pre>
+        </div>
+        <p><code>ingest</code> prints the <code>&lt;id&gt;</code> to use for <code>serve</code>. To wire
+          it into a coding agent automatically, see <a class="inline" href="#connect">Connect an agent</a>.</p>
+      </section>
+
+      <!-- INGEST -->
+      <section class="doc-sec" id="ingest">
+        <h2><code>ingest</code></h2>
+        <p>Parses git-tracked source files (tree-sitter) and reads commit history, aggregates
+          per-area signals, asks the model to infer priors, and stores them as <strong>candidates</strong>.</p>
+        <div class="doc-code">
+          <div class="doc-code-bar"><span class="dots"><i></i><i></i><i></i></span> ingest</div>
+<pre><span class="pr">$</span> <span class="cm">uv run metatron ingest /path/to/your/repo</span>
+<span class="ot">Ingested repo 'github.com/acme/app': parsed 214 files, read 500 commits across 38 scopes,</span>
+<span class="ot">created <span class="hl">271 candidate priors</span>.</span>
+<span class="ot">Review them with: metatron candidates list --repo github.com/acme/app</span></pre>
+        </div>
+        <table class="doc-table">
+          <thead><tr><th>Flag</th><th>Default</th><th>Meaning</th></tr></thead>
+          <tbody>
+            <tr><td><code>--max-commits N</code></td><td>500</td><td>how much git history to read</td></tr>
+            <tr><td><code>--since DATE</code></td><td>—</td><td>only commits after e.g. <code>2024-01-01</code></td></tr>
+            <tr><td><code>--path SUBTREE</code></td><td>—</td><td>limit ingest to a subtree, e.g. <code>src/components</code></td></tr>
+            <tr><td><code>--repo ID</code></td><td>origin remote</td><td>override the repo identity</td></tr>
+          </tbody>
+        </table>
+        <p>Priors are keyed by a <strong>repo identity</strong> derived from the <code>origin</code>
+          remote (constant across developers; a checkout path isn't), with a directory-name
+          fallback when there's no remote. One DB holds many repos; each is isolated on retrieval.</p>
+      </section>
+
+      <!-- CANDIDATES -->
+      <section class="doc-sec" id="candidates">
+        <h2><code>candidates</code></h2>
+        <p>Review and curate — humans decide what becomes canonical.</p>
+        <div class="doc-code">
+          <div class="doc-code-bar"><span class="dots"><i></i><i></i><i></i></span> candidates</div>
+<pre><span class="pr">$</span> <span class="cm">uv run metatron candidates list</span>
+<span class="ot">1d2ab8e8…  [high]  (CheckoutSuccessRedirect (paid submit/finish flow))</span>
+<span class="ot">    After a paid submission completes, redirect to /my-dashboard/?thanks=1 …</span>
+
+<span class="pr">$</span> <span class="cm">uv run metatron candidates approve 1d2ab8e8…</span>
+<span class="ot">Prior 1d2ab8e8… approved.</span>
+<span class="pr">$</span> <span class="cm">uv run metatron candidates reject d672a984…</span>
+<span class="ot">Prior d672a984… rejected.</span></pre>
+        </div>
+        <p><code>candidates list</code> accepts <code>--repo &lt;id&gt;</code> and <code>--scope &lt;path&gt;</code>
+          filters. <code>approve</code> promotes a candidate to canonical; <code>reject</code> discards it.</p>
+      </section>
+
+      <!-- TRIAGE -->
+      <section class="doc-sec" id="triage">
+        <h2><code>triage</code></h2>
+        <p>For large candidate queues, a separate LLM pass scores each candidate (recommended /
+          borderline / not-recommended) with a reason, so you curate a ranked, pre-filtered queue.
+          It <strong>does not curate</strong> — a human still approves.</p>
+        <div class="doc-code">
+          <div class="doc-code-bar"><span class="dots"><i></i><i></i><i></i></span> triage</div>
+<pre><span class="pr">$</span> <span class="cm">uv run metatron triage --repo github.com/acme/app</span>
+<span class="ot">Triaged 271 candidates: approve=88, borderline=96, reject=87</span>
+<span class="ot">  judge cost: ~$0.42</span></pre>
+        </div>
+        <p>Flags: <code>--repo &lt;id&gt;</code> (limit to one repo), <code>--limit N</code> (max candidates to judge).</p>
+      </section>
+
+      <!-- SERVE -->
+      <section class="doc-sec" id="serve">
+        <h2><code>serve</code></h2>
+        <p>Expose canonical priors to agents over MCP (stdio). One served instance serves exactly
+          one repo (<code>--repo</code>, the id printed by <code>ingest</code>), so an agent only
+          ever sees that repo's priors. It also records usage events to the same DB for the UI.</p>
+        <div class="doc-code">
+          <div class="doc-code-bar"><span class="dots"><i></i><i></i><i></i></span> serve</div>
+<pre><span class="pr">$</span> <span class="cm">uv run metatron serve --repo github.com/acme/app</span></pre>
+        </div>
+        <div class="callout"><span class="mono">›</span><span>Normally you don't run this by hand — an MCP-capable agent launches it. See <a class="inline" href="#connect">Connect an agent</a>.</span></div>
+      </section>
+
+      <!-- UI -->
+      <section class="doc-sec" id="ui">
+        <h2><code>ui</code></h2>
+        <p>The local curation web UI. Binds to <code>localhost</code> (bumping to the next free
+          port if taken) and reads/writes the same store as the CLI.</p>
+        <div class="doc-code">
+          <div class="doc-code-bar"><span class="dots"><i></i><i></i><i></i></span> ui</div>
+<pre><span class="pr">$</span> <span class="cm">uv run metatron ui</span>
+<span class="ot">Metatron curation UI on http://127.0.0.1:1337  (Ctrl-C to stop)</span></pre>
+        </div>
+        <ul>
+          <li><strong>Priors</strong> — browse paginated; filter by status / scope / triage / origin; full-text search; approve/reject with a click.</li>
+          <li><strong>Usage</strong> — how often agents query, coverage, most-queried scopes, recent queries.</li>
+          <li><strong>Quality</strong> — prior quality by origin (ingest vs feedback) and one-time ingest cost.</li>
+          <li><strong>Feedback</strong> — the agent feedback stream, filterable All / Unhandled / Handled, with a <em>Refine into priors</em> button per report.</li>
+        </ul>
+        <p>Flag: <code>--port N</code> (starting port, default <code>1337</code>).</p>
+      </section>
+
+      <!-- REFINE -->
+      <section class="doc-sec" id="refine">
+        <h2><code>refine-feedback</code></h2>
+        <p>When an agent reports a missing convention via <code>submit_feedback</code>, this
+          reshapes those free-text gap reports into <strong>structured candidate priors</strong>
+          (defaults to Opus, the higher-stakes step). Nothing it produces is canonical — it all
+          goes to curation.</p>
+        <div class="doc-code">
+          <div class="doc-code-bar"><span class="dots"><i></i><i></i><i></i></span> refine-feedback</div>
+<pre><span class="pr">$</span> <span class="cm">uv run metatron refine-feedback</span>
+<span class="ot">Refined 3 feedback report(s) into <span class="hl">13 candidate prior(s)</span> for curation.</span>
+<span class="ot">  refiner cost: ~$0.19</span></pre>
+        </div>
+        <p>Flags: <code>--repo &lt;id&gt;</code>, <code>--limit N</code>, <code>--model &lt;name&gt;</code>.</p>
+      </section>
+
+      <!-- CONNECT -->
+      <section class="doc-sec" id="connect">
+        <h2>Connect an agent</h2>
+        <p>So a coding agent reliably <em>consults</em> priors rather than rediscovering
+          conventions, run the onboarding script from inside the target repo:</p>
+        <div class="doc-code">
+          <div class="doc-code-bar"><span class="dots"><i></i><i></i><i></i></span> onboarding</div>
+<pre><span class="pr">$</span> <span class="cm">bash /path/to/metatron/metatron_setup.sh</span>   <span class="c"># or pass the repo dir as an arg</span></pre>
+        </div>
+        <p>It is <strong>additive and idempotent</strong> — it adds (never deletes) four things to
+          the target repo:</p>
+        <ul>
+          <li>A "query Metatron first" block in <code>CLAUDE.md</code> (between markers).</li>
+          <li>A <code>UserPromptSubmit</code> hook in <code>.claude/settings.json</code> that re-injects the directive every turn.</li>
+          <li>A <code>Stop</code> hook that reminds the agent (once per session) to call <code>submit_feedback</code> when it consulted Metatron but never sent feedback.</li>
+          <li>The <code>metatron</code> MCP server in <code>.mcp.json</code>.</li>
+        </ul>
+
+        <h3>Manual MCP client config</h3>
+        <p>If you wire the server up yourself instead of using the script:</p>
+        <div class="doc-code">
+          <div class="doc-code-bar"><span class="dots"><i></i><i></i><i></i></span> .mcp.json</div>
+<pre>{
+  <span class="k">"mcpServers"</span>: {
+    <span class="k">"metatron"</span>: {
+      <span class="k">"command"</span>: <span class="s">"uv"</span>,
+      <span class="k">"args"</span>: [<span class="s">"run"</span>, <span class="s">"--project"</span>, <span class="s">"/abs/path/to/metatron"</span>, <span class="s">"metatron"</span>, <span class="s">"serve"</span>, <span class="s">"--repo"</span>, <span class="s">"github.com/acme/app"</span>],
+      <span class="k">"env"</span>: { <span class="k">"METATRON_DB"</span>: <span class="s">"/abs/path/to/metatron.db"</span> }
+    }
+  }
+}</pre>
+        </div>
+      </section>
+
+      <!-- TOOLS -->
+      <section class="doc-sec" id="tools">
+        <h2>MCP tools exposed</h2>
+        <table class="doc-table">
+          <thead><tr><th>Tool</th><th>Purpose</th></tr></thead>
+          <tbody>
+            <tr>
+              <td><code>get_priors_for_context</code></td>
+              <td>the relevant <strong>canonical</strong> priors as compact structured context, with a <code>query_id</code> to reference in feedback</td>
+            </tr>
+            <tr>
+              <td><code>submit_feedback</code></td>
+              <td>rate served priors by <code>[index]</code> and report a convention Metatron should have known — captured for <code>refine-feedback</code>; never auto-applied</td>
+            </tr>
+            <tr>
+              <td><code>submit_candidate_learning</code></td>
+              <td>record a convention the agent learned as a new <strong>candidate</strong> (never auto-promoted)</td>
+            </tr>
+          </tbody>
+        </table>
+        <p>A <code>get_priors_for_context</code> call returns context like this:</p>
+        <div class="doc-code">
+          <div class="doc-code-bar"><span class="dots"><i></i><i></i><i></i></span> served context</div>
+<pre><span class="ot">metatron:query b1f2… · rev 1101886 (reference the query id in submit_feedback)</span>
+<span class="hl">[1]</span> [medium] Record payment/sale events into the shared payments ledger when
+    handling subscription billing.
+  <span class="k">scope:</span> src/routes/api/subscription
+  <span class="k">why:</span> A fix commit explicitly records sales into the payments ledger,
+       establishing this as the expected billing-recording pattern.</pre>
+        </div>
+      </section>
+
+      <!-- PRIVACY -->
+      <section class="doc-sec" id="privacy">
+        <h2>Privacy</h2>
+        <p>Metatron is self-hosted and built for sensitive, on-prem codebases:</p>
+        <ul>
+          <li>Extraction sends only <strong>structural signals</strong> — imports, decorators, base classes, commit subjects — to the model. Never raw source.</li>
+          <li>Agent feedback and usage are stored only in your <strong>local SQLite database</strong>.</li>
+          <li><code>serve</code>, <code>ui</code>, and <code>candidates</code> are fully local and need no API key.</li>
+          <li>No prior self-promotes — a human curates everything that becomes canonical.</li>
+        </ul>
+        <div class="callout">
+          <span class="mono">▲</span>
+          <span>Want a hosted version instead of running it yourself?
+          <a class="inline" href="mailto:kerbelp@gmail.com?subject=Metatron%20hosted%20interest">Get in touch →</a></span>
+        </div>
+      </section>
+    </main>
+  </div>
+</div>
+
+<!-- ============ FOOTER ============ -->
+<footer class="foot">
+  <div class="wrap">
+    <div class="foot-bottom">
+      <span>© 2026 Metatron · Open source</span>
+      <span>Built with tree-sitter · MCP · SQLite</span>
+    </div>
+  </div>
+</footer>
+
+<script src="/metatron.js"></script>
+<script>
+/* docs sidebar scroll-spy (kept inline; main metatron.js handles brand mark, favicon, nav) */
+(function () {
+  var links = Array.prototype.slice.call(document.querySelectorAll(".docs-side a[href^='#']"));
+  if (!links.length || !("IntersectionObserver" in window)) return;
+  var map = {};
+  links.forEach(function (a) { map[a.getAttribute("href").slice(1)] = a; });
+  var spy = new IntersectionObserver(function (ents) {
+    ents.forEach(function (en) {
+      if (en.isIntersecting) {
+        links.forEach(function (l) { l.classList.remove("active"); });
+        var a = map[en.target.id];
+        if (a) a.classList.add("active");
+      }
+    });
+  }, { rootMargin: "-86px 0px -65% 0px", threshold: 0 });
+  document.querySelectorAll(".doc-sec[id]").forEach(function (s) { spy.observe(s); });
+})();
+</script>
+</body>
+</html>

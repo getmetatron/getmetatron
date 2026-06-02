@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Metatron — your codebase's conventions, served to AI agents over MCP</title>
+<meta name="description" content="Metatron is an open-source, self-hosted system that captures your team's real implementation decisions as structured priors and serves them to AI coding agents over MCP." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Hanken+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+<!-- ============ NAV ============ -->
+<header class="nav">
+  <div class="nav-inner">
+    <a class="brand" href="#top" aria-label="Metatron home">
+      <span data-cube-mark style="width:26px;height:26px;display:block"></span>
+      Metatron
+    </a>
+    <nav class="nav-links" aria-label="Primary">
+      <a href="#problem">Problem</a>
+      <a href="#how">How it works</a>
+      <a href="#anatomy">Anatomy</a>
+      <a href="#opensource">Open source</a>
+      <a href="/docs">Docs</a>
+    </nav>
+    <div class="nav-cta">
+      <a class="btn btn-ghost btn-sm" href="https://github.com/getmetatron/metatron" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.7.5.5 5.7.5 12c0 5.1 3.3 9.4 7.9 10.9.6.1.8-.3.8-.6v-2c-3.2.7-3.9-1.5-3.9-1.5-.5-1.3-1.3-1.7-1.3-1.7-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.7 1.3 3.4 1 .1-.8.4-1.3.7-1.6-2.6-.3-5.3-1.3-5.3-5.7 0-1.3.5-2.3 1.2-3.1-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0c2.3-1.5 3.3-1.2 3.3-1.2.6 1.6.2 2.8.1 3.1.8.8 1.2 1.8 1.2 3.1 0 4.4-2.7 5.4-5.3 5.7.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6 4.6-1.5 7.9-5.8 7.9-10.9C23.5 5.7 18.3.5 12 .5Z"/></svg>
+        GitHub
+      </a>
+      <a class="btn btn-primary btn-sm" href="#updates">Get updates</a>
+    </div>
+    <button class="nav-burger" aria-label="Menu">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+    </button>
+  </div>
+</header>
+
+<main id="top">
+
+<!-- ============ HERO ============ -->
+<section class="hero" data-screen-label="hero">
+  <div class="hero-bg"><div class="grid"></div></div>
+  <div class="wrap hero-grid">
+    <div class="hero-copy">
+      <span class="kicker">Open source · Self-hosted · MCP-native</span>
+      <h1>AI agents that already <em>know your codebase.</em></h1>
+      <p class="hero-sub">
+        Metatron captures the implementation decisions your team already made — preferred
+        patterns, rejected approaches, hard-won edge cases — as structured priors, and
+        serves them to coding agents over MCP. Agents report what was missing back to
+        Metatron, so every curated feedback loop makes the next agent less like a
+        stranger guessing.
+      </p>
+      <div class="hero-cta">
+        <a class="btn btn-primary" href="#updates">Get early updates</a>
+        <a class="btn btn-ghost" href="https://github.com/getmetatron/metatron" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.7.5.5 5.7.5 12c0 5.1 3.3 9.4 7.9 10.9.6.1.8-.3.8-.6v-2c-3.2.7-3.9-1.5-3.9-1.5-.5-1.3-1.3-1.7-1.3-1.7-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.7 1.3 3.4 1 .1-.8.4-1.3.7-1.6-2.6-.3-5.3-1.3-5.3-5.7 0-1.3.5-2.3 1.2-3.1-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0c2.3-1.5 3.3-1.2 3.3-1.2.6 1.6.2 2.8.1 3.1.8.8 1.2 1.8 1.2 3.1 0 4.4-2.7 5.4-5.3 5.7.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6 4.6-1.5 7.9-5.8 7.9-10.9C23.5 5.7 18.3.5 12 .5Z"/></svg>
+          View on GitHub
+        </a>
+        <a class="link-arrow" href="/docs">Read the docs →</a>
+      </div>
+      <div class="hero-meta">
+        <span>tree-sitter parsing</span>
+        <span>Official MCP SDK</span>
+        <span>SQLite · Python 3.12+</span>
+      </div>
+    </div>
+    <div class="hero-art" aria-hidden="true">
+      <div id="heroCube" style="width:100%;height:100%"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PROBLEM ============ -->
+<section class="problem section-pad" id="problem" data-screen-label="problem">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="kicker">The problem</span>
+      <h2>AI agents are confident strangers.</h2>
+    </div>
+    <p class="problem-lead reveal" style="margin-top:32px">
+      They've never read your codebase. They don't know you abandoned that pattern two
+      years ago, that this service has a hard rule about retries, or that <span class="mono" style="color:var(--ink)">auth</span>
+      means three different things in three different repos. <span class="mute">So they generate
+      plausible code that quietly ignores everything your team learned the hard way.</span>
+    </p>
+    <div class="fail-grid reveal">
+      <div class="fail">
+        <div class="fail-n">01</div>
+        <h4><span class="x">✗</span>Reinvents what you rejected</h4>
+        <p>Reaches for the library you dropped, the pattern you deprecated, the abstraction the team voted down in review.</p>
+      </div>
+      <div class="fail">
+        <div class="fail-n">02</div>
+        <h4><span class="x">✗</span>Ignores the edge cases</h4>
+        <p>Doesn't know which call must be idempotent, which path is hot, or which input you've been burned by before.</p>
+      </div>
+      <div class="fail">
+        <div class="fail-n">03</div>
+        <h4><span class="x">✗</span>Drifts from your conventions</h4>
+        <p>Right on its own, wrong for you. Every PR becomes a re-litigation of decisions you already settled.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider" />
+
+<!-- ============ HOW IT WORKS ============ -->
+<section class="section-pad" id="how" data-screen-label="how-it-works">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="kicker">How it works</span>
+      <h2>From git history to senior-level code.</h2>
+      <p>Metatron watches your real code and decisions, distills candidate priors, and only
+        serves what a human has curated. And it closes the loop: as your agent works, it reports
+        what was missing — feeding fresh candidates back for review. Nothing canonical is automatic.</p>
+    </div>
+
+    <div class="pipe-stage reveal">
+      <div class="pipe">
+        <div class="pstep">
+          <div class="pcard">
+            <div class="picon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="6" cy="6" r="2.4"/><circle cx="6" cy="18" r="2.4"/><circle cx="18" cy="9" r="2.4"/><path d="M6 8.4v7.2M8.2 6h4.6a3 3 0 0 1 3 3v0"/></svg></div>
+            <span class="ptag">Input</span>
+            <h4>Codebase&nbsp;+ git history</h4>
+            <p>Your private repos, PRs, reviews and ADRs — read in place.</p>
+          </div>
+        </div>
+        <div class="pstep proc">
+          <div class="pcard">
+            <div class="picon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 6h16M4 12h10M4 18h7"/><path d="M16 14l4 4-4 4" /></svg></div>
+            <span class="ptag proc-label">Parse</span>
+            <h4>tree-sitter extraction</h4>
+            <p>Language-agnostic parsing surfaces recurring patterns.</p>
+          </div>
+        </div>
+        <div class="pstep">
+          <div class="pcard">
+            <div class="picon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="4" y="5" width="16" height="5" rx="1.5"/><rect x="4" y="14" width="11" height="5" rx="1.5" opacity=".55"/></svg></div>
+            <span class="ptag">Candidates</span>
+            <h4>Candidate priors</h4>
+            <p>Proposed records — unverified, never yet trusted.</p>
+          </div>
+        </div>
+        <div class="pstep gate proc">
+          <div class="pcard">
+            <div class="picon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 3l7 3v5c0 4-3 6.5-7 8-4-1.5-7-4-7-8V6z"/><path d="M9 12l2 2 4-4"/></svg></div>
+            <span class="ptag proc-label">Human gate</span>
+            <h4>Curation review</h4>
+            <p>A human approves, edits or rejects. Required.</p>
+          </div>
+        </div>
+        <div class="pstep">
+          <div class="pcard">
+            <div class="picon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><ellipse cx="12" cy="6" rx="7" ry="2.6"/><path d="M5 6v6c0 1.4 3.1 2.6 7 2.6s7-1.2 7-2.6V6"/><path d="M5 12v6c0 1.4 3.1 2.6 7 2.6s7-1.2 7-2.6v-6"/></svg></div>
+            <span class="ptag">Store</span>
+            <h4>Canonical priors</h4>
+            <p>The trusted set, versioned in SQLite on your infra.</p>
+          </div>
+        </div>
+        <div class="pstep proc">
+          <div class="pcard">
+            <div class="picon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M9 7V4M15 7V4M8 7h8v4a4 4 0 0 1-8 0z"/><path d="M12 15v5"/></svg></div>
+            <span class="ptag proc-label">Serve</span>
+            <h4>Over MCP</h4>
+            <p>Exposed to any MCP-capable agent as live context.</p>
+          </div>
+        </div>
+        <div class="pstep">
+          <div class="pcard">
+            <div class="picon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 3l1.8 4.2L18 9l-4.2 1.8L12 15l-1.8-4.2L6 9l4.2-1.8z"/><path d="M18 15l.9 2.1L21 18l-2.1.9L18 21l-.9-2.1L15 18l2.1-.9z"/></svg></div>
+            <span class="ptag">Output</span>
+            <h4>Senior-level code</h4>
+            <p>The agent writes to your conventions — first try.</p>
+          </div>
+        </div>
+        <!-- mobile-only: the feedback loop as an explicit step (the return arc isn't drawn on mobile) -->
+        <div class="pstep pstep-mobile loopback">
+          <div class="pcard">
+            <div class="picon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 12a8 8 0 0 1 13.7-5.6L20 8"/><path d="M20 4v4h-4"/><path d="M20 12a8 8 0 0 1-13.7 5.6L4 16"/><path d="M4 20v-4h4"/></svg></div>
+            <span class="ptag proc-label">Feedback · MCP</span>
+            <h4>↺ Back to Metatron</h4>
+            <p>The agent calls <span class="mono">submit_feedback()</span> to report what was missing — gaps return as new <b>candidates</b> for curation. Never auto-applied.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pipe-note reveal">
+      <span class="mono">●</span> Pulses show <b>candidate priors</b> flowing forward — but only past the human gate do they become canonical.
+    </div>
+    <div class="pipe-note reveal">
+      <span class="mono" style="color:var(--accent)">↺</span> The accent return edge is the <b>feedback loop</b> — your agent calls <span class="mono">submit_feedback()</span> over MCP to report what was missing, and those gaps become new candidates. Still curated, never auto-applied.
+    </div>
+  </div>
+</section>
+
+<hr class="divider" />
+
+<!-- ============ ANATOMY OF A PRIOR ============ -->
+<section class="section-pad" id="anatomy" data-screen-label="anatomy">
+  <div class="wrap">
+    <div class="anat-layout">
+      <div class="anat-copy reveal">
+        <span class="kicker">Anatomy of a prior</span>
+        <h3 style="margin-top:16px">A prior is a record, not a paragraph.</h3>
+        <p>Wikis rot. Style guides get ignored. A Metatron prior is a typed, queryable
+          record an agent can actually reason over — with the rationale and the receipts
+          attached.</p>
+        <ul class="anat-fieldlist">
+          <li><span class="fk">pattern</span><span class="fv">the rule, stated precisely</span></li>
+          <li><span class="fk">scope</span><span class="fv">where it applies — paths, layers, contexts</span></li>
+          <li><span class="fk">rationale</span><span class="fv">why it exists — the decision behind it</span></li>
+          <li><span class="fk">confidence</span><span class="fv">how strongly it's held, 0–1</span></li>
+          <li><span class="fk">source_refs</span><span class="fv">PRs, incidents, ADRs that prove it</span></li>
+        </ul>
+        <p class="flip-hint" style="text-align:left;margin-top:20px">Tap the card to see the raw record →</p>
+      </div>
+
+      <div class="flip-wrap reveal">
+        <div class="flip-card" id="priorCard" role="button" tabindex="0" aria-label="Flip prior card">
+          <!-- FRONT -->
+          <div class="flip-face flip-front">
+            <div class="fcard-top">
+              <span class="fcard-id">prior · #0427</span>
+              <span class="badge canon">canonical</span>
+            </div>
+            <div class="fcard-title">Outbound GETs must be idempotent &amp; retried</div>
+            <div class="fcard-sub">scope: <span class="mono">services/api/**</span> · outbound HTTP to internal services</div>
+            <div class="fcard-conf">
+              <div class="conf-row"><span>confidence</span><span>0.92 · high</span></div>
+              <div class="conf-bar"><div class="conf-fill" data-val="92%"></div></div>
+            </div>
+            <button class="btn btn-ghost btn-sm flip-btn">View record</button>
+          </div>
+          <!-- BACK -->
+          <div class="flip-face flip-back">
+            <div class="fcard-top">
+              <span class="fcard-id">prior_0427.json</span>
+              <span class="badge canon">structured</span>
+            </div>
+            <pre class="rec" style="margin-top:16px">{
+  <span class="k">"pattern"</span>: <span class="s">"wrap outbound GET in
+              @with_retry(policy='idempotent')"</span>,
+  <span class="k">"scope"</span>: <span class="s">"services/api/**"</span>,
+  <span class="k">"context"</span>: <span class="s">"outbound HTTP, internal mesh"</span>,
+  <span class="k">"rationale"</span>: <span class="s">"GETs are safe to retry; flaky
+              mesh caused 0.3% phantom 5xx"</span>,
+  <span class="k">"confidence"</span>: <span class="n">0.92</span>,
+  <span class="k">"source_refs"</span>: [<span class="s">"PR#3120"</span>, <span class="s">"inc/2025-11-08"</span>, <span class="s">"ADR-017"</span>],
+  <span class="k">"curated_by"</span>: <span class="s">"@dlin"</span>,
+  <span class="k">"status"</span>: <span class="s">"canonical"</span>
+}</pre>
+            <button class="btn btn-ghost btn-sm flip-btn">Back</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- BEFORE / AFTER -->
+    <div style="margin-top:clamp(70px,9vw,110px)">
+      <div class="sec-head reveal">
+        <span class="kicker">Before / after</span>
+        <h2 style="font-size:clamp(26px,3.4vw,38px)">Same task. One agent has read the priors.</h2>
+      </div>
+      <div class="reveal">
+        <div class="ba-toggle" role="tablist" aria-label="Compare agents">
+          <button data-on="bad" role="tab"><span class="dot"></span>Generic agent</button>
+          <button data-on="good" role="tab"><span class="dot"></span>Metatron agent</button>
+        </div>
+
+        <div class="editor">
+          <div class="editor-bar">
+            <span class="dots"><i></i><i></i><i></i></span>
+            <span class="editor-file">services/api/users.py</span>
+            <span class="editor-state bad">convention violations</span>
+          </div>
+
+          <!-- BAD -->
+          <div class="swap show" data-swap="bad">
+            <pre class="code">
+<div class="ln"><span class="gut">1</span><span class="src"><span class="tok-kw">import</span> requests  <span class="tok-com"># ad-hoc client</span></span></div>
+<div class="ln"><span class="gut">2</span><span class="src"></span></div>
+<div class="ln mark-bad"><span class="gut">3</span><span class="src"><span class="tok-kw">def</span> <span class="tok-fn">fetch_user</span>(user_id):</span></div>
+<div class="ln mark-bad"><span class="gut">4</span><span class="src">    r = requests.<span class="tok-fn">get</span>(<span class="tok-str">f"{API}/users/{user_id}"</span>)</span></div>
+<div class="ln mark-bad"><span class="gut">5</span><span class="src">    <span class="tok-kw">if</span> r.status_code != <span class="tok-num">200</span>:</span></div>
+<div class="ln mark-bad"><span class="gut">6</span><span class="src">        <span class="tok-kw">return</span> <span class="tok-kw">None</span>  <span class="tok-com"># error vanishes</span></span></div>
+<div class="ln"><span class="gut">7</span><span class="src">    <span class="tok-kw">return</span> r.<span class="tok-fn">json</span>()  <span class="tok-com"># untyped dict</span></span></div>
+            </pre>
+            <div class="code-anno bad"><span class="tag">prior #0427</span><span>Ignores the sanctioned <span class="mono">internal.http</span> client and the documented retry policy. Failures collapse into <span class="mono">None</span> instead of propagating.</span></div>
+          </div>
+
+          <!-- GOOD -->
+          <div class="swap" data-swap="good">
+            <pre class="code">
+<div class="ln mark-good"><span class="gut">1</span><span class="src"><span class="tok-kw">from</span> internal.http <span class="tok-kw">import</span> client</span></div>
+<div class="ln mark-good"><span class="gut">2</span><span class="src"><span class="tok-kw">from</span> internal.types <span class="tok-kw">import</span> <span class="tok-typ">Result</span>, <span class="tok-typ">User</span></span></div>
+<div class="ln"><span class="gut">3</span><span class="src"></span></div>
+<div class="ln mark-good"><span class="gut">4</span><span class="src"><span class="tok-fn">@with_retry</span>(policy=<span class="tok-str">"idempotent"</span>)  <span class="tok-com"># prior #0427</span></span></div>
+<div class="ln"><span class="gut">5</span><span class="src"><span class="tok-kw">def</span> <span class="tok-fn">fetch_user</span>(user_id: <span class="tok-typ">str</span>) -> <span class="tok-typ">Result</span>[<span class="tok-typ">User</span>]:</span></div>
+<div class="ln"><span class="gut">6</span><span class="src">    resp = client.<span class="tok-fn">get</span>(<span class="tok-str">f"/users/{user_id}"</span>)</span></div>
+<div class="ln mark-good"><span class="gut">7</span><span class="src">    <span class="tok-kw">return</span> resp.<span class="tok-fn">parse</span>(<span class="tok-typ">User</span>)  <span class="tok-com"># typed, errors propagate</span></span></div>
+            </pre>
+            <div class="code-anno good"><span class="tag">prior #0427</span><span>Uses the sanctioned client, the team's <span class="mono">Result[T]</span> error model, and the documented retry policy. No guessing — it read the record.</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider" />
+
+<!-- ============ WHY SELF-HOSTED / CURATED ============ -->
+<section class="section-pad" id="trust" data-screen-label="trust">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="kicker">Trust by design</span>
+      <h2>Self-hosted. Structured. Human-curated.</h2>
+      <p>The whole point is a knowledge set you can trust enough to act on. That requires
+        three non-negotiables.</p>
+    </div>
+    <div class="pillars">
+      <div class="pillar reveal">
+        <div class="picon2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/><circle cx="7.5" cy="10" r="1"/><path d="M11 10h6"/></svg></div>
+        <h3>Runs on your infra</h3>
+        <p>Self-hosted by default. Metatron parses your private code in place. Nothing — not a
+          line, not an embedding — leaves your network. On-prem or your own cloud, your call.</p>
+      </div>
+      <div class="pillar reveal">
+        <div class="picon2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg></div>
+        <h3>Structured, not prose</h3>
+        <p>Every prior is a typed record with scope, rationale, confidence and source refs.
+          Queryable, diffable, reviewable in a PR. No wikis to rot, no vibes to misread.</p>
+      </div>
+      <div class="pillar reveal">
+        <div class="picon2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="8" r="3.2"/><path d="M5 20c0-3.3 3.1-6 7-6s7 2.7 7 6"/><path d="M9 11.5l2 2 4-4" transform="translate(0 -1)"/></svg></div>
+        <h3>Human-in-the-loop</h3>
+        <p>No prior self-promotes. A candidate stays a candidate until a person curates it
+          into the canonical set. You decide what the agents are allowed to trust.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ OPEN SOURCE ============ -->
+<section class="oss section-pad" id="opensource" data-screen-label="open-source">
+  <div class="wrap oss-inner">
+    <div class="reveal">
+      <span class="kicker">Open source</span>
+      <h2 style="margin-top:16px">Open source, <em>first.</em></h2>
+      <p>Metatron is open source and built to be self-hosted. Read every line, run it on your
+        own hardware, fork it, send a PR. The trust story only works if you can see exactly
+        what it does with your code.</p>
+      <div class="repo-meta">
+        <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 18V6m0 0l4-2 8 4 4-2v12l-4 2-8-4-4 2"/></svg>Python 3.12+</span>
+        <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 6h16M4 12h10M4 18h7"/></svg>tree-sitter</span>
+        <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M8 7V4m8 3V4M8 7h8v4a4 4 0 0 1-8 0z"/></svg>MCP SDK</span>
+        <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><ellipse cx="12" cy="6" rx="7" ry="2.5"/><path d="M5 6v12c0 1.4 3.1 2.5 7 2.5s7-1.1 7-2.5V6"/></svg>SQLite</span>
+      </div>
+      <div class="oss-cta">
+        <a class="btn btn-primary" href="https://github.com/getmetatron/metatron" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.7.5.5 5.7.5 12c0 5.1 3.3 9.4 7.9 10.9.6.1.8-.3.8-.6v-2c-3.2.7-3.9-1.5-3.9-1.5-.5-1.3-1.3-1.7-1.3-1.7-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.7 1.3 3.4 1 .1-.8.4-1.3.7-1.6-2.6-.3-5.3-1.3-5.3-5.7 0-1.3.5-2.3 1.2-3.1-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0c2.3-1.5 3.3-1.2 3.3-1.2.6 1.6.2 2.8.1 3.1.8.8 1.2 1.8 1.2 3.1 0 4.4-2.7 5.4-5.3 5.7.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6 4.6-1.5 7.9-5.8 7.9-10.9C23.5 5.7 18.3.5 12 .5Z"/></svg>
+          View on GitHub
+        </a>
+        <a class="btn btn-ghost" href="/docs">Read the docs</a>
+      </div>
+      <p class="oss-saas">Want a hosted version instead of running it yourself?
+        <a href="mailto:kerbelp@gmail.com?subject=Metatron%20hosted%20interest">Get in touch →</a></p>
+    </div>
+
+    <div class="reveal">
+      <div class="term">
+        <div class="term-bar"><span class="dots"><i></i><i></i><i></i></span><span>zsh · ~/your-repo</span></div>
+        <div class="term-body">
+          <div><span class="pr">$</span> <span class="cm">pip install metatron</span></div>
+          <div><span class="pr">$</span> <span class="cm">metatron init --repo .</span></div>
+          <div><span class="ot">  ↳ parsing 1,284 files with tree-sitter…</span></div>
+          <div><span class="ot">  ↳ <span class="hl">38 candidate priors</span> → review queue</span></div>
+          <div><span class="pr">$</span> <span class="cm">metatron serve --mcp</span></div>
+          <div><span class="ot">  ✓ MCP server listening · point your agent here</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ EMAIL CAPTURE ============ -->
+<section class="section-pad capture" id="updates" data-screen-label="updates">
+  <div class="wrap">
+    <div class="capture-card reveal">
+      <span class="kicker" style="justify-content:center">Stay in the loop</span>
+      <h2 style="font-size:clamp(30px,4.4vw,48px);margin-top:18px;letter-spacing:-.03em">Get updates about Metatron</h2>
+      <p style="color:var(--ink-soft);margin-top:16px;max-width:480px;margin-inline:auto">
+        We're building in the open. Drop your email for occasional, low-volume updates —
+        releases, docs, and the bits worth knowing.</p>
+      <!-- TODO(provider): mailto fallback now; swap data-signup handler for a real POST -->
+      <form class="email-form" data-signup novalidate>
+        <input type="email" name="email" placeholder="you@company.com" autocomplete="email" aria-label="Email address" required />
+        <button class="btn btn-primary" type="submit">Notify me</button>
+      </form>
+      <div class="email-note"><span class="mono">▲</span> No spam. No selling. Unsubscribe in one click.</div>
+      <div class="email-ok" role="status"></div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- ============ FOOTER ============ -->
+<footer class="foot" data-screen-label="footer">
+  <div class="wrap">
+    <div class="foot-inner">
+      <div class="foot-brand">
+        <a class="brand" href="#top"><span data-cube-mark style="width:26px;height:26px;display:block"></span>Metatron</a>
+        <p>Open-source, self-hosted priors for AI coding agents. Your conventions, served over MCP — so agents write code like they belong on the team.</p>
+      </div>
+      <div class="foot-cols">
+        <div class="foot-col">
+          <h5>Product</h5>
+          <a href="#problem">The problem</a>
+          <a href="#how">How it works</a>
+          <a href="#anatomy">Anatomy of a prior</a>
+          <a href="#opensource">Open source</a>
+        </div>
+        <div class="foot-col">
+          <h5>Resources</h5>
+          <a href="/docs">Documentation</a>
+          <a href="https://github.com/getmetatron/metatron" target="_blank" rel="noopener">GitHub repo</a>
+          <a href="#updates">Get updates</a>
+        </div>
+        <div class="foot-col">
+          <h5>Contact</h5>
+          <a href="mailto:kerbelp@gmail.com">kerbelp@gmail.com</a>
+          <a href="mailto:kerbelp@gmail.com?subject=Metatron%20hosted%20interest">Hosted version?</a>
+        </div>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>© 2026 Metatron · Open source</span>
+      <span>Built with tree-sitter · MCP · SQLite</span>
+    </div>
+  </div>
+</footer>
+
+<script src="metatron.js"></script>
+</body>
+</html>
