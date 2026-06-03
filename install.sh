@@ -41,10 +41,9 @@ if ! command -v uv >/dev/null 2>&1; then
     error "Please add \$HOME/.local/bin to your PATH and run the installation again."
     exit 1
 fi
-
-info "Installing Metatron from GitHub..."
-if ! uv tool install git+https://github.com/kerbelp/metatron.git; then
-    error "Failed to install Metatron. Ensure git is installed and you have internet access."
+info "Installing Metatron from PyPI..."
+if ! uv tool install getmetatron; then
+    error "Failed to install Metatron. Ensure you have internet access and Python 3.12+ is supported."
     exit 1
 fi
 

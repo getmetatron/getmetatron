@@ -174,9 +174,17 @@
       <!-- INSTALL -->
       <section class="doc-sec" id="install">
         <h2>Install</h2>
-        <p>All you need to get started is <strong>Git</strong> installed on your system and an <strong>Anthropic API key</strong> (only for the LLM extraction steps). The installer handles Python, <code>uv</code>, and all other dependencies in an isolated directory automatically:</p>
+        <p>To install <strong>Metatron</strong> as a global tool on your system:</p>
         <div class="doc-code">
           <div class="doc-code-bar"><span class="dots"><i></i><i></i><i></i></span> installation</div>
+<pre><span class="pr">$</span> <span class="cm">pip install getmetatron</span>
+
+<span class="c"># Or if you use uv:</span>
+<span class="pr">$</span> <span class="cm">uv tool install getmetatron</span></pre>
+        </div>
+        <p>Alternatively, you can use our installer script which handles Python, <code>uv</code>, and path configuration automatically:</p>
+        <div class="doc-code">
+          <div class="doc-code-bar"><span class="dots"><i></i><i></i><i></i></span> installer script</div>
 <pre><span class="pr">$</span> <span class="cm">curl -sSf https://getmetatron.com/install.sh | sh</span></pre>
         </div>
         <p>To run it locally from source or contribute to the project, clone and sync instead:</p>
@@ -350,6 +358,21 @@
 
         <h3>Manual MCP client config</h3>
         <p>If you wire the server up yourself instead of using the script:</p>
+
+        <p><strong>For PyPI / Global Installation:</strong></p>
+        <div class="doc-code">
+          <div class="doc-code-bar"><span class="dots"><i></i><i></i><i></i></span> .mcp.json</div>
+<pre>{
+  <span class="k">"mcpServers"</span>: {
+    <span class="k">"metatron"</span>: {
+      <span class="k">"command"</span>: <span class="s">"metatron"</span>,
+      <span class="k">"args"</span>: [<span class="s">"serve"</span>, <span class="s">"--repo"</span>, <span class="s">"github.com/acme/app"</span>]
+    }
+  }
+}</pre>
+        </div>
+
+        <p><strong>For Local Clone / Development:</strong></p>
         <div class="doc-code">
           <div class="doc-code-bar"><span class="dots"><i></i><i></i><i></i></span> .mcp.json</div>
 <pre>{
