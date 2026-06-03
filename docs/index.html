@@ -57,6 +57,7 @@
         <a href="#overview">Overview</a>
         <a href="#loop">The loop</a>
         <a href="#install">Install</a>
+        <a href="#docker">Docker</a>
         <a href="#configure">Configure</a>
         <a href="#quickstart">Quick start</a>
         <span class="side-group">Commands</span>
@@ -194,6 +195,51 @@
 <span class="pr">$</span> <span class="cm">cd metatron</span>
 <span class="pr">$</span> <span class="cm">uv sync</span>            <span class="c"># create venv and install dependencies</span></pre>
         
+      </section>
+
+      <!-- DOCKER -->
+      <section class="doc-sec" id="docker">
+        <h2>Run with Docker</h2>
+        <p>A <code>Dockerfile</code> is included (it's also what the Glama.ai listing builds). The
+          image's entrypoint is the <code>metatron</code> CLI and its default command serves the MCP
+          server over stdio, so <code>docker run</code> with no arguments starts the server.</p>
+        <div class="doc-code">
+          <div class="doc-code-bar"><span class="dots"><i></i><i></i><i></i></span> build</div>
+<pre><span class="pr">$</span> <span class="cm">docker build -t getmetatron .</span></pre>
+        </div>
+        <p>Priors live in a SQLite database, so mount a volume to persist it across runs. Ingest a
+          repo, then serve the curated priors:</p>
+        <div class="doc-code">
+          <div class="doc-code-bar"><span class="dots"><i></i><i></i><i></i></span> ingest + serve</div>
+<pre><span class="c"># 1. ingest a repo into a persisted DB (needs an API key)</span>
+<span class="pr">$</span> <span class="cm">docker run --rm \
+    -e ANTHROPIC_API_KEY \
+    -v metatron-data:/data -e METATRON_DB=/data/metatron.db \
+    -v /path/to/your/repo:/repo:ro \
+    getmetatron ingest /repo</span>
+
+<span class="c"># 2. serve the curated priors over stdio (no API key needed)</span>
+<span class="pr">$</span> <span class="cm">docker run -i --rm \
+    -v metatron-data:/data -e METATRON_DB=/data/metatron.db \
+    getmetatron serve --repo &lt;id&gt;</span></pre>
+        </div>
+        <p><code>ingest</code> prints the <code>&lt;id&gt;</code> to pass to <code>serve</code>. The
+          <code>-i</code> flag on <code>serve</code> is required — stdio needs an open stdin. To point
+          a coding agent at the container, use it as the MCP command:</p>
+        <div class="doc-code">
+          <div class="doc-code-bar"><span class="dots"><i></i><i></i><i></i></span> .mcp.json</div>
+<pre>{
+  <span class="k">"mcpServers"</span>: {
+    <span class="k">"metatron"</span>: {
+      <span class="k">"command"</span>: <span class="s">"docker"</span>,
+      <span class="k">"args"</span>: [<span class="s">"run"</span>, <span class="s">"-i"</span>, <span class="s">"--rm"</span>,
+               <span class="s">"-v"</span>, <span class="s">"metatron-data:/data"</span>,
+               <span class="s">"-e"</span>, <span class="s">"METATRON_DB=/data/metatron.db"</span>,
+               <span class="s">"getmetatron"</span>, <span class="s">"serve"</span>, <span class="s">"--repo"</span>, <span class="s">"&lt;id&gt;"</span>]
+    }
+  }
+}</pre>
+        </div>
       </section>
 
       <!-- CONFIGURE -->
