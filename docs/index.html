@@ -8,31 +8,37 @@
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Hanken+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
-<link rel="stylesheet" href="/styles.css" />
-<link rel="stylesheet" href="/docs.css" />
+<link rel="stylesheet" href="../styles.css" />
+<link rel="stylesheet" href="../docs.css" />
+
+<!-- Favicons / app icons -->
+<link rel="icon" href="../public/images/favicon.ico" sizes="any" />
+<link rel="icon" type="image/png" sizes="32x32" href="../public/images/favicon-32x32.png" />
+<link rel="icon" type="image/png" sizes="16x16" href="../public/images/favicon-16x16.png" />
+<link rel="apple-touch-icon" sizes="180x180" href="../public/images/apple-touch-icon.png" />
 </head>
 <body>
 
 <!-- ============ NAV ============ -->
 <header class="nav">
   <div class="nav-inner">
-    <a class="brand" href="/" aria-label="Metatron home">
+    <a class="brand" href="../" aria-label="Metatron home">
       <span data-cube-mark style="width:26px;height:26px;display:block"></span>
       Metatron
     </a>
     <nav class="nav-links" aria-label="Primary">
-      <a href="/#problem">Problem</a>
-      <a href="/#how">How it works</a>
-      <a href="/#anatomy">Anatomy</a>
-      <a href="/#opensource">Open source</a>
-      <a href="/docs" aria-current="page">Docs</a>
+      <a href="../#problem">Problem</a>
+      <a href="../#how">How it works</a>
+      <a href="../#anatomy">Anatomy</a>
+      <a href="../#opensource">Source-available</a>
+      <a href="./" aria-current="page">Docs</a>
     </nav>
     <div class="nav-cta">
       <a class="btn btn-ghost btn-sm" href="https://github.com/getmetatron/metatron" target="_blank" rel="noopener">
         <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.7.5.5 5.7.5 12c0 5.1 3.3 9.4 7.9 10.9.6.1.8-.3.8-.6v-2c-3.2.7-3.9-1.5-3.9-1.5-.5-1.3-1.3-1.7-1.3-1.7-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.7 1.3 3.4 1 .1-.8.4-1.3.7-1.6-2.6-.3-5.3-1.3-5.3-5.7 0-1.3.5-2.3 1.2-3.1-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0c2.3-1.5 3.3-1.2 3.3-1.2.6 1.6.2 2.8.1 3.1.8.8 1.2 1.8 1.2 3.1 0 4.4-2.7 5.4-5.3 5.7.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6 4.6-1.5 7.9-5.8 7.9-10.9C23.5 5.7 18.3.5 12 .5Z"/></svg>
         GitHub
       </a>
-      <a class="btn btn-primary btn-sm" href="/#updates">Get updates</a>
+      <a class="btn btn-primary btn-sm" href="../#updates">Get updates</a>
     </div>
     <button class="nav-burger" aria-label="Menu">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
@@ -45,7 +51,7 @@
 
     <!-- ============ SIDEBAR ============ -->
     <aside class="docs-side">
-      <a class="doc-back" href="/">← Back to home</a>
+      <a class="doc-back" href="../">← Back to home</a>
       <nav aria-label="Docs">
         <span class="side-group">Start</span>
         <a href="#overview">Overview</a>
@@ -374,13 +380,13 @@
 <footer class="foot">
   <div class="wrap">
     <div class="foot-bottom">
-      <span>© 2026 Metatron · Open source</span>
+      <span>© 2026 Metatron · FSL licensed</span>
       <span>Built with tree-sitter · MCP · SQLite</span>
     </div>
   </div>
 </footer>
 
-<script src="/metatron.js"></script>
+<script src="../metatron.js"></script>
 <script>
 /* docs sidebar scroll-spy (kept inline; main metatron.js handles brand mark, favicon, nav) */
 (function () {

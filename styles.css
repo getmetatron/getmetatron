@@ -96,7 +96,7 @@ svg { display: block; }
 /* ---------- layout primitives ---------- */
 .wrap { max-width: var(--maxw); margin-inline: auto; padding-inline: var(--gut); }
 section { position: relative; }
-.section-pad { padding-block: clamp(80px, 12vw, 150px); }
+.section-pad { padding-block: clamp(56px, 7vw, 100px); }
 .divider { border: none; border-top: 1px solid var(--line); margin: 0; }
 
 /* ---------- nav ---------- */
@@ -213,17 +213,17 @@ section { position: relative; }
 .fail h4 .x { color: var(--bad); margin-right: 7px; font-family: var(--mono); }
 
 /* ---------- pipeline / how it works ---------- */
-.pipe-stage { margin-top: 64px; position: relative; }
+.pipe-stage { margin-top: 40px; position: relative; }
 .pstep-mobile { display: none; }   /* shown only on the mobile (vertical) pipeline */
+/* the 5 loop cards are placed on the vertices of a regular pentagon by JS */
 .pipe {
   position: relative;
-  min-height: clamp(620px, 56vw, 760px);
-  max-width: 1160px;
+  max-width: 1040px;
   margin-inline: auto;
 }
 .pstep {
   position: absolute;
-  width: clamp(180px, 18vw, 240px);
+  width: clamp(172px, 16.5vw, 214px);
   padding: 0;
   opacity: 0;
   transform: translateY(14px);
@@ -232,17 +232,10 @@ section { position: relative; }
 .pcard {
   position: relative; z-index: 2;
   background: var(--bg-2); border: 1px solid var(--line); border-radius: 12px;
-  padding: 18px 16px; min-height: 176px;
+  padding: 18px 16px; min-height: 150px;
   display: flex; flex-direction: column; gap: 8px;
   transition: border-color .3s, box-shadow .3s, transform .3s;
 }
-.pstep:nth-child(1) { left: 0; top: 9%; }
-.pstep:nth-child(2) { left: 0; top: 52%; }
-.pstep:nth-child(3) { left: 31%; top: 5%; }
-.pstep:nth-child(4) { left: 63%; top: 13%; }
-.pstep:nth-child(5) { left: 68%; top: 51%; }
-.pstep:nth-child(6) { left: 45%; top: 72%; }
-.pstep:nth-child(7) { left: 31%; top: 44%; }
 .pstep.gate .pcard { border-color: color-mix(in oklab, var(--accent) 40%, var(--line)); box-shadow: inset 0 0 0 1px var(--accent-wash); }
 .pcard.active { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent-wash), 0 12px 40px -18px var(--accent-glow); transform: translateY(-3px); }
 .picon { width: 30px; height: 30px; color: var(--accent); }
@@ -257,6 +250,7 @@ section { position: relative; }
 .pipe-wires { position: absolute; inset: 0; z-index: 1; width: 100%; height: 100%; pointer-events: none; overflow: visible; }
 .wire-base { stroke: var(--line-strong); stroke-width: 2; fill: none; }
 .wire-pulse { stroke: var(--accent); stroke-width: 2.4; fill: none; stroke-linecap: round; filter: drop-shadow(0 0 5px var(--accent-glow)); }
+.wire-chevron { fill: none; stroke: var(--accent); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; filter: drop-shadow(0 0 4px var(--accent-glow)); }
 /* feedback return arc */
 .wire-feedback-base { stroke: color-mix(in oklab, var(--accent) 45%, var(--line-strong)); stroke-width: 1.6; fill: none; stroke-dasharray: 2 5; opacity: .65; }
 .wire-feedback-pulse { stroke: var(--accent); stroke-width: 2.2; fill: none; stroke-linecap: round; filter: drop-shadow(0 0 5px var(--accent-glow)); }

@@ -203,24 +203,7 @@
     document.querySelectorAll("[data-cube-mark]").forEach(function (el) {
       buildCube(el, { size: 100, d: 19, nodeR: 3.4, animate: false, pulse: false });
     });
-    // favicon
-    var n = cubeNodes(50, 50, 9.5), e = cubeEdges(n);
-    var lines = e.map(function (g) {
-      return '<line x1="' + g[0].x.toFixed(1) + '" y1="' + g[0].y.toFixed(1) +
-             '" x2="' + g[1].x.toFixed(1) + '" y2="' + g[1].y.toFixed(1) + '"/>';
-    }).join("");
-    var dots = n.map(function (p) {
-      return '<circle cx="' + p.x.toFixed(1) + '" cy="' + p.y.toFixed(1) + '" r="2.4" fill="#34d399"/>';
-    }).join("");
-    var svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">' +
-      '<rect width="100" height="100" rx="20" fill="#08090a"/>' +
-      '<g stroke="#34d399" stroke-width="1.1" opacity="0.85" fill="none">' + lines + '</g>' +
-      dots + '</svg>';
-    var link = document.createElement("link");
-    link.rel = "icon";
-    link.type = "image/svg+xml";
-    link.href = "data:image/svg+xml," + encodeURIComponent(svg);
-    document.head.appendChild(link);
+    // favicon is now a static asset wired in <head> (public/images/favicon*).
   }
 
   /* ----------------------------------------------------------
@@ -237,28 +220,7 @@
     wires.setAttribute("preserveAspectRatio", "none");
     var holder = document.querySelector(".pipe-stage");
 
-    function centerOf(step, bounds) {
-      var c = step.querySelector(".pcard").getBoundingClientRect();
-      return {
-        x: c.left - bounds.left + c.width / 2,
-        y: c.top - bounds.top + c.height / 2
-      };
-    }
-
-    function pathBetween(a, b, bend) {
-      bend = bend || 0;
-      if (!bend) return "M " + a.x + " " + a.y + " L " + b.x + " " + b.y;
-      var mx = (a.x + b.x) / 2;
-      var my = (a.y + b.y) / 2;
-      var dx = b.x - a.x;
-      var dy = b.y - a.y;
-      var len = Math.max(1, Math.sqrt(dx * dx + dy * dy));
-      var nx = -dy / len;
-      var ny = dx / len;
-      var cx = mx + nx * bend;
-      var cy = my + ny * bend;
-      return "M " + a.x + " " + a.y + " Q " + cx + " " + cy + " " + b.x + " " + b.y;
-    }
+    var vertices = null;   // pentagon vertex centers, in pipe coordinate space
 
     function addPath(d, className, delay) {
       var path = document.createElementNS(SVGNS, "path");
@@ -277,35 +239,71 @@
       return path;
     }
 
+    function addChevron(a, b) {   // small direction arrow at the midpoint of a→b
+      var mx = (a.x + b.x) / 2, my = (a.y + b.y) / 2;
+      var ang = Math.atan2(b.y - a.y, b.x - a.x) * 180 / Math.PI;
+      var g = document.createElementNS(SVGNS, "path");
+      g.setAttribute("d", "M -5 -4 L 4 0 L -5 4");
+      g.setAttribute("class", "wire-chevron");
+      g.setAttribute("transform", "translate(" + mx.toFixed(1) + " " + my.toFixed(1) + ") rotate(" + ang.toFixed(1) + ")");
+      wires.appendChild(g);
+    }
+
+    function trimEnd(a, b, pad) {  // point `pad`px short of b, along a→b
+      var dx = b.x - a.x, dy = b.y - a.y, L = Math.sqrt(dx * dx + dy * dy) || 1;
+      return { x: b.x - dx / L * pad, y: b.y - dy / L * pad };
+    }
+
+    // place the 5 loop cards on the vertices of a regular pentagon (point up)
+    function layoutPentagon() {
+      if (window.innerWidth <= 820 || steps.length < 5) {
+        steps.forEach(function (s) { s.style.left = ""; s.style.top = ""; });
+        pipe.style.height = "";
+        vertices = null;
+        return;
+      }
+      var W = pipe.clientWidth;
+      var halfW = (steps[0].offsetWidth || 200) / 2;
+      var maxH = 0;
+      steps.forEach(function (s) { maxH = Math.max(maxH, s.offsetHeight); });
+      var halfH = (maxH || 170) / 2;
+
+      var R = (W / 2 - halfW - 22) / 0.951;       // largest pentagon that fits the width
+      R = Math.min(R, 270);
+      R = Math.max(R, 165);
+
+      var cx = W / 2;
+      var cy = 28 + halfH + R;                     // a little breathing room above the top card
+      var H = cy + 0.809 * R + halfH + 16;
+      pipe.style.height = H.toFixed(0) + "px";
+
+      var ang = [-90, -18, 54, 126, 198];          // top, up-right, low-right, low-left, up-left
+      vertices = ang.map(function (deg, i) {
+        var t = deg * Math.PI / 180;
+        var vx = cx + R * Math.cos(t);
+        var vy = cy + R * Math.sin(t);
+        var s = steps[i];
+        s.style.left = (vx - s.offsetWidth / 2).toFixed(1) + "px";
+        s.style.top = (vy - s.offsetHeight / 2).toFixed(1) + "px";
+        return { x: vx, y: vy };
+      });
+    }
+
     function drawWires() {
       var pw = pipe.getBoundingClientRect();
       wires.setAttribute("viewBox", "0 0 " + pw.width + " " + pw.height);
       wires.setAttribute("width", pw.width);
       wires.setAttribute("height", pw.height);
       while (wires.firstChild) wires.removeChild(wires.firstChild);
-      if (window.innerWidth <= 820) return;
+      if (window.innerWidth <= 820 || !vertices) return;
+      var pts = vertices;
 
-      var pts = steps.map(function (step) { return centerOf(step, pw); });
-      var forward = [
-        [0, 1, 0],
-        [1, 2, -28],
-        [2, 3, -18],
-        [3, 4, -16],
-        [4, 5, -22],
-        [5, 6, -18]
-      ];
-      forward.forEach(function (edge, i) {
-        var d = pathBetween(pts[edge[0]], pts[edge[1]], edge[2]);
-        addPath(d, "wire-base", 0);
-        addPath(d, "wire-pulse", i * 0.34);
-      });
-
-      // Output closes the pentagon back to Candidates via submit_feedback().
+      // shared arrowhead marker
       var defs = document.createElementNS(SVGNS, "defs");
       var mk = document.createElementNS(SVGNS, "marker");
       mk.setAttribute("id", "fbArrow");
       mk.setAttribute("viewBox", "0 0 10 10");
-      mk.setAttribute("refX", "7"); mk.setAttribute("refY", "5");
+      mk.setAttribute("refX", "8"); mk.setAttribute("refY", "5");
       mk.setAttribute("markerWidth", "7"); mk.setAttribute("markerHeight", "7");
       mk.setAttribute("orient", "auto");
       var mp = document.createElementNS(SVGNS, "path");
@@ -313,18 +311,36 @@
       mp.setAttribute("class", "fb-arrow-head");
       mk.appendChild(mp); defs.appendChild(mk); wires.appendChild(defs);
 
-      var fbStr = pathBetween(pts[6], pts[2], -72);
-      var fbBase = addPath(fbStr, "wire-feedback-base", 0);
+      // four forward sides: candidates → gate → canonical → serve → output
+      var forward = [[0, 1], [1, 2], [2, 3], [3, 4]];
+      forward.forEach(function (e, i) {
+        var a = pts[e[0]], b = pts[e[1]];
+        var d = "M " + a.x.toFixed(1) + " " + a.y.toFixed(1) + " L " + b.x.toFixed(1) + " " + b.y.toFixed(1);
+        addPath(d, "wire-base", 0);
+        addPath(d, "wire-pulse", i * 0.3);
+        addChevron(a, b);
+      });
+
+      // closing side: output → candidates = feedback (submit_feedback over MCP)
+      var oa = pts[4], ob = pts[0];
+      var ea = trimEnd(ob, oa, 90);   // start near the output card
+      var eb = trimEnd(oa, ob, 90);   // end near the candidates card (arrow lands here)
+      var fd = "M " + ea.x.toFixed(1) + " " + ea.y.toFixed(1) + " L " + eb.x.toFixed(1) + " " + eb.y.toFixed(1);
+      var fbBase = addPath(fd, "wire-feedback-base", 0);
       fbBase.setAttribute("marker-end", "url(#fbArrow)");
-      var fbPulse = addPath(fbStr, "wire-feedback-pulse", 1.7);
+      var fbPulse = addPath(fd, "wire-feedback-pulse", 0);
       if (!reduceMotion) {
         fbPulse.style.strokeDasharray = "7 21";
         fbPulse.style.animation = "dashFlow 1.9s linear infinite";
+      } else {
+        fbPulse.style.opacity = "0.5";
       }
 
+      // feedback label at the midpoint of that side
+      var mx = (oa.x + ob.x) / 2, my = (oa.y + ob.y) / 2;
       var txt = document.createElementNS(SVGNS, "text");
-      txt.setAttribute("x", (pts[6].x + pts[2].x) / 2 - 38);
-      txt.setAttribute("y", (pts[6].y + pts[2].y) / 2 + 2);
+      txt.setAttribute("x", mx.toFixed(1));
+      txt.setAttribute("y", my.toFixed(1));
       txt.setAttribute("text-anchor", "middle");
       txt.setAttribute("class", "wire-label");
       txt.textContent = "↺ submit_feedback() · MCP";
@@ -343,12 +359,16 @@
     }
     holder.insertBefore(wires, pipe);
 
-    drawWires();
+    function relayout() { layoutPentagon(); drawWires(); }
+    relayout();
     var rt;
     window.addEventListener("resize", function () {
       clearTimeout(rt);
-      rt = setTimeout(drawWires, 150);
+      rt = setTimeout(relayout, 150);
     });
+    // card heights shift once webfonts load — realign then
+    window.addEventListener("load", relayout);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(relayout);
 
     // staggered reveal on enter
     var io = new IntersectionObserver(function (ents) {
