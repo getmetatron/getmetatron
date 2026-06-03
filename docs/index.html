@@ -99,6 +99,50 @@
           agent-submitted, and feedback-refined priors all start as <em>candidates</em> for
           curation. None self-promote.</span>
         </div>
+
+        <h3 style="margin-top: 32px;">How Metatron Compares</h3>
+        <table class="doc-table">
+          <thead>
+            <tr>
+              <th>Dimension</th>
+              <th>Code RAG (e.g., Cursor)</th>
+              <th>Code Graphs (e.g., Graphify)</th>
+              <th>Metatron (Priors)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Primary Focus</strong></td>
+              <td>Text similarity search</td>
+              <td>Code architecture &amp; call chains</td>
+              <td>Intent, gotchas &amp; conventions</td>
+            </tr>
+            <tr>
+              <td><strong>Primary Data Source</strong></td>
+              <td>Raw source files</td>
+              <td>Abstract Syntax Trees (AST)</td>
+              <td>Git logs + Developer feedback</td>
+            </tr>
+            <tr>
+              <td><strong>What it Captures</strong></td>
+              <td>What code is written <em>where</em></td>
+              <td>How files/functions are connected</td>
+              <td><em>Why</em> decisions were made</td>
+            </tr>
+            <tr>
+              <td><strong>Curation Gate</strong></td>
+              <td>None (fully automated)</td>
+              <td>None (fully automated)</td>
+              <td><strong>Curated (Human-in-the-loop)</strong></td>
+            </tr>
+            <tr>
+              <td><strong>Best For</strong></td>
+              <td>Finding code examples</td>
+              <td>System navigation &amp; exploration</td>
+              <td>Writing code like a team senior</td>
+            </tr>
+          </tbody>
+        </table>
       </section>
 
       <!-- THE LOOP -->
@@ -141,8 +185,7 @@
 <pre><span class="pr">$</span> <span class="cm">git clone https://github.com/kerbelp/metatron.git</span>
 <span class="pr">$</span> <span class="cm">cd metatron</span>
 <span class="pr">$</span> <span class="cm">uv sync</span>            <span class="c"># create venv and install dependencies</span></pre>
-        </div>
-        <div class="callout"><span class="mono">›</span><span>The examples below use <code>uv run metatron</code>. If you installed globally, drop the <code>uv run</code> prefix.</span></div>
+        
       </section>
 
       <!-- CONFIGURE -->
@@ -170,10 +213,10 @@
         <h2>Quick start</h2>
         <div class="doc-code">
           <div class="doc-code-bar"><span class="dots"><i></i><i></i><i></i></span> three steps</div>
-<pre><span class="pr">$</span> <span class="cm">uv run metatron ingest /path/to/your/repo</span>      <span class="c"># 1. bootstrap candidates (needs API key)</span>
-<span class="pr">$</span> <span class="cm">uv run metatron candidates list</span>                <span class="c"># 2. review …</span>
-<span class="pr">$</span> <span class="cm">uv run metatron candidates approve &lt;id&gt;</span>        <span class="c">#    … and curate</span>
-<span class="pr">$</span> <span class="cm">uv run metatron serve --repo &lt;id&gt;</span>              <span class="c"># 3. serve canonical priors over MCP</span></pre>
+<pre><span class="pr">$</span> <span class="cm">metatron ingest /path/to/your/repo</span>      <span class="c"># 1. bootstrap candidates (needs API key)</span>
+<span class="pr">$</span> <span class="cm">metatron candidates list</span>                <span class="c"># 2. review …</span>
+<span class="pr">$</span> <span class="cm">metatron candidates approve &lt;id&gt;</span>        <span class="c">#    … and curate</span>
+<span class="pr">$</span> <span class="cm">metatron serve --repo &lt;id&gt;</span>              <span class="c"># 3. serve canonical priors over MCP</span></pre>
         </div>
         <p><code>ingest</code> prints the <code>&lt;id&gt;</code> to use for <code>serve</code>. To wire
           it into a coding agent automatically, see <a class="inline" href="#connect">Connect an agent</a>.</p>
@@ -186,7 +229,7 @@
           per-area signals, asks the model to infer priors, and stores them as <strong>candidates</strong>.</p>
         <div class="doc-code">
           <div class="doc-code-bar"><span class="dots"><i></i><i></i><i></i></span> ingest</div>
-<pre><span class="pr">$</span> <span class="cm">uv run metatron ingest /path/to/your/repo</span>
+<pre><span class="pr">$</span> <span class="cm">metatron ingest /path/to/your/repo</span>
 <span class="ot">Ingested repo 'github.com/acme/app': parsed 214 files, read 500 commits across 38 scopes,</span>
 <span class="ot">created <span class="hl">271 candidate priors</span>.</span>
 <span class="ot">Review them with: metatron candidates list --repo github.com/acme/app</span></pre>
@@ -211,13 +254,13 @@
         <p>Review and curate — humans decide what becomes canonical.</p>
         <div class="doc-code">
           <div class="doc-code-bar"><span class="dots"><i></i><i></i><i></i></span> candidates</div>
-<pre><span class="pr">$</span> <span class="cm">uv run metatron candidates list</span>
+<pre><span class="pr">$</span> <span class="cm">metatron candidates list</span>
 <span class="ot">1d2ab8e8…  [high]  (CheckoutSuccessRedirect (paid submit/finish flow))</span>
 <span class="ot">    After a paid submission completes, redirect to /my-dashboard/?thanks=1 …</span>
 
-<span class="pr">$</span> <span class="cm">uv run metatron candidates approve 1d2ab8e8…</span>
+<span class="pr">$</span> <span class="cm">metatron candidates approve 1d2ab8e8…</span>
 <span class="ot">Prior 1d2ab8e8… approved.</span>
-<span class="pr">$</span> <span class="cm">uv run metatron candidates reject d672a984…</span>
+<span class="pr">$</span> <span class="cm">metatron candidates reject d672a984…</span>
 <span class="ot">Prior d672a984… rejected.</span></pre>
         </div>
         <p><code>candidates list</code> accepts <code>--repo &lt;id&gt;</code> and <code>--scope &lt;path&gt;</code>
@@ -232,7 +275,7 @@
           It <strong>does not curate</strong> — a human still approves.</p>
         <div class="doc-code">
           <div class="doc-code-bar"><span class="dots"><i></i><i></i><i></i></span> triage</div>
-<pre><span class="pr">$</span> <span class="cm">uv run metatron triage --repo github.com/acme/app</span>
+<pre><span class="pr">$</span> <span class="cm">metatron triage --repo github.com/acme/app</span>
 <span class="ot">Triaged 271 candidates: approve=88, borderline=96, reject=87</span>
 <span class="ot">  judge cost: ~$0.42</span></pre>
         </div>
@@ -247,7 +290,7 @@
           ever sees that repo's priors. It also records usage events to the same DB for the UI.</p>
         <div class="doc-code">
           <div class="doc-code-bar"><span class="dots"><i></i><i></i><i></i></span> serve</div>
-<pre><span class="pr">$</span> <span class="cm">uv run metatron serve --repo github.com/acme/app</span></pre>
+<pre><span class="pr">$</span> <span class="cm">metatron serve --repo github.com/acme/app</span></pre>
         </div>
         <div class="callout"><span class="mono">›</span><span>Normally you don't run this by hand — an MCP-capable agent launches it. See <a class="inline" href="#connect">Connect an agent</a>.</span></div>
       </section>
@@ -259,7 +302,7 @@
           port if taken) and reads/writes the same store as the CLI.</p>
         <div class="doc-code">
           <div class="doc-code-bar"><span class="dots"><i></i><i></i><i></i></span> ui</div>
-<pre><span class="pr">$</span> <span class="cm">uv run metatron ui</span>
+<pre><span class="pr">$</span> <span class="cm">metatron ui</span>
 <span class="ot">Metatron curation UI on http://127.0.0.1:1337  (Ctrl-C to stop)</span></pre>
         </div>
         <ul>
@@ -280,7 +323,7 @@
           goes to curation.</p>
         <div class="doc-code">
           <div class="doc-code-bar"><span class="dots"><i></i><i></i><i></i></span> refine-feedback</div>
-<pre><span class="pr">$</span> <span class="cm">uv run metatron refine-feedback</span>
+<pre><span class="pr">$</span> <span class="cm">metatron refine-feedback</span>
 <span class="ot">Refined 3 feedback report(s) into <span class="hl">13 candidate prior(s)</span> for curation.</span>
 <span class="ot">  refiner cost: ~$0.19</span></pre>
         </div>
