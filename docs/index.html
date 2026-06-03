@@ -34,7 +34,7 @@
       <a href="./" aria-current="page">Docs</a>
     </nav>
     <div class="nav-cta">
-      <a class="btn btn-ghost btn-sm" href="https://github.com/getmetatron/metatron" target="_blank" rel="noopener">
+      <a class="btn btn-ghost btn-sm" href="https://github.com/kerbelp/metatron" target="_blank" rel="noopener">
         <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.7.5.5 5.7.5 12c0 5.1 3.3 9.4 7.9 10.9.6.1.8-.3.8-.6v-2c-3.2.7-3.9-1.5-3.9-1.5-.5-1.3-1.3-1.7-1.3-1.7-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.7 1.3 3.4 1 .1-.8.4-1.3.7-1.6-2.6-.3-5.3-1.3-5.3-5.7 0-1.3.5-2.3 1.2-3.1-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0c2.3-1.5 3.3-1.2 3.3-1.2.6 1.6.2 2.8.1 3.1.8.8 1.2 1.8 1.2 3.1 0 4.4-2.7 5.4-5.3 5.7.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6 4.6-1.5 7.9-5.8 7.9-10.9C23.5 5.7 18.3.5 12 .5Z"/></svg>
         GitHub
       </a>
@@ -130,20 +130,17 @@
       <!-- INSTALL -->
       <section class="doc-sec" id="install">
         <h2>Install</h2>
-        <p>You need <a class="inline" href="https://docs.astral.sh/uv/" target="_blank" rel="noopener">uv</a>,
-          Python 3.12+, and an Anthropic API key (only for the LLM steps —
-          <code>serve</code>, <code>ui</code>, and <code>candidates</code> are fully local).</p>
+        <p>Install Metatron as a global tool on your <code>PATH</code> in one command. If you don't have <a class="inline" href="https://docs.astral.sh/uv/" target="_blank" rel="noopener">uv</a>, the script will install it for you:</p>
         <div class="doc-code">
-          <div class="doc-code-bar"><span class="dots"><i></i><i></i><i></i></span> clone &amp; sync</div>
-<pre><span class="pr">$</span> <span class="cm">git clone https://github.com/getmetatron/metatron.git</span>
-<span class="pr">$</span> <span class="cm">cd metatron</span>
-<span class="pr">$</span> <span class="cm">uv sync</span>            <span class="c"># create the venv and install dependencies</span></pre>
+          <div class="doc-code-bar"><span class="dots"><i></i><i></i><i></i></span> installation</div>
+<pre><span class="pr">$</span> <span class="cm">curl -sSf https://getmetatron.com/install.sh | sh</span></pre>
         </div>
-        <p>Run the CLI without installing globally with <code>uv run metatron --help</code>, or put
-          it on your PATH everywhere:</p>
+        <p>To run it locally from source or contribute to the project, clone and sync instead:</p>
         <div class="doc-code">
-          <div class="doc-code-bar"><span class="dots"><i></i><i></i><i></i></span> global tool</div>
-<pre><span class="pr">$</span> <span class="cm">uv tool install .</span>       <span class="c"># then just: metatron --help</span></pre>
+          <div class="doc-code-bar"><span class="dots"><i></i><i></i><i></i></span> build from source</div>
+<pre><span class="pr">$</span> <span class="cm">git clone https://github.com/kerbelp/metatron.git</span>
+<span class="pr">$</span> <span class="cm">cd metatron</span>
+<span class="pr">$</span> <span class="cm">uv sync</span>            <span class="c"># create venv and install dependencies</span></pre>
         </div>
         <div class="callout"><span class="mono">›</span><span>The examples below use <code>uv run metatron</code>. If you installed globally, drop the <code>uv run</code> prefix.</span></div>
       </section>
