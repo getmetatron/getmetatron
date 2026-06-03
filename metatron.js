@@ -212,7 +212,9 @@
   function initPipeline() {
     var pipe = document.querySelector(".pipe");
     if (!pipe) return;
-    var steps = Array.prototype.slice.call(pipe.querySelectorAll(".pstep:not(.pstep-mobile)"));
+    var steps = Array.prototype.slice.call(pipe.querySelectorAll(".pstep:not(.pstep-mobile):not(.pstep-input)"));
+    var inputRepo = pipe.querySelector(".input-repo");
+    var inputIngest = pipe.querySelector(".input-ingest");
 
     // build the diagram wires + traveling pulses (desktop only)
     var wires = document.createElementNS(SVGNS, "svg");
@@ -258,6 +260,8 @@
     function layoutPentagon() {
       if (window.innerWidth <= 820 || steps.length < 5) {
         steps.forEach(function (s) { s.style.left = ""; s.style.top = ""; });
+        if (inputRepo) { inputRepo.style.left = ""; inputRepo.style.top = ""; }
+        if (inputIngest) { inputIngest.style.left = ""; inputIngest.style.top = ""; }
         pipe.style.height = "";
         vertices = null;
         return;
@@ -273,7 +277,7 @@
       R = Math.max(R, 165);
 
       var cx = W / 2;
-      var cy = 28 + halfH + R;                     // a little breathing room above the top card
+      var cy = 28 + halfH + R + 200;               // shifted down by 200px to make room for inputs
       var H = cy + 0.809 * R + halfH + 16;
       pipe.style.height = H.toFixed(0) + "px";
 
@@ -287,6 +291,22 @@
         s.style.top = (vy - s.offsetHeight / 2).toFixed(1) + "px";
         return { x: vx, y: vy };
       });
+
+      // Place the inputs above Candidate priors (which is vertices[0])
+      var Y0 = vertices[0].y;
+      var inputY = Y0 - 200;
+      if (inputRepo) {
+        var w = inputRepo.offsetWidth || 200;
+        var h = inputRepo.offsetHeight || 170;
+        inputRepo.style.left = (cx - 120 - w / 2).toFixed(1) + "px";
+        inputRepo.style.top = (inputY - h / 2).toFixed(1) + "px";
+      }
+      if (inputIngest) {
+        var w = inputIngest.offsetWidth || 200;
+        var h = inputIngest.offsetHeight || 170;
+        inputIngest.style.left = (cx + 120 - w / 2).toFixed(1) + "px";
+        inputIngest.style.top = (inputY - h / 2).toFixed(1) + "px";
+      }
     }
 
     function drawWires() {
@@ -311,13 +331,35 @@
       mp.setAttribute("class", "fb-arrow-head");
       mk.appendChild(mp); defs.appendChild(mk); wires.appendChild(defs);
 
+      // Draw horizontal connection: Your codebase -> Parse & extract
+      var halfW = (steps[0].offsetWidth || 200) / 2;
+      var halfH = (steps[0].offsetHeight || 170) / 2;
+      var cx = pw.width / 2;
+      var Y0 = pts[0].y;
+      var inputY = Y0 - 200;
+
+      var rx1 = cx - 120 + halfW, ry1 = inputY;
+      var rx2 = cx + 120 - halfW, ry2 = inputY;
+      var d1 = "M " + rx1.toFixed(1) + " " + ry1.toFixed(1) + " L " + rx2.toFixed(1) + " " + ry2.toFixed(1);
+      addPath(d1, "wire-base", 0);
+      addPath(d1, "wire-pulse", 0);
+      addChevron({x: rx1, y: ry1}, {x: rx2, y: ry2});
+
+      // Draw diagonal connection: Parse & extract -> Candidate priors
+      var ix1 = cx + 80, iy1 = inputY + halfH;
+      var ix2 = cx + 20, iy2 = Y0 - halfH;
+      var d2 = "M " + ix1.toFixed(1) + " " + iy1.toFixed(1) + " L " + ix2.toFixed(1) + " " + iy2.toFixed(1);
+      addPath(d2, "wire-base", 0);
+      addPath(d2, "wire-pulse", 0.15);
+      addChevron({x: ix1, y: iy1}, {x: ix2, y: iy2});
+
       // four forward sides: candidates → gate → canonical → serve → output
       var forward = [[0, 1], [1, 2], [2, 3], [3, 4]];
       forward.forEach(function (e, i) {
         var a = pts[e[0]], b = pts[e[1]];
         var d = "M " + a.x.toFixed(1) + " " + a.y.toFixed(1) + " L " + b.x.toFixed(1) + " " + b.y.toFixed(1);
         addPath(d, "wire-base", 0);
-        addPath(d, "wire-pulse", i * 0.3);
+        addPath(d, "wire-pulse", (i + 1) * 0.3); // delay shifted by 1 index because of preceding input steps
         addChevron(a, b);
       });
 
@@ -374,7 +416,11 @@
     var io = new IntersectionObserver(function (ents) {
       ents.forEach(function (en) {
         if (en.isIntersecting) {
-          steps.forEach(function (s, i) {
+          var allSteps = [];
+          if (inputRepo) allSteps.push(inputRepo);
+          if (inputIngest) allSteps.push(inputIngest);
+          allSteps = allSteps.concat(steps);
+          allSteps.forEach(function (s, i) {
             setTimeout(function () { s.classList.add("in"); }, reduceMotion ? 0 : i * 110);
           });
           io.disconnect();
@@ -386,7 +432,11 @@
 
     // cycle the "active" highlight along the pipeline
     function startCycle() {
-      var cards = steps.map(function (s) { return s.querySelector(".pcard"); });
+      var allSteps = [];
+      if (inputRepo) allSteps.push(inputRepo);
+      if (inputIngest) allSteps.push(inputIngest);
+      allSteps = allSteps.concat(steps);
+      var cards = allSteps.map(function (s) { return s.querySelector(".pcard"); }).filter(Boolean);
       var i = 0;
       setInterval(function () {
         cards.forEach(function (c) { c.classList.remove("active"); });
