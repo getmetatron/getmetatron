@@ -96,7 +96,7 @@ svg { display: block; }
 /* ---------- layout primitives ---------- */
 .wrap { max-width: var(--maxw); margin-inline: auto; padding-inline: var(--gut); }
 section { position: relative; }
-.section-pad { padding-block: clamp(56px, 7vw, 100px); }
+.section-pad { padding-block: clamp(40px, 5vw, 72px); }
 .divider { border: none; border-top: 1px solid var(--line); margin: 0; }
 
 /* ---------- nav ---------- */
@@ -145,8 +145,8 @@ section { position: relative; }
 .hero-grid {
   position: relative; z-index: 2;
   display: grid; grid-template-columns: 1.05fr 0.95fr; gap: clamp(30px, 5vw, 70px);
-  align-items: center; min-height: min(82vh, 760px);
-  padding-block: clamp(40px, 6vw, 70px);
+  align-items: center; min-height: min(65vh, 580px);
+  padding-block: clamp(32px, 4vw, 54px);
 }
 .hero-copy { max-width: 600px; }
 .hero h1 {
