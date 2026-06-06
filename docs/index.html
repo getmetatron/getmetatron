@@ -14,7 +14,7 @@
   gtag('config', 'G-0P4SKXFNWL');
 </script>
 <title>Docs — Metatron</title>
-<meta name="description" content="Documentation for Metatron: install, configure, bootstrap candidate priors, curate them, and serve them to AI coding agents over MCP." />
+<meta name="description" content="Documentation for Metatron: install, configure, bootstrap candidate decisions, curate them, and serve them to AI coding agents over MCP." />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Hanken+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
@@ -89,7 +89,7 @@
       <h1>Documentation</h1>
       <p class="doc-lede">
         Metatron captures your codebase's real implementation decisions as structured
-        <strong>priors</strong> and serves them to AI coding agents over MCP. Bootstrap once,
+        <strong>decisions</strong> and serves them to AI coding agents over MCP. Bootstrap once,
         curate what's worth keeping, serve it to your agent — and let the agent's feedback
         feed the next round of candidates.
       </p>
@@ -98,7 +98,7 @@
       <section class="doc-sec" id="overview">
         <h2>Overview</h2>
         <p>
-          A prior is a typed record — <code>pattern</code>, <code>scope</code>,
+          A decision is a typed record — <code>pattern</code>, <code>scope</code>,
           <code>rationale</code>, <code>confidence</code>, <code>source_refs</code> — not a prose
           doc. Metatron is self-hosted and runs against a private codebase: extraction sends only
           <em>structural</em> signals (imports, decorators, base classes, commit subjects) to the
@@ -107,7 +107,7 @@
         <div class="callout">
           <span class="mono">▲</span>
           <span><strong>Nothing becomes canonical without a human.</strong> Bootstrapped,
-          agent-submitted, and feedback-refined priors all start as <em>candidates</em> for
+          agent-submitted, and feedback-refined decisions all start as <em>candidates</em> for
           curation. None self-promote.</span>
         </div>
 
@@ -118,7 +118,7 @@
               <th>Dimension</th>
               <th>Code RAG (e.g., Cursor)</th>
               <th>Code Graphs (e.g., Graphify)</th>
-              <th>Metatron (Priors)</th>
+              <th>Metatron (Decisions)</th>
             </tr>
           </thead>
           <tbody>
@@ -163,22 +163,22 @@
           Bootstrap with <code>ingest</code>, curate candidates into the canonical set, then
           <code>serve</code> them to your agent over MCP. As the agent works it reports gaps via
           <code>submit_feedback</code>; <code>refine-feedback</code> reshapes those gaps into new
-          candidate priors — closing the loop on the conventions extraction can't see
+          candidate decisions — closing the loop on the conventions extraction can't see
           (cross-file and workflow rules). Crucially, feedback returns as <em>candidates</em>, so
           the human gate is never bypassed.
         </p>
         <div class="doc-code">
           <div class="doc-code-bar"><span class="dots"><i></i><i></i><i></i></span> the loop</div>
 <pre>            <span class="c">┌─────────── ingest ───────────┐</span>
- your repo <span class="c">─┤</span>  parse (tree-sitter) + git    <span class="c">├─▶</span> candidate priors
+ your repo <span class="c">─┤</span>  parse (tree-sitter) + git    <span class="c">├─▶</span> candidate decisions
             <span class="c">└──────── LLM extraction ───────┘</span>          <span class="c">│</span>
                                                        <span class="c">▼</span>
                                               curate (<span class="hl">human</span>)  <span class="c">◀──</span> triage (advisory)
                                                        <span class="c">│</span>  approve / reject
                                                        <span class="c">▼</span>
- coding agent <span class="c">◀──── serve (MCP) ──── canonical priors</span>
+ coding agent <span class="c">◀──── serve (MCP) ──── canonical decisions</span>
        <span class="c">│</span>
-       <span class="c">└──</span> <span class="k">submit_feedback</span> <span class="c">──▶ refine-feedback ──▶ candidate priors ──▶ curate</span></pre>
+       <span class="c">└──</span> <span class="k">submit_feedback</span> <span class="c">──▶ refine-feedback ──▶ candidate decisions ──▶ curate</span></pre>
         </div>
       </section>
 
@@ -217,8 +217,8 @@
           <div class="doc-code-bar"><span class="dots"><i></i><i></i><i></i></span> build</div>
 <pre><span class="pr">$</span> <span class="cm">docker build -t getmetatron .</span></pre>
         </div>
-        <p>Priors live in a SQLite database, so mount a volume to persist it across runs. Ingest a
-          repo, then serve the curated priors:</p>
+        <p>Decisions live in a SQLite database, so mount a volume to persist it across runs. Ingest a
+          repo, then serve the curated decisions:</p>
         <div class="doc-code">
           <div class="doc-code-bar"><span class="dots"><i></i><i></i><i></i></span> ingest + serve</div>
 <pre><span class="c"># 1. ingest a repo into a persisted DB (needs an API key)</span>
@@ -228,7 +228,7 @@
     -v /path/to/your/repo:/repo:ro \
     getmetatron ingest /repo</span>
 
-<span class="c"># 2. serve the curated priors over stdio (no API key needed)</span>
+<span class="c"># 2. serve the curated decisions over stdio (no API key needed)</span>
 <span class="pr">$</span> <span class="cm">docker run -i --rm \
     -v metatron-data:/data -e METATRON_DB=/data/metatron.db \
     getmetatron serve --repo &lt;id&gt;</span></pre>
@@ -280,7 +280,7 @@
 <pre><span class="pr">$</span> <span class="cm">metatron ingest /path/to/your/repo</span>      <span class="c"># 1. bootstrap candidates (needs API key)</span>
 <span class="pr">$</span> <span class="cm">metatron candidates list</span>                <span class="c"># 2. review …</span>
 <span class="pr">$</span> <span class="cm">metatron candidates approve &lt;id&gt;</span>        <span class="c">#    … and curate</span>
-<span class="pr">$</span> <span class="cm">metatron serve --repo &lt;id&gt;</span>              <span class="c"># 3. serve canonical priors over MCP</span></pre>
+<span class="pr">$</span> <span class="cm">metatron serve --repo &lt;id&gt;</span>              <span class="c"># 3. serve canonical decisions over MCP</span></pre>
         </div>
         <p><code>ingest</code> prints the <code>&lt;id&gt;</code> to use for <code>serve</code>. To wire
           it into a coding agent automatically, see <a class="inline" href="#connect">Connect an agent</a>.</p>
@@ -290,12 +290,12 @@
       <section class="doc-sec" id="ingest">
         <h2><code>ingest</code></h2>
         <p>Parses git-tracked source files (tree-sitter) and reads commit history, aggregates
-          per-area signals, asks the model to infer priors, and stores them as <strong>candidates</strong>.</p>
+          per-area signals, asks the model to infer decisions, and stores them as <strong>candidates</strong>.</p>
         <div class="doc-code">
           <div class="doc-code-bar"><span class="dots"><i></i><i></i><i></i></span> ingest</div>
 <pre><span class="pr">$</span> <span class="cm">metatron ingest /path/to/your/repo</span>
 <span class="ot">Ingested repo 'github.com/acme/app': parsed 214 files, read 500 commits across 38 scopes,</span>
-<span class="ot">created <span class="hl">271 candidate priors</span>.</span>
+<span class="ot">created <span class="hl">271 candidate decisions</span>.</span>
 <span class="ot">Review them with: metatron candidates list --repo github.com/acme/app</span></pre>
         </div>
         <table class="doc-table">
@@ -307,7 +307,7 @@
             <tr><td><code>--repo ID</code></td><td>origin remote</td><td>override the repo identity</td></tr>
           </tbody>
         </table>
-        <p>Priors are keyed by a <strong>repo identity</strong> derived from the <code>origin</code>
+        <p>Decisions are keyed by a <strong>repo identity</strong> derived from the <code>origin</code>
           remote (constant across developers; a checkout path isn't), with a directory-name
           fallback when there's no remote. One DB holds many repos; each is isolated on retrieval.</p>
       </section>
@@ -323,9 +323,9 @@
 <span class="ot">    After a paid submission completes, redirect to /my-dashboard/?thanks=1 …</span>
 
 <span class="pr">$</span> <span class="cm">metatron candidates approve 1d2ab8e8…</span>
-<span class="ot">Prior 1d2ab8e8… approved.</span>
+<span class="ot">Decision 1d2ab8e8… approved.</span>
 <span class="pr">$</span> <span class="cm">metatron candidates reject d672a984…</span>
-<span class="ot">Prior d672a984… rejected.</span></pre>
+<span class="ot">Decision d672a984… rejected.</span></pre>
         </div>
         <p><code>candidates list</code> accepts <code>--repo &lt;id&gt;</code> and <code>--scope &lt;path&gt;</code>
           filters. <code>approve</code> promotes a candidate to canonical; <code>reject</code> discards it.</p>
@@ -349,9 +349,9 @@
       <!-- SERVE -->
       <section class="doc-sec" id="serve">
         <h2><code>serve</code></h2>
-        <p>Expose canonical priors to agents over MCP (stdio). One served instance serves exactly
+        <p>Expose canonical decisions to agents over MCP (stdio). One served instance serves exactly
           one repo (<code>--repo</code>, the id printed by <code>ingest</code>), so an agent only
-          ever sees that repo's priors. It also records usage events to the same DB for the UI.</p>
+          ever sees that repo's decisions. It also records usage events to the same DB for the UI.</p>
         <div class="doc-code">
           <div class="doc-code-bar"><span class="dots"><i></i><i></i><i></i></span> serve</div>
 <pre><span class="pr">$</span> <span class="cm">metatron serve --repo github.com/acme/app</span></pre>
@@ -370,10 +370,10 @@
 <span class="ot">Metatron curation UI on http://127.0.0.1:1337  (Ctrl-C to stop)</span></pre>
         </div>
         <ul>
-          <li><strong>Priors</strong> — browse paginated; filter by status / scope / triage / origin; full-text search; approve/reject with a click.</li>
+          <li><strong>Decisions</strong> — browse paginated; filter by status / scope / triage / origin; full-text search; approve/reject with a click.</li>
           <li><strong>Usage</strong> — how often agents query, coverage, most-queried scopes, recent queries.</li>
-          <li><strong>Quality</strong> — prior quality by origin (ingest vs feedback) and one-time ingest cost.</li>
-          <li><strong>Feedback</strong> — the agent feedback stream, filterable All / Unhandled / Handled, with a <em>Refine into priors</em> button per report.</li>
+          <li><strong>Quality</strong> — decision quality by origin (ingest vs feedback) and one-time ingest cost.</li>
+          <li><strong>Feedback</strong> — the agent feedback stream, filterable All / Unhandled / Handled, with a <em>Refine into decisions</em> button per report.</li>
         </ul>
         <p>Flag: <code>--port N</code> (starting port, default <code>1337</code>).</p>
       </section>
@@ -382,13 +382,13 @@
       <section class="doc-sec" id="refine">
         <h2><code>refine-feedback</code></h2>
         <p>When an agent reports a missing convention via <code>submit_feedback</code>, this
-          reshapes those free-text gap reports into <strong>structured candidate priors</strong>
+          reshapes those free-text gap reports into <strong>structured candidate decisions</strong>
           (defaults to Opus, the higher-stakes step). Nothing it produces is canonical — it all
           goes to curation.</p>
         <div class="doc-code">
           <div class="doc-code-bar"><span class="dots"><i></i><i></i><i></i></span> refine-feedback</div>
 <pre><span class="pr">$</span> <span class="cm">metatron refine-feedback</span>
-<span class="ot">Refined 3 feedback report(s) into <span class="hl">13 candidate prior(s)</span> for curation.</span>
+<span class="ot">Refined 3 feedback report(s) into <span class="hl">13 candidate decision(s)</span> for curation.</span>
 <span class="ot">  refiner cost: ~$0.19</span></pre>
         </div>
         <p>Flags: <code>--repo &lt;id&gt;</code>, <code>--limit N</code>, <code>--model &lt;name&gt;</code>.</p>
@@ -397,7 +397,7 @@
       <!-- CONNECT -->
       <section class="doc-sec" id="connect">
         <h2>Connect an agent</h2>
-        <p>So a coding agent reliably <em>consults</em> priors rather than rediscovering
+        <p>So a coding agent reliably <em>consults</em> decisions rather than rediscovering
           conventions, run the onboarding script from inside the target repo:</p>
         <div class="doc-code">
           <div class="doc-code-bar"><span class="dots"><i></i><i></i><i></i></span> onboarding</div>
@@ -450,20 +450,20 @@
           <thead><tr><th>Tool</th><th>Purpose</th></tr></thead>
           <tbody>
             <tr>
-              <td><code>get_priors_for_context</code></td>
-              <td>the relevant <strong>canonical</strong> priors as compact structured context, with a <code>query_id</code> to reference in feedback</td>
+              <td><code>get_decisions_for_context</code></td>
+              <td>the relevant <strong>canonical</strong> decisions as compact structured context, with a <code>query_id</code> to reference in feedback</td>
             </tr>
             <tr>
               <td><code>submit_feedback</code></td>
-              <td>rate served priors by <code>[index]</code> and report a convention Metatron should have known — captured for <code>refine-feedback</code>; never auto-applied</td>
+              <td>rate served decisions by <code>[index]</code> and report a convention Metatron should have known — captured for <code>refine-feedback</code>; never auto-applied</td>
             </tr>
             <tr>
-              <td><code>submit_candidate_learning</code></td>
+              <td><code>submit_candidate_decision</code></td>
               <td>record a convention the agent learned as a new <strong>candidate</strong> (never auto-promoted)</td>
             </tr>
           </tbody>
         </table>
-        <p>A <code>get_priors_for_context</code> call returns context like this:</p>
+        <p>A <code>get_decisions_for_context</code> call returns context like this:</p>
         <div class="doc-code">
           <div class="doc-code-bar"><span class="dots"><i></i><i></i><i></i></span> served context</div>
 <pre><span class="ot">metatron:query b1f2… · rev 1101886 (reference the query id in submit_feedback)</span>
@@ -483,7 +483,7 @@
           <li>Extraction sends only <strong>structural signals</strong> — imports, decorators, base classes, commit subjects — to the model. Never raw source.</li>
           <li>Agent feedback and usage are stored only in your <strong>local SQLite database</strong>.</li>
           <li><code>serve</code>, <code>ui</code>, and <code>candidates</code> are fully local and need no API key.</li>
-          <li>No prior self-promotes — a human curates everything that becomes canonical.</li>
+          <li>No decision self-promotes — a human curates everything that becomes canonical.</li>
         </ul>
         <div class="callout">
           <span class="mono">▲</span>
