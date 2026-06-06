@@ -14,7 +14,7 @@
   gtag('config', 'G-0P4SKXFNWL');
 </script>
 <title>Metatron — your codebase's conventions, served to AI agents over MCP</title>
-<meta name="description" content="Metatron is a self-hosted system that captures your team's real implementation decisions as structured priors and serves them to AI coding agents over MCP." />
+<meta name="description" content="Metatron is a self-hosted system that captures your team's real implementation decisions as structured records and serves them to AI coding agents over MCP." />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Hanken+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
@@ -31,7 +31,7 @@
 <meta property="og:site_name" content="Metatron" />
 <meta property="og:url" content="https://getmetatron.com/" />
 <meta property="og:title" content="Metatron — your codebase's conventions, served to AI agents over MCP" />
-<meta property="og:description" content="Self-hosted: captures your team's real implementation decisions as structured priors and serves them to AI coding agents over MCP." />
+<meta property="og:description" content="Self-hosted: captures your team's real implementation decisions as structured records and serves them to AI coding agents over MCP." />
 <meta property="og:image" content="https://getmetatron.com/public/images/og-image.png" />
 <meta property="og:image:width" content="1200" />
 <meta property="og:image:height" content="630" />
@@ -40,7 +40,7 @@
 <!-- Twitter / X card -->
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content="Metatron — your codebase's conventions, served to AI agents over MCP" />
-<meta name="twitter:description" content="Self-hosted: captures your team's real implementation decisions as structured priors and serves them to AI coding agents over MCP." />
+<meta name="twitter:description" content="Self-hosted: captures your team's real implementation decisions as structured records and serves them to AI coding agents over MCP." />
 <meta name="twitter:image" content="https://getmetatron.com/public/images/og-image.png" />
 </head>
 <body>
@@ -83,7 +83,7 @@
       <h1>AI agents that already <em>know your codebase.</em></h1>
       <p class="hero-sub">
         Your team already made the hard calls — patterns to prefer, approaches to avoid,
-        edge cases that bite. Metatron captures them as structured priors and serves them
+        edge cases that bite. Metatron captures them as structured records and serves them
         to coding agents over MCP, so agents write to your conventions instead of guessing.
         When one hits a gap, it reports back — and the next agent knows more.
       </p>
@@ -148,7 +148,7 @@
     <div class="sec-head reveal">
       <span class="kicker">How it works</span>
       <h2>A loop, not a one-time import.</h2>
-      <p>Metatron ingests your repo and git history with tree-sitter, distills candidate priors,
+      <p>Metatron ingests your repo and git history with tree-sitter, distills candidate decisions,
         and serves only what a human has curated. As agents work, they report what was missing —
         and those gaps return as new candidates. The canonical set is never automatic.</p>
     </div>
@@ -170,7 +170,7 @@
             <div class="picon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/><line x1="10" y1="20" x2="14" y2="4"/></svg></div>
             <span class="ptag proc-label">Ingest</span>
             <h4>Parse &amp; extract</h4>
-            <p>Runs tree-sitter to collect deterministic facts and LLM to infer priors.</p>
+            <p>Runs tree-sitter to collect deterministic facts and LLM to infer decisions.</p>
           </div>
         </div>
         <!-- 0 · top -->
@@ -178,7 +178,7 @@
           <div class="pcard">
             <div class="picon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="4" y="5" width="16" height="5" rx="1.5"/><rect x="4" y="14" width="11" height="5" rx="1.5" opacity=".55"/></svg></div>
             <span class="ptag">Candidates</span>
-            <h4>Candidate priors</h4>
+            <h4>Candidate decisions</h4>
             <p>Bootstrapped from your code &amp; git with tree-sitter. Proposed — never yet trusted.</p>
           </div>
         </div>
@@ -196,7 +196,7 @@
           <div class="pcard">
             <div class="picon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><ellipse cx="12" cy="6" rx="7" ry="2.6"/><path d="M5 6v6c0 1.4 3.1 2.6 7 2.6s7-1.2 7-2.6V6"/><path d="M5 12v6c0 1.4 3.1 2.6 7 2.6s7-1.2 7-2.6v-6"/></svg></div>
             <span class="ptag">Canonical</span>
-            <h4>Trusted priors</h4>
+            <h4>Trusted decisions</h4>
             <p>The curated set, versioned in SQLite on your own infra.</p>
           </div>
         </div>
@@ -230,7 +230,7 @@
       </div>
     </div>
     <div class="pipe-note reveal">
-      <span class="mono">●</span> Each side carries <b>candidate priors</b> forward — but only past the human gate do they become canonical.
+      <span class="mono">●</span> Each side carries <b>candidate decisions</b> forward — but only past the human gate do they become canonical.
     </div>
     <div class="pipe-note reveal">
       <span class="mono" style="color:var(--accent)">↺</span> The accent edge closes the loop: agents call <span class="mono">submit_feedback()</span> over MCP, and the gaps come back as new candidates. Still curated, never auto-applied.
@@ -240,14 +240,14 @@
 
 <hr class="divider" />
 
-<!-- ============ ANATOMY OF A PRIOR ============ -->
+<!-- ============ ANATOMY OF A DECISION ============ -->
 <section class="section-pad" id="anatomy" data-screen-label="anatomy">
   <div class="wrap">
     <div class="anat-layout">
       <div class="anat-copy reveal">
-        <span class="kicker">Anatomy of a prior</span>
-        <h3 style="margin-top:16px">A prior is a record, not a paragraph.</h3>
-        <p>Wikis rot. Style guides get ignored. A Metatron prior is a typed, queryable
+        <span class="kicker">Anatomy of a decision</span>
+        <h3 style="margin-top:16px">A decision is a record, not a paragraph.</h3>
+        <p>Wikis rot. Style guides get ignored. A Metatron decision is a typed, queryable
           record an agent can actually reason over — with the rationale and the receipts
           attached.</p>
         <ul class="anat-fieldlist">
@@ -261,11 +261,11 @@
       </div>
 
       <div class="flip-wrap reveal">
-        <div class="flip-card" id="priorCard" role="button" tabindex="0" aria-label="Flip prior card">
+        <div class="flip-card" id="decisionCard" role="button" tabindex="0" aria-label="Flip decision card">
           <!-- FRONT -->
           <div class="flip-face flip-front">
             <div class="fcard-top">
-              <span class="fcard-id">prior · #0427</span>
+              <span class="fcard-id">decision · #0427</span>
               <span class="badge canon">canonical</span>
             </div>
             <div class="fcard-title">Outbound GETs must be idempotent &amp; retried</div>
@@ -279,7 +279,7 @@
           <!-- BACK -->
           <div class="flip-face flip-back">
             <div class="fcard-top">
-              <span class="fcard-id">prior_0427.json</span>
+              <span class="fcard-id">decision_0427.json</span>
               <span class="badge canon">structured</span>
             </div>
             <pre class="rec" style="margin-top:16px">{
@@ -304,7 +304,7 @@
     <div style="margin-top:clamp(70px,9vw,110px)">
       <div class="sec-head reveal">
         <span class="kicker">Before / after</span>
-        <h2 style="font-size:clamp(26px,3.4vw,38px)">Same task. One agent has read the priors.</h2>
+        <h2 style="font-size:clamp(26px,3.4vw,38px)">Same task. One agent has read the decisions.</h2>
       </div>
       <div class="reveal">
         <div class="ba-toggle" role="tablist" aria-label="Compare agents">
@@ -330,7 +330,7 @@
 <div class="ln mark-bad"><span class="gut">6</span><span class="src">        <span class="tok-kw">return</span> <span class="tok-kw">None</span>  <span class="tok-com"># error vanishes</span></span></div>
 <div class="ln"><span class="gut">7</span><span class="src">    <span class="tok-kw">return</span> r.<span class="tok-fn">json</span>()  <span class="tok-com"># untyped dict</span></span></div>
             </pre>
-            <div class="code-anno bad"><span class="tag">prior #0427</span><span>Ignores the sanctioned <span class="mono">internal.http</span> client and the documented retry policy. Failures collapse into <span class="mono">None</span> instead of propagating.</span></div>
+            <div class="code-anno bad"><span class="tag">decision #0427</span><span>Ignores the sanctioned <span class="mono">internal.http</span> client and the documented retry policy. Failures collapse into <span class="mono">None</span> instead of propagating.</span></div>
           </div>
 
           <!-- GOOD -->
@@ -339,12 +339,12 @@
 <div class="ln mark-good"><span class="gut">1</span><span class="src"><span class="tok-kw">from</span> internal.http <span class="tok-kw">import</span> client</span></div>
 <div class="ln mark-good"><span class="gut">2</span><span class="src"><span class="tok-kw">from</span> internal.types <span class="tok-kw">import</span> <span class="tok-typ">Result</span>, <span class="tok-typ">User</span></span></div>
 <div class="ln"><span class="gut">3</span><span class="src"></span></div>
-<div class="ln mark-good"><span class="gut">4</span><span class="src"><span class="tok-fn">@with_retry</span>(policy=<span class="tok-str">"idempotent"</span>)  <span class="tok-com"># prior #0427</span></span></div>
+<div class="ln mark-good"><span class="gut">4</span><span class="src"><span class="tok-fn">@with_retry</span>(policy=<span class="tok-str">"idempotent"</span>)  <span class="tok-com"># decision #0427</span></span></div>
 <div class="ln"><span class="gut">5</span><span class="src"><span class="tok-kw">def</span> <span class="tok-fn">fetch_user</span>(user_id: <span class="tok-typ">str</span>) -> <span class="tok-typ">Result</span>[<span class="tok-typ">User</span>]:</span></div>
 <div class="ln"><span class="gut">6</span><span class="src">    resp = client.<span class="tok-fn">get</span>(<span class="tok-str">f"/users/{user_id}"</span>)</span></div>
 <div class="ln mark-good"><span class="gut">7</span><span class="src">    <span class="tok-kw">return</span> resp.<span class="tok-fn">parse</span>(<span class="tok-typ">User</span>)  <span class="tok-com"># typed, errors propagate</span></span></div>
             </pre>
-            <div class="code-anno good"><span class="tag">prior #0427</span><span>Uses the sanctioned client, the team's <span class="mono">Result[T]</span> error model, and the documented retry policy. No guessing — it read the record.</span></div>
+            <div class="code-anno good"><span class="tag">decision #0427</span><span>Uses the sanctioned client, the team's <span class="mono">Result[T]</span> error model, and the documented retry policy. No guessing — it read the record.</span></div>
           </div>
         </div>
       </div>
@@ -373,13 +373,13 @@
       <div class="pillar reveal">
         <div class="picon2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg></div>
         <h3>Structured, not prose</h3>
-        <p>Every prior is a typed record with scope, rationale, confidence and source refs.
+        <p>Every decision is a typed record with scope, rationale, confidence and source refs.
           Queryable, diffable, reviewable in a PR. No wikis to rot, no vibes to misread.</p>
       </div>
       <div class="pillar reveal">
         <div class="picon2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="8" r="3.2"/><path d="M5 20c0-3.3 3.1-6 7-6s7 2.7 7 6"/><path d="M9 11.5l2 2 4-4" transform="translate(0 -1)"/></svg></div>
         <h3>Human-in-the-loop</h3>
-        <p>No prior self-promotes. A candidate stays a candidate until a person curates it
+        <p>No decision self-promotes. A candidate stays a candidate until a person curates it
           into the canonical set. You decide what the agents are allowed to trust.</p>
       </div>
     </div>
@@ -419,8 +419,8 @@
           <div><span class="pr">$</span> <span class="cm">pip install getmetatron</span>         <span class="ot"># or: uv tool install getmetatron</span></div>
           <div><span class="pr">$</span> <span class="cm">metatron ingest .</span>          <span class="ot"># parse repo + git history</span></div>
           <div><span class="ot">  ↳ parsing 1,284 files with tree-sitter…</span></div>
-          <div><span class="ot">  ↳ <span class="hl">271 candidate priors</span> → review queue</span></div>
-          <div><span class="pr">$</span> <span class="cm">metatron serve --repo .</span>      <span class="ot"># serve curated priors over MCP</span></div>
+          <div><span class="ot">  ↳ <span class="hl">271 candidate decisions</span> → review queue</span></div>
+          <div><span class="pr">$</span> <span class="cm">metatron serve --repo .</span>      <span class="ot"># serve curated decisions over MCP</span></div>
           <div><span class="ot">  ✓ MCP server listening · point your agent here</span></div>
         </div>
       </div>
@@ -456,14 +456,14 @@
     <div class="foot-inner">
       <div class="foot-brand">
         <a class="brand" href="#top"><span data-cube-mark style="width:26px;height:26px;display:block"></span>Metatron</a>
-        <p>Self-hosted priors for AI coding agents. Your conventions, served over MCP — so agents write code like they belong on the team.</p>
+        <p>Self-hosted decisions for AI coding agents. Your conventions, served over MCP — so agents write code like they belong on the team.</p>
       </div>
       <div class="foot-cols">
         <div class="foot-col">
           <h5>Product</h5>
           <a href="#problem">The problem</a>
           <a href="#how">How it works</a>
-          <a href="#anatomy">Anatomy of a prior</a>
+          <a href="#anatomy">Anatomy of a decision</a>
           <a href="#opensource">Open-source</a>
         </div>
         <div class="foot-col">

@@ -292,7 +292,7 @@
         return { x: vx, y: vy };
       });
 
-      // Place the inputs above Candidate priors (which is vertices[0])
+      // Place the inputs above Candidate decisions (which is vertices[0])
       var Y0 = vertices[0].y;
       var inputY = Y0 - 200;
       if (inputRepo) {
@@ -345,7 +345,7 @@
       addPath(d1, "wire-pulse", 0);
       addChevron({x: rx1, y: ry1}, {x: rx2, y: ry2});
 
-      // Draw diagonal connection: Parse & extract -> Candidate priors
+      // Draw diagonal connection: Parse & extract -> Candidate decisions
       var ix1 = cx + 80, iy1 = inputY + halfH;
       var ix2 = cx + 20, iy2 = Y0 - halfH;
       var d2 = "M " + ix1.toFixed(1) + " " + iy1.toFixed(1) + " L " + ix2.toFixed(1) + " " + iy2.toFixed(1);
@@ -450,7 +450,7 @@
      5) ANATOMY — flip card + confidence meter
      ---------------------------------------------------------- */
   function initFlip() {
-    var card = document.getElementById("priorCard");
+    var card = document.getElementById("decisionCard");
     if (!card) return;
     var fill = card.querySelector(".conf-fill");
     function flip() { card.classList.toggle("flipped"); }
@@ -481,7 +481,7 @@
       btns.forEach(function (b) { b.classList.toggle("active", b.dataset.on === which); });
       swaps.forEach(function (s) { s.classList.toggle("show", s.dataset.swap === which); });
       if (stateEl) {
-        stateEl.textContent = which === "bad" ? "convention violations" : "matches team priors";
+        stateEl.textContent = which === "bad" ? "convention violations" : "matches team decisions";
         stateEl.className = "editor-state " + which;
       }
     }
