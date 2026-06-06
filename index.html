@@ -57,6 +57,7 @@
       <a href="#how">How it works</a>
       <a href="#anatomy">Anatomy</a>
       <a href="#opensource">Open-source</a>
+      <a href="#faq">FAQ</a>
       <a href="docs/">Docs</a>
     </nav>
     <div class="nav-cta">
@@ -197,7 +198,7 @@
             <div class="picon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><ellipse cx="12" cy="6" rx="7" ry="2.6"/><path d="M5 6v6c0 1.4 3.1 2.6 7 2.6s7-1.2 7-2.6V6"/><path d="M5 12v6c0 1.4 3.1 2.6 7 2.6s7-1.2 7-2.6v-6"/></svg></div>
             <span class="ptag">Canonical</span>
             <h4>Trusted decisions</h4>
-            <p>The curated set, versioned in SQLite on your own infra.</p>
+            <p>Approved by a human — the only decisions served to agents. Versioned in SQLite on your own infra.</p>
           </div>
         </div>
         <!-- 3 · lower-left -->
@@ -424,6 +425,72 @@
           <div><span class="ot">  ✓ MCP server listening · point your agent here</span></div>
         </div>
       </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FAQ ============ -->
+<section class="section-pad" id="faq" data-screen-label="faq">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="kicker">FAQ</span>
+      <h2>Questions, answered.</h2>
+      <p>The things people ask first — including what we mean by a few key words.</p>
+    </div>
+    <div class="faq-list reveal">
+      <details class="faq-item">
+        <summary>What does “canonical” mean?</summary>
+        <div class="faq-a">
+          <p>A <b>canonical</b> decision is one a human has approved. Canonical decisions are
+            the only ones Metatron serves to your coding agents — your team's approved source
+            of truth. By contrast, a <b>candidate</b> is a proposal still awaiting review (never
+            served), and a <b>rejected</b> decision was reviewed and declined (also never served).</p>
+        </div>
+      </details>
+      <details class="faq-item">
+        <summary>How does a decision become canonical?</summary>
+        <div class="faq-a">
+          <p>Ingest mines candidates from your code and git history, and agents can propose more
+            as they work. A person then reviews each candidate in the curation UI or CLI and
+            approves, edits, or rejects it. Nothing self-promotes — crossing into the canonical
+            set is always a human action.</p>
+        </div>
+      </details>
+      <details class="faq-item">
+        <summary>Can the agents change what's canonical on their own?</summary>
+        <div class="faq-a">
+          <p>No. Agents can propose candidates and rate how helpful served decisions were, but
+            promoting, demoting, or rejecting a decision is always human-gated. Ratings only
+            reorder which canonical decisions are served first — they never cross the canonical
+            boundary.</p>
+        </div>
+      </details>
+      <details class="faq-item">
+        <summary>Does my code leave my machine?</summary>
+        <div class="faq-a">
+          <p>No. Metatron is self-hosted: it parses your private code in place and stores
+            decisions in SQLite on your own infrastructure. Nothing — not a line of code, not an
+            embedding — leaves your network. (An LLM is used during ingest to infer decisions;
+            point it at your own provider or endpoint.)</p>
+        </div>
+      </details>
+      <details class="faq-item">
+        <summary>How do agents actually use the decisions?</summary>
+        <div class="faq-a">
+          <p>Metatron runs an MCP server. Before working in an area, an agent calls
+            <span class="mono">get_decisions_for_context</span> and gets back the relevant canonical
+            decisions as compact, structured context — so it writes to your conventions on the
+            first try instead of rediscovering them.</p>
+        </div>
+      </details>
+      <details class="faq-item">
+        <summary>Is it really open source? What does it cost?</summary>
+        <div class="faq-a">
+          <p>Yes — Metatron is MIT-licensed and self-hosted, so you can read every line, run it on
+            your own hardware, and fork it. <a href="https://github.com/kerbelp/metatron" target="_blank" rel="noopener">It's on GitHub</a>.
+            Want a hosted version instead? <a href="mailto:kerbelp@gmail.com?subject=Metatron%20hosted%20interest">Get in touch</a>.</p>
+        </div>
+      </details>
     </div>
   </div>
 </section>
