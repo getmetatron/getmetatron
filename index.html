@@ -55,6 +55,7 @@
     <nav class="nav-links" aria-label="Primary">
       <a href="#problem">Problem</a>
       <a href="#how">How it works</a>
+      <a href="#ui">The UI</a>
       <a href="#anatomy">Anatomy</a>
       <a href="#opensource">Open-source</a>
       <a href="#faq">FAQ</a>
@@ -236,6 +237,26 @@
     <div class="pipe-note reveal">
       <span class="mono" style="color:var(--accent)">↺</span> The accent edge closes the loop: agents call <span class="mono">submit_feedback()</span> over MCP, and the gaps come back as new candidates. Still curated, never auto-applied.
     </div>
+  </div>
+</section>
+
+<hr class="divider" />
+
+<!-- ============ THE UI ============ -->
+<section class="section-pad" id="ui" data-screen-label="ui">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="kicker">See it</span>
+      <h2>Curate the set. Watch agents put it to work.</h2>
+      <p>A local web UI over the same store the CLI uses: review candidates into the canonical
+        set, then see which agents query it, what they were served, and where they hit a gap.
+        Bound to <span class="mono">localhost</span> — your decisions never leave your machine.</p>
+    </div>
+    <figure class="shot reveal">
+      <img src="public/images/ui-agent-impact.png" width="2000" height="999" loading="lazy"
+           alt="Metatron's local curation UI — the Agent Impact view: live agent activity, query coverage, and decisions served." />
+      <figcaption>The Agent Impact view — live agent activity, query coverage, and decisions served.</figcaption>
+    </figure>
   </div>
 </section>
 
