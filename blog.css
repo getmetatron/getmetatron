@@ -1,0 +1,217 @@
+/* ============================================================
+   Metatron — blog
+   Article + index typography, built on the marketing design
+   tokens in styles.css (emerald accent, Space Grotesk / Hanken
+   Grotesk / JetBrains Mono). Load AFTER styles.css.
+   ============================================================ */
+
+/* ---------- shared page frame ---------- */
+.blog-main { padding-top: 92px; }            /* clear the fixed nav */
+.blog-wrap { max-width: 760px; }             /* comfortable reading measure */
+
+.crumb {
+  font-family: var(--mono);
+  font-size: 12.5px;
+  letter-spacing: 0.04em;
+  color: var(--ink-mute);
+  margin-bottom: 28px;
+}
+.crumb a { color: var(--ink-soft); }
+.crumb a:hover { color: var(--accent); }
+.crumb span { color: var(--ink-faint); padding: 0 8px; }
+
+/* ============================================================
+   ARTICLE
+   ============================================================ */
+.article-head { margin: 8px 0 40px; }
+.article-head .kicker { color: var(--accent); display: block; margin-bottom: 18px; }
+.article-head h1 {
+  font-size: clamp(34px, 6vw, 52px);
+  line-height: 1.04;
+  margin: 0 0 20px;
+}
+.article-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  align-items: center;
+  font-family: var(--mono);
+  font-size: 13px;
+  color: var(--ink-mute);
+}
+.article-meta .dot { color: var(--ink-faint); }
+.article-lede {
+  margin-top: 26px;
+  font-size: clamp(19px, 2.4vw, 22px);
+  line-height: 1.55;
+  color: var(--ink-soft);
+}
+
+/* ---------- prose ---------- */
+.prose { font-size: 18px; line-height: 1.72; color: var(--ink); }
+.prose > * + * { margin-top: 1.35em; }
+.prose h2 {
+  font-size: clamp(24px, 3.4vw, 30px);
+  line-height: 1.12;
+  margin-top: 2em;
+  margin-bottom: 0.1em;
+  scroll-margin-top: 100px;
+}
+.prose h3 {
+  font-size: 20px;
+  margin-top: 1.7em;
+  margin-bottom: 0.1em;
+  color: var(--ink);
+}
+.prose p { color: var(--ink-soft); }
+.prose strong { color: var(--ink); font-weight: 600; }
+.prose em { color: var(--ink); }
+.prose a {
+  color: var(--accent);
+  text-decoration: none;
+  border-bottom: 1px solid var(--accent-dim);
+  transition: border-color 0.15s var(--ease), color 0.15s var(--ease);
+}
+.prose a:hover { color: var(--accent-bright); border-bottom-color: var(--accent); }
+
+.prose ul, .prose ol { padding-left: 1.3em; color: var(--ink-soft); }
+.prose li { margin-top: 0.5em; }
+.prose li::marker { color: var(--accent-dim); }
+
+.prose hr {
+  border: 0;
+  height: 1px;
+  background: var(--line);
+  margin: 2.6em 0;
+}
+
+/* inline code */
+.prose code {
+  font-family: var(--mono);
+  font-size: 0.88em;
+  background: var(--bg-3);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 0.12em 0.4em;
+  color: var(--accent-bright);
+}
+
+/* code block */
+.prose pre {
+  background: var(--bg-1);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  padding: 18px 20px;
+  overflow-x: auto;
+  font-size: 14px;
+  line-height: 1.6;
+}
+.prose pre code {
+  background: none;
+  border: 0;
+  padding: 0;
+  color: var(--ink-soft);
+  font-size: inherit;
+}
+
+/* pull-aside / callout */
+.callout {
+  border-left: 2px solid var(--accent);
+  background: var(--accent-wash);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  padding: 16px 20px;
+  font-size: 16.5px;
+  color: var(--ink-soft);
+}
+.callout strong { color: var(--ink); }
+
+/* blockquote / pull-quote */
+.prose blockquote {
+  border: 0;
+  margin: 1.8em 0;
+  padding: 0;
+  font-family: var(--display);
+  font-size: clamp(22px, 3.2vw, 28px);
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+}
+.prose blockquote p { color: var(--ink); }
+
+/* ---------- article foot ---------- */
+.article-foot {
+  margin-top: 56px;
+  padding-top: 28px;
+  border-top: 1px solid var(--line);
+}
+.article-foot .foot-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.article-byline {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 32px;
+  color: var(--ink-mute);
+  font-size: 14px;
+}
+.article-byline .mark {
+  width: 34px; height: 34px;
+  border-radius: 9px;
+  background: var(--bg-2);
+  border: 1px solid var(--line-strong);
+  display: grid; place-items: center;
+}
+.article-byline b { color: var(--ink); font-weight: 600; }
+
+/* ============================================================
+   BLOG INDEX
+   ============================================================ */
+.blog-index-head { margin: 8px 0 44px; }
+.blog-index-head .kicker { color: var(--accent); display: block; margin-bottom: 16px; }
+.blog-index-head h1 { font-size: clamp(34px, 6vw, 50px); margin-bottom: 14px; }
+.blog-index-head p { color: var(--ink-soft); font-size: 18px; max-width: 60ch; }
+
+.post-list { display: flex; flex-direction: column; gap: 18px; }
+.post-card {
+  display: block;
+  background: var(--bg-2);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 28px 30px;
+  transition: border-color 0.18s var(--ease), transform 0.18s var(--ease), background 0.18s var(--ease);
+}
+.post-card:hover {
+  border-color: var(--line-strong);
+  background: var(--bg-3);
+  transform: translateY(-2px);
+}
+.post-card-tag {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: 0.16em;
+  color: var(--accent);
+}
+.post-card h2 {
+  font-size: clamp(21px, 3vw, 27px);
+  line-height: 1.12;
+  margin: 12px 0 10px;
+  color: var(--ink);
+}
+.post-card-excerpt { color: var(--ink-soft); font-size: 16.5px; line-height: 1.6; }
+.post-card-meta {
+  margin-top: 16px;
+  font-family: var(--mono);
+  font-size: 12.5px;
+  color: var(--ink-mute);
+  display: flex; gap: 14px; align-items: center;
+}
+.post-card-meta .dot { color: var(--ink-faint); }
+.post-card .read-arrow { color: var(--accent); }
+
+@media (max-width: 640px) {
+  .post-card { padding: 22px 22px; }
+  .prose { font-size: 17px; }
+}

@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-0P4SKXFNWL"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-0P4SKXFNWL');
+</script>
+
+<title>Blog — Metatron</title>
+<meta name="description" content="Notes on building Metatron — the missing layer of agentic coding. Why coding agents need a memory of your team's decisions, and what we're learning along the way." />
+<link rel="canonical" href="https://getmetatron.com/blog/" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Hanken+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="/styles.css" />
+<link rel="stylesheet" href="/blog.css" />
+
+<!-- Favicons -->
+<link rel="icon" href="/public/images/favicon.ico" sizes="any" />
+<link rel="icon" type="image/png" sizes="32x32" href="/public/images/favicon-32x32.png" />
+<link rel="icon" type="image/png" sizes="16x16" href="/public/images/favicon-16x16.png" />
+<link rel="apple-touch-icon" sizes="180x180" href="/public/images/apple-touch-icon.png" />
+
+<!-- Open Graph -->
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="Metatron" />
+<meta property="og:url" content="https://getmetatron.com/blog/" />
+<meta property="og:title" content="Blog — Metatron" />
+<meta property="og:description" content="Notes on building Metatron — the missing layer of agentic coding." />
+<meta property="og:image" content="https://getmetatron.com/public/images/og-image.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Blog — Metatron" />
+<meta name="twitter:description" content="Notes on building Metatron — the missing layer of agentic coding." />
+<meta name="twitter:image" content="https://getmetatron.com/public/images/og-image.png" />
+</head>
+<body>
+
+<!-- ============ NAV ============ -->
+<header class="nav">
+  <div class="nav-inner">
+    <a class="brand" href="/" aria-label="Metatron home">
+      <span data-cube-mark style="width:26px;height:26px;display:block"></span>
+      Metatron
+    </a>
+    <nav class="nav-links" aria-label="Primary">
+      <a href="/#problem">Problem</a>
+      <a href="/#how">How it works</a>
+      <a href="/#ui">The UI</a>
+      <a href="/blog/">Blog</a>
+      <a href="/docs/">Docs</a>
+    </nav>
+    <div class="nav-cta">
+      <a class="btn btn-ghost btn-sm" href="https://github.com/kerbelp/metatron" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.7.5.5 5.7.5 12c0 5.1 3.3 9.4 7.9 10.9.6.1.8-.3.8-.6v-2c-3.2.7-3.9-1.5-3.9-1.5-.5-1.3-1.3-1.7-1.3-1.7-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.7 1.3 3.4 1 .1-.8.4-1.3.7-1.6-2.6-.3-5.3-1.3-5.3-5.7 0-1.3.5-2.3 1.2-3.1-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0c2.3-1.5 3.3-1.2 3.3-1.2.6 1.6.2 2.8.1 3.1.8.8 1.2 1.8 1.2 3.1 0 4.4-2.7 5.4-5.3 5.7.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6 4.6-1.5 7.9-5.8 7.9-10.9C23.5 5.7 18.3.5 12 .5Z"/></svg>
+        GitHub
+      </a>
+      <a class="btn btn-primary btn-sm" href="/#updates">Get updates</a>
+    </div>
+    <button class="nav-burger" aria-label="Menu">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+    </button>
+  </div>
+</header>
+
+<main class="blog-main" id="top">
+  <div class="wrap blog-wrap">
+
+    <header class="blog-index-head">
+      <span class="kicker">Blog</span>
+      <h1>Notes from building Metatron</h1>
+      <p>Why coding agents need a memory of your team's decisions — and what we're learning as we build the layer that gives them one.</p>
+    </header>
+
+    <div class="post-list">
+
+      <a class="post-card" href="/blog/why-i-built-metatron/">
+        <span class="post-card-tag">ORIGIN</span>
+        <h2>Why I built Metatron</h2>
+        <p class="post-card-excerpt">
+          A reasonable refactor silently broke my payment funnel for a day. The fix
+          was one line — but the real cause was a decision that lived nowhere an agent
+          could read it. That's the layer I set out to build.
+        </p>
+        <div class="post-card-meta">
+          <time datetime="2026-06-08">June 8, 2026</time>
+          <span class="dot">·</span>
+          <span>6 min read</span>
+          <span class="dot">·</span>
+          <span class="read-arrow">Read →</span>
+        </div>
+      </a>
+
+    </div>
+  </div>
+</main>
+
+<!-- ============ FOOTER ============ -->
+<footer class="foot">
+  <div class="wrap">
+    <div class="foot-inner">
+      <div class="foot-brand">
+        <a class="brand" href="/"><span data-cube-mark style="width:26px;height:26px;display:block"></span>Metatron</a>
+        <p>Self-hosted decisions for AI coding agents. Your conventions, served over MCP — so agents write code like they belong on the team.</p>
+        <div class="foot-social" style="display:flex;gap:14px;margin-top:16px">
+          <a href="https://github.com/kerbelp/metatron" target="_blank" rel="noopener" aria-label="GitHub" style="color:#8aa39c;display:inline-flex"><svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.7.5.5 5.7.5 12c0 5.1 3.3 9.4 7.9 10.9.6.1.8-.3.8-.6v-2c-3.2.7-3.9-1.5-3.9-1.5-.5-1.3-1.3-1.7-1.3-1.7-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.7 1.3 3.4 1 .1-.8.4-1.3.7-1.6-2.6-.3-5.3-1.3-5.3-5.7 0-1.3.5-2.3 1.2-3.1-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0c2.3-1.5 3.3-1.2 3.3-1.2.6 1.6.2 2.8.1 3.1.8.8 1.2 1.8 1.2 3.1 0 4.4-2.7 5.4-5.3 5.7.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6 4.6-1.5 7.9-5.8 7.9-10.9C23.5 5.7 18.3.5 12 .5Z"/></svg></a>
+          <a href="https://www.youtube.com/@getmetatron" target="_blank" rel="noopener" aria-label="YouTube" style="color:#8aa39c;display:inline-flex"><svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M23.5 6.2a3 3 0 0 0-2.11-2.12C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.39.58A3 3 0 0 0 .5 6.2 31.1 31.1 0 0 0 0 12a31.1 31.1 0 0 0 .5 5.8 3 3 0 0 0 2.11 2.12C4.5 20.5 12 20.5 12 20.5s7.5 0 9.39-.58A3 3 0 0 0 23.5 17.8 31.1 31.1 0 0 0 24 12a31.1 31.1 0 0 0-.5-5.8ZM9.6 15.6V8.4l6.3 3.6-6.3 3.6Z"/></svg></a>
+        </div>
+      </div>
+      <div class="foot-cols">
+        <div class="foot-col">
+          <h5>Product</h5>
+          <a href="/#problem">The problem</a>
+          <a href="/#how">How it works</a>
+          <a href="/#anatomy">Anatomy of a decision</a>
+          <a href="/#opensource">Open-source</a>
+        </div>
+        <div class="foot-col">
+          <h5>Resources</h5>
+          <a href="/blog/">Blog</a>
+          <a href="/docs/">Documentation</a>
+          <a href="https://github.com/kerbelp/metatron" target="_blank" rel="noopener">GitHub repo</a>
+          <a href="https://youtu.be/VoWp6jH4VLM" target="_blank" rel="noopener">Demo video</a>
+        </div>
+        <div class="foot-col">
+          <h5>Contact</h5>
+          <a href="mailto:kerbelp@gmail.com">kerbelp@gmail.com</a>
+          <a href="mailto:kerbelp@gmail.com?subject=Metatron%20hosted%20interest">Hosted version?</a>
+        </div>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>© 2026 Metatron · MIT licensed</span>
+      <span>Built with tree-sitter · MCP · SQLite</span>
+    </div>
+  </div>
+</footer>
+
+<script src="/metatron.js"></script>
+</body>
+</html>

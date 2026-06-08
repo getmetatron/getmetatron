@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-0P4SKXFNWL"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-0P4SKXFNWL');
+</script>
+
+<title>Why I built Metatron — a silent outage and the case for agent memory</title>
+<meta name="description" content="A reasonable refactor silently broke my payment funnel for a day. The fix was one line — but the real cause was a decision that lived nowhere an agent could read it. That's why I built Metatron." />
+<link rel="canonical" href="https://getmetatron.com/blog/why-i-built-metatron/" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Hanken+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="/styles.css" />
+<link rel="stylesheet" href="/blog.css" />
+
+<!-- Favicons -->
+<link rel="icon" href="/public/images/favicon.ico" sizes="any" />
+<link rel="icon" type="image/png" sizes="32x32" href="/public/images/favicon-32x32.png" />
+<link rel="icon" type="image/png" sizes="16x16" href="/public/images/favicon-16x16.png" />
+<link rel="apple-touch-icon" sizes="180x180" href="/public/images/apple-touch-icon.png" />
+
+<!-- Open Graph -->
+<meta property="og:type" content="article" />
+<meta property="og:site_name" content="Metatron" />
+<meta property="og:url" content="https://getmetatron.com/blog/why-i-built-metatron/" />
+<meta property="og:title" content="Why I built Metatron" />
+<meta property="og:description" content="A reasonable refactor silently broke my payment funnel for a day. The fix was one line — the real cause was a decision that lived nowhere an agent could read it." />
+<meta property="og:image" content="https://getmetatron.com/public/images/og/why-i-built-metatron.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content="Why I built Metatron — Metatron blog" />
+<meta property="article:published_time" content="2026-06-08" />
+<meta property="article:author" content="Pavel Kerbel" />
+
+<!-- Twitter / X -->
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Why I built Metatron" />
+<meta name="twitter:description" content="A reasonable refactor silently broke my payment funnel for a day. The real cause was a decision that lived nowhere an agent could read it." />
+<meta name="twitter:image" content="https://getmetatron.com/public/images/og/why-i-built-metatron.png" />
+
+<!-- JSON-LD -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Why I built Metatron",
+  "description": "A reasonable refactor silently broke my payment funnel for a day. The fix was one line — the real cause was a decision that lived nowhere an agent could read it. That's why I built Metatron.",
+  "image": "https://getmetatron.com/public/images/og/why-i-built-metatron.png",
+  "datePublished": "2026-06-08",
+  "dateModified": "2026-06-08",
+  "author": { "@type": "Person", "name": "Pavel Kerbel", "url": "https://pavelkerbel.com" },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Metatron",
+    "logo": { "@type": "ImageObject", "url": "https://getmetatron.com/public/images/apple-touch-icon.png" }
+  },
+  "mainEntityOfPage": { "@type": "WebPage", "@id": "https://getmetatron.com/blog/why-i-built-metatron/" }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://getmetatron.com/" },
+    { "@type": "ListItem", "position": 2, "name": "Blog", "item": "https://getmetatron.com/blog/" },
+    { "@type": "ListItem", "position": 3, "name": "Why I built Metatron", "item": "https://getmetatron.com/blog/why-i-built-metatron/" }
+  ]
+}
+</script>
+</head>
+<body>
+
+<!-- ============ NAV ============ -->
+<header class="nav">
+  <div class="nav-inner">
+    <a class="brand" href="/" aria-label="Metatron home">
+      <span data-cube-mark style="width:26px;height:26px;display:block"></span>
+      Metatron
+    </a>
+    <nav class="nav-links" aria-label="Primary">
+      <a href="/#problem">Problem</a>
+      <a href="/#how">How it works</a>
+      <a href="/#ui">The UI</a>
+      <a href="/blog/">Blog</a>
+      <a href="/docs/">Docs</a>
+    </nav>
+    <div class="nav-cta">
+      <a class="btn btn-ghost btn-sm" href="https://github.com/kerbelp/metatron" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.7.5.5 5.7.5 12c0 5.1 3.3 9.4 7.9 10.9.6.1.8-.3.8-.6v-2c-3.2.7-3.9-1.5-3.9-1.5-.5-1.3-1.3-1.7-1.3-1.7-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.7 1.3 3.4 1 .1-.8.4-1.3.7-1.6-2.6-.3-5.3-1.3-5.3-5.7 0-1.3.5-2.3 1.2-3.1-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0c2.3-1.5 3.3-1.2 3.3-1.2.6 1.6.2 2.8.1 3.1.8.8 1.2 1.8 1.2 3.1 0 4.4-2.7 5.4-5.3 5.7.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6 4.6-1.5 7.9-5.8 7.9-10.9C23.5 5.7 18.3.5 12 .5Z"/></svg>
+        GitHub
+      </a>
+      <a class="btn btn-primary btn-sm" href="/#updates">Get updates</a>
+    </div>
+    <button class="nav-burger" aria-label="Menu">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+    </button>
+  </div>
+</header>
+
+<main class="blog-main" id="top">
+  <article class="wrap blog-wrap">
+
+    <div class="crumb">
+      <a href="/">Home</a><span>/</span><a href="/blog/">Blog</a><span>/</span>Why I built Metatron
+    </div>
+
+    <header class="article-head">
+      <span class="kicker">Origin</span>
+      <h1>Why I built Metatron</h1>
+      <div class="article-meta">
+        <span>Pavel Kerbel</span>
+        <span class="dot">·</span>
+        <time datetime="2026-06-08">June 8, 2026</time>
+        <span class="dot">·</span>
+        <span>6 min read</span>
+      </div>
+      <p class="article-lede">
+        For a full day, nobody could pay me. Not because the servers were down —
+        they were green the whole time — but because of a one-line change that no
+        reasonable review would have flagged. That bug is why I stopped piling
+        everything into ever-longer <code>CLAUDE.md</code> instructions and built a
+        real memory for my coding agents instead.
+      </p>
+    </header>
+
+    <div class="prose">
+
+      <h2>A day of silence</h2>
+      <p>
+        One of my side projects is <a href="https://thataicollection.com/" target="_blank" rel="noopener">AI Collection</a>,
+        a directory where makers pay a small fee to list their tools. One of its paid
+        funnels works like this: sign in, paste a URL, get an AI-drafted listing, review
+        it, hit <strong>Publish</strong>. When that funnel breaks, the revenue behind it
+        stops cold.
+      </p>
+      <p>
+        On a Saturday in May, the funnel went dark. Users could still sign in, paste a
+        URL, and watch the AI draft their listing — but the final review step never
+        became interactive. The Publish button just sat there. Completed submissions
+        dropped from a dozen-odd a day to <strong>zero</strong>, and stayed there.
+      </p>
+      <p>
+        The cruel part was the silence. Nothing threw on the server. Nothing landed in
+        the errors table. The deploy that broke it was green; the build passed
+        type-checks, lint, and a clean server render. The only evidence that anything
+        was wrong was the <em>absence</em> of success events on a chart that doesn't
+        scream when it flatlines. I caught it the next day — a maker emailed to ask
+        if the site was broken right as I was digging into why the numbers looked off.
+      </p>
+
+      <h2>It wasn't a bug. It was a forgotten decision.</h2>
+      <p>
+        The technical cause was a delight of modern bundling. The finish step of the
+        submit flow transitively imported <a href="https://sharp.pixelplumbing.com/" target="_blank" rel="noopener"><code>sharp</code></a>,
+        a native, server-only image library. <code>sharp</code>'s module init reads
+        <code>process.*</code>, which doesn't exist in a browser. For a long time this
+        was harmless: the bundler tree-shook the <code>sharp</code>-using helpers out of
+        the client chunk because they were private to the module. Submissions worked,
+        invisibly held up by a tree-shaking pass nobody knew was load-bearing.
+      </p>
+      <p>
+        Then a perfectly sensible change — made in a routine Claude session (Opus 4.8) —
+        <strong>exported</strong> two of those helpers so a new API route could reuse
+        them. Exporting them defeated the tree-shaking. <code>sharp</code> got pulled
+        into the browser bundle, its init ran <code>process.platform</code>, threw
+        <code>ReferenceError: process is not defined</code>, and the component never
+        hydrated. The fix, once I found it, was a single line — make the import lazy so
+        it can never reach the client:
+      </p>
+      <pre><code>// before — static import; tree-shaking was the only thing keeping it client-safe
+import sharp from "sharp";
+
+// after — server-only, in its own async chunk, no matter what the module exports
+const sharp = (await import("sharp")).default;</code></pre>
+      <p>
+        Here's the thing that stuck with me. The session that exported those helpers did
+        nothing wrong by any normal standard. Sharing a function so another route can
+        reuse it is <em>good</em> instinct. The only way to know it was dangerous was to
+        already hold a specific, hard-won decision in your head: <strong>native
+        server-only dependencies must be structurally isolated — don't let tree-shaking
+        be the thing keeping them out of the client.</strong>
+      </p>
+      <p>
+        That decision existed. It just lived nowhere you could reach it at the moment
+        you needed it. I wrote it down afterward, of course — it's action item #4 in the
+        postmortem: <em>"client components must not transitively import modules that
+        statically import native/server-only deps."</em> But a convention buried in a
+        postmortem that nobody reads before touching that file is not a guardrail. It's
+        a eulogy.
+      </p>
+
+      <h2>Every session starts from zero</h2>
+      <p>
+        Around the same time, I noticed I was living a smaller version of this every day
+        with my coding agents. I'd open a fresh session and spend the first few minutes
+        re-explaining the same things: why we wrap server-only deps this way, why we
+        prefer this pattern over that one, which approach we already tried and abandoned.
+        The agent is brilliant and completely amnesiac. Every conversation, I pay the
+        same tax in tokens and in patience to rebuild context it had yesterday.
+      </p>
+
+      <h2>…and when I don't, it's confidently wrong</h2>
+      <p>
+        The flip side is worse. When I <em>don't</em> re-explain — because I'm moving
+        fast, or I forgot this repo had that landmine — the agent does the reasonable
+        thing. It exports the helper. It reaches for the obvious pattern. And it
+        reintroduces exactly the class of mistake I already paid for — because nothing it
+        learned in the last session, and nothing I learned in the last incident, is
+        present this time.
+      </p>
+      <div class="callout">
+        Two failures, one root cause: the decision that would have prevented the mistake
+        was real, but it wasn't anywhere the person — or the agent — about to act could
+        read it first.
+      </div>
+
+      <h2>There was no layer for this</h2>
+      <p>
+        The knowledge isn't missing. It's in senior engineers' heads, in Slack threads,
+        in PR review comments, in postmortems like the one above. The problem is that
+        none of those are reachable by an agent at the moment it's writing code. We have
+        a layer for source. A layer for dependencies. A layer for CI. We have nothing
+        that sits between a codebase's <em>decisions</em> and the agents acting on them —
+        no place that says "before you change this, here's what we already know."
+      </p>
+      <blockquote><p>The decisions were never the problem. Reaching them in time was.</p></blockquote>
+
+      <h2>The new hire with no one to ask</h2>
+      <p>
+        In the pre-agent era, this had a social fix. A new engineer who didn't know the
+        codebase wouldn't just start committing — they'd wander over to someone senior
+        first and ask: <em>how do we usually do this? anything I should watch out for
+        here?</em> The expensive mistakes got caught in a two-minute conversation, before
+        a line was written.
+      </p>
+      <p>
+        A fresh coding-agent session is exactly that new hire. Brilliant, fast, widely
+        read — and completely new to your code, every single time. It doesn't matter
+        whether the new hire is a junior or a principal engineer — or, in this case, a
+        Claude session running Opus 4.8 that can hold your whole module in its head. If it
+        doesn't know the hard-won convention, it can still ship something subtly wrong, or
+        quietly against a best practice the team bled for in some earlier incident.
+      </p>
+      <p>
+        The difference is that the agent has had no one to ask. So give it someone. Except
+        it doesn't walk to a desk or write a Slack message — it sends an
+        <a href="https://modelcontextprotocol.io/" target="_blank" rel="noopener">MCP</a>
+        request to a teammate who has seen it all, and gets the answer back in the instant
+        before it acts.
+      </p>
+
+      <h2>What Metatron is</h2>
+      <p>
+        Metatron is that teammate. It captures your team's real implementation decisions
+        as structured records and serves them to coding agents over MCP, so an agent
+        writing code can ask "what do we know about this?" and get the answer before it
+        acts — not after a customer emails.
+      </p>
+      <ul>
+        <li><strong>Decisions, not docs.</strong> Each record is a specific call — the
+          pattern to prefer, the approach to avoid, the edge case that bites — with the
+          rationale attached. The <code>sharp</code> rule would be one of them.</li>
+        <li><strong>Human-gated <em>canonical</em> knowledge.</strong> Anything an agent
+          relies on as ground truth is reviewed and promoted by a human first. The
+          system proposes; people decide what becomes canonical.</li>
+        <li><strong>It closes the loop.</strong> When an agent hits a gap the knowledge
+          base doesn't cover, it reports back — so the next agent, and the next
+          engineer, knows more than the last one did.</li>
+      </ul>
+      <p>
+        The demo walks through the whole thing end to end if you'd rather watch than
+        read:
+      </p>
+      <p>
+        <a class="btn btn-primary btn-sm" href="https://youtu.be/VoWp6jH4VLM" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="currentColor" style="width:16px;height:16px"><path d="M8 5v14l11-7z"/></svg>
+          Watch the 2-minute demo
+        </a>
+      </p>
+
+      <h2>Why it's self-hosted and open-source</h2>
+      <p>
+        Your conventions are some of the most sensitive things you own — they describe
+        how your system actually works and where its soft spots are. So Metatron runs on
+        your own infrastructure, stores everything in a local SQLite database, and is
+        MIT-licensed. No decision about your codebase leaves your machines, and you can
+        read every line that handles it.
+      </p>
+
+      <hr />
+
+      <p>
+        That one-day outage cost me real revenue and a few apologetic emails. But the
+        more I sat with it, the less it looked like a bundling bug and the more it looked
+        like a category error: we keep asking agents to make good decisions while giving
+        them no way to know what we already decided. In a world where most code is about
+        to be written by agents, the decision that prevents the next silent outage
+        shouldn't live in someone's memory. It should be one query away.
+      </p>
+      <p>
+        That's the layer I'm building.
+      </p>
+
+      <div class="article-foot">
+        <div class="foot-links">
+          <a class="btn btn-ghost btn-sm" href="https://github.com/kerbelp/metatron" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="currentColor" style="width:16px;height:16px"><path d="M12 .5C5.7.5.5 5.7.5 12c0 5.1 3.3 9.4 7.9 10.9.6.1.8-.3.8-.6v-2c-3.2.7-3.9-1.5-3.9-1.5-.5-1.3-1.3-1.7-1.3-1.7-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.7 1.3 3.4 1 .1-.8.4-1.3.7-1.6-2.6-.3-5.3-1.3-5.3-5.7 0-1.3.5-2.3 1.2-3.1-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0c2.3-1.5 3.3-1.2 3.3-1.2.6 1.6.2 2.8.1 3.1.8.8 1.2 1.8 1.2 3.1 0 4.4-2.7 5.4-5.3 5.7.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6 4.6-1.5 7.9-5.8 7.9-10.9C23.5 5.7 18.3.5 12 .5Z"/></svg>
+            Star on GitHub
+          </a>
+          <a class="btn btn-ghost btn-sm" href="/docs/">Read the docs</a>
+          <a class="btn btn-ghost btn-sm" href="/#updates">Get early updates</a>
+        </div>
+        <div class="article-byline">
+          <span class="mark"><span data-cube-mark style="width:20px;height:20px;display:block"></span></span>
+          <span>Written by <b>Pavel Kerbel</b>, who builds Metatron and AI Collection.</span>
+        </div>
+      </div>
+
+    </div>
+  </article>
+</main>
+
+<!-- ============ FOOTER ============ -->
+<footer class="foot">
+  <div class="wrap">
+    <div class="foot-inner">
+      <div class="foot-brand">
+        <a class="brand" href="/"><span data-cube-mark style="width:26px;height:26px;display:block"></span>Metatron</a>
+        <p>Self-hosted decisions for AI coding agents. Your conventions, served over MCP — so agents write code like they belong on the team.</p>
+        <div class="foot-social" style="display:flex;gap:14px;margin-top:16px">
+          <a href="https://github.com/kerbelp/metatron" target="_blank" rel="noopener" aria-label="GitHub" style="color:#8aa39c;display:inline-flex"><svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.7.5.5 5.7.5 12c0 5.1 3.3 9.4 7.9 10.9.6.1.8-.3.8-.6v-2c-3.2.7-3.9-1.5-3.9-1.5-.5-1.3-1.3-1.7-1.3-1.7-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.7 1.3 3.4 1 .1-.8.4-1.3.7-1.6-2.6-.3-5.3-1.3-5.3-5.7 0-1.3.5-2.3 1.2-3.1-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0c2.3-1.5 3.3-1.2 3.3-1.2.6 1.6.2 2.8.1 3.1.8.8 1.2 1.8 1.2 3.1 0 4.4-2.7 5.4-5.3 5.7.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6 4.6-1.5 7.9-5.8 7.9-10.9C23.5 5.7 18.3.5 12 .5Z"/></svg></a>
+          <a href="https://www.youtube.com/@getmetatron" target="_blank" rel="noopener" aria-label="YouTube" style="color:#8aa39c;display:inline-flex"><svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M23.5 6.2a3 3 0 0 0-2.11-2.12C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.39.58A3 3 0 0 0 .5 6.2 31.1 31.1 0 0 0 0 12a31.1 31.1 0 0 0 .5 5.8 3 3 0 0 0 2.11 2.12C4.5 20.5 12 20.5 12 20.5s7.5 0 9.39-.58A3 3 0 0 0 23.5 17.8 31.1 31.1 0 0 0 24 12a31.1 31.1 0 0 0-.5-5.8ZM9.6 15.6V8.4l6.3 3.6-6.3 3.6Z"/></svg></a>
+        </div>
+      </div>
+      <div class="foot-cols">
+        <div class="foot-col">
+          <h5>Product</h5>
+          <a href="/#problem">The problem</a>
+          <a href="/#how">How it works</a>
+          <a href="/#anatomy">Anatomy of a decision</a>
+          <a href="/#opensource">Open-source</a>
+        </div>
+        <div class="foot-col">
+          <h5>Resources</h5>
+          <a href="/blog/">Blog</a>
+          <a href="/docs/">Documentation</a>
+          <a href="https://github.com/kerbelp/metatron" target="_blank" rel="noopener">GitHub repo</a>
+          <a href="https://youtu.be/VoWp6jH4VLM" target="_blank" rel="noopener">Demo video</a>
+        </div>
+        <div class="foot-col">
+          <h5>Contact</h5>
+          <a href="mailto:kerbelp@gmail.com">kerbelp@gmail.com</a>
+          <a href="mailto:kerbelp@gmail.com?subject=Metatron%20hosted%20interest">Hosted version?</a>
+        </div>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>© 2026 Metatron · MIT licensed</span>
+      <span>Built with tree-sitter · MCP · SQLite</span>
+    </div>
+  </div>
+</footer>
+
+<script src="/metatron.js"></script>
+</body>
+</html>
