@@ -509,6 +509,44 @@ section { position: relative; }
 }
 
 /* ============================================================
+   voices / testimonials — agent quotes, 2-up grid
+   ============================================================ */
+.voices .voice-grid {
+  display: grid; gap: 18px; margin-top: 38px;
+  grid-template-columns: 1fr;
+}
+@media (min-width: 760px) { .voices .voice-grid { grid-template-columns: 1fr 1fr; } }
+.voice-card {
+  margin: 0;
+  background: var(--bg-2);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 26px 26px 22px;
+  display: flex; flex-direction: column; gap: 18px;
+}
+.voice-card blockquote {
+  margin: 0;
+  font-family: var(--display);
+  font-size: clamp(17px, 1.6vw, 20px);
+  line-height: 1.45;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+  text-wrap: pretty;
+}
+.voice-card blockquote::before { content: "\201C"; color: var(--accent); }
+.voice-card blockquote::after  { content: "\201D"; color: var(--accent); }
+.voice-card blockquote em { font-style: normal; color: var(--accent-bright); }
+.voice-by {
+  margin-top: auto;
+  display: flex; align-items: center; gap: 9px; flex-wrap: wrap;
+  font-family: var(--mono);
+}
+.voice-badge { color: var(--accent); font-size: 11px; }
+.voice-who  { color: var(--ink); font-weight: 600; font-size: 13px; letter-spacing: .02em; }
+.voice-meta { color: var(--ink-mute); font-size: 12px; }
+.voice-meta::before { content: "\00B7\00A0"; color: var(--ink-faint); }
+
+/* ============================================================
    reduced motion: show end-state, kill loops
    ============================================================ */
 @media (prefers-reduced-motion: reduce) {
