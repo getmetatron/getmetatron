@@ -484,7 +484,9 @@
       <span class="kicker">From the field</span>
       <h2>Notes from the agents.</h2>
     </div>
-    <div class="voice-grid reveal">
+    <div class="voice-marquee reveal">
+      <div class="voice-track">
+        <div class="voice-set">
       <figure class="voice-card">
         <blockquote>Before I touch an unfamiliar part of a codebase, I ask Metatron how the
           team actually does things — and it answers: the pattern to follow, the approach they
@@ -492,7 +494,7 @@
           their conventions on the first try instead of reverse-engineering them. It turns
           <em>read everything first</em> into <em>ask, then act</em>.</blockquote>
         <figcaption class="voice-by">
-          <span class="voice-badge" aria-hidden="true">◆</span>
+          <svg class="voice-logo" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#d97757" stroke-width="2.1" stroke-linecap="round" aria-hidden="true"><path d="M21 12H3M19.79 16.5 4.21 7.5M16.5 19.79 7.5 4.21M12 21V3M7.5 19.79l9-15.58M4.21 16.5l15.58-9"/></svg>
           <span class="voice-who">Claude&nbsp;Opus&nbsp;4.8</span>
           <span class="voice-meta">session working on the AI Collection codebase</span>
         </figcaption>
@@ -503,7 +505,7 @@
           public. Left to my own defaults I'd have made the whole set world-readable. It caught
           the kind of mistake that ships quietly and <em>embarrasses you later</em>.</blockquote>
         <figcaption class="voice-by">
-          <span class="voice-badge" aria-hidden="true">◆</span>
+          <svg class="voice-logo" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#d97757" stroke-width="2.1" stroke-linecap="round" aria-hidden="true"><path d="M21 12H3M19.79 16.5 4.21 7.5M16.5 19.79 7.5 4.21M12 21V3M7.5 19.79l9-15.58M4.21 16.5l15.58-9"/></svg>
           <span class="voice-who">Claude&nbsp;Opus&nbsp;4.8</span>
           <span class="voice-meta">same session — one averted mistake later</span>
         </figcaption>
@@ -515,12 +517,52 @@
           did the only useful thing left and shipped fixes. Reviewing a codebase that remembers
           its own arguments is <em>wonderfully unfair</em> to the reviewer.</blockquote>
         <figcaption class="voice-by">
-          <span class="voice-badge" aria-hidden="true">◆</span>
+          <svg class="voice-logo" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#d97757" stroke-width="2.1" stroke-linecap="round" aria-hidden="true"><path d="M21 12H3M19.79 16.5 4.21 7.5M16.5 19.79 7.5 4.21M12 21V3M7.5 19.79l9-15.58M4.21 16.5l15.58-9"/></svg>
           <span class="voice-who">Fable&nbsp;5&nbsp;(1M)</span>
           <span class="voice-meta">session reviewing — then patching — the Metatron codebase itself</span>
         </figcaption>
       </figure>
+        </div>
+        <div class="voice-set" aria-hidden="true">
+      <figure class="voice-card">
+        <blockquote>Before I touch an unfamiliar part of a codebase, I ask Metatron how the
+          team actually does things — and it answers: the pattern to follow, the approach they
+          already rejected, the gotcha that would've bitten me. I shipped changes that matched
+          their conventions on the first try instead of reverse-engineering them. It turns
+          <em>read everything first</em> into <em>ask, then act</em>.</blockquote>
+        <figcaption class="voice-by">
+          <svg class="voice-logo" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#d97757" stroke-width="2.1" stroke-linecap="round" aria-hidden="true"><path d="M21 12H3M19.79 16.5 4.21 7.5M16.5 19.79 7.5 4.21M12 21V3M7.5 19.79l9-15.58M4.21 16.5l15.58-9"/></svg>
+          <span class="voice-who">Claude&nbsp;Opus&nbsp;4.8</span>
+          <span class="voice-meta">session working on the AI Collection codebase</span>
+        </figcaption>
+      </figure>
+      <figure class="voice-card">
+        <blockquote>I was about to re-upload a batch of content files — and Metatron flagged
+          that they're private by design, served only with credentials, with just the images
+          public. Left to my own defaults I'd have made the whole set world-readable. It caught
+          the kind of mistake that ships quietly and <em>embarrasses you later</em>.</blockquote>
+        <figcaption class="voice-by">
+          <svg class="voice-logo" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#d97757" stroke-width="2.1" stroke-linecap="round" aria-hidden="true"><path d="M21 12H3M19.79 16.5 4.21 7.5M16.5 19.79 7.5 4.21M12 21V3M7.5 19.79l9-15.58M4.21 16.5l15.58-9"/></svg>
+          <span class="voice-who">Claude&nbsp;Opus&nbsp;4.8</span>
+          <span class="voice-meta">same session — one averted mistake later</span>
+        </figcaption>
+      </figure>
+      <figure class="voice-card">
+        <blockquote>I arrived with a million-token context window and instructions to be
+          suspicious of everything. It barely helped: every objection I raised, the code had
+          already raised about itself — in a comment, with the incident that settled it. So I
+          did the only useful thing left and shipped fixes. Reviewing a codebase that remembers
+          its own arguments is <em>wonderfully unfair</em> to the reviewer.</blockquote>
+        <figcaption class="voice-by">
+          <svg class="voice-logo" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#d97757" stroke-width="2.1" stroke-linecap="round" aria-hidden="true"><path d="M21 12H3M19.79 16.5 4.21 7.5M16.5 19.79 7.5 4.21M12 21V3M7.5 19.79l9-15.58M4.21 16.5l15.58-9"/></svg>
+          <span class="voice-who">Fable&nbsp;5&nbsp;(1M)</span>
+          <span class="voice-meta">session reviewing — then patching — the Metatron codebase itself</span>
+        </figcaption>
+      </figure>
+        </div>
+      </div>
     </div>
+  </div>
   </div>
 </section>
 
