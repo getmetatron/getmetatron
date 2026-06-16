@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-0P4SKXFNWL"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-0P4SKXFNWL');
+</script>
+
+<title>Metatron speaks the Open Knowledge Format (OKF)</title>
+<meta name="description" content="Your codebase's decisions are now a git-tracked Open Knowledge Format (OKF) bundle — auditable in version control, editable as plain files, and portable to any tool that reads OKF. Here's why we adopted Google's new standard." />
+<link rel="canonical" href="https://getmetatron.com/blog/open-knowledge-format/" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Hanken+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="/styles.css" />
+<link rel="stylesheet" href="/blog.css" />
+
+<!-- Favicons -->
+<link rel="icon" href="/public/images/favicon.ico" sizes="any" />
+<link rel="icon" type="image/png" sizes="32x32" href="/public/images/favicon-32x32.png" />
+<link rel="icon" type="image/png" sizes="16x16" href="/public/images/favicon-16x16.png" />
+<link rel="apple-touch-icon" sizes="180x180" href="/public/images/apple-touch-icon.png" />
+
+<!-- Open Graph -->
+<meta property="og:type" content="article" />
+<meta property="og:site_name" content="Metatron" />
+<meta property="og:url" content="https://getmetatron.com/blog/open-knowledge-format/" />
+<meta property="og:title" content="Metatron speaks the Open Knowledge Format" />
+<meta property="og:description" content="Your codebase's decisions are now a git-tracked Open Knowledge Format (OKF) bundle — auditable in version control, editable as plain files, and portable to any tool that reads OKF." />
+<meta property="og:image" content="https://getmetatron.com/public/images/og/open-knowledge-format.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content="Metatron speaks the Open Knowledge Format — Metatron blog" />
+<meta property="article:published_time" content="2026-06-16" />
+<meta property="article:author" content="Pavel Kerbel" />
+
+<!-- Twitter / X -->
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Metatron speaks the Open Knowledge Format" />
+<meta name="twitter:description" content="Your codebase's decisions are now a git-tracked OKF bundle — auditable, editable as plain files, and portable to any tool that reads the Open Knowledge Format." />
+<meta name="twitter:image" content="https://getmetatron.com/public/images/og/open-knowledge-format.png" />
+
+<!-- JSON-LD -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Metatron speaks the Open Knowledge Format",
+  "description": "Your codebase's decisions are now a git-tracked Open Knowledge Format (OKF) bundle — auditable in version control, editable as plain files, and portable to any tool that reads OKF.",
+  "image": "https://getmetatron.com/public/images/og/open-knowledge-format.png",
+  "datePublished": "2026-06-16",
+  "dateModified": "2026-06-16",
+  "author": { "@type": "Person", "name": "Pavel Kerbel", "url": "https://pavelkerbel.com" },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Metatron",
+    "logo": { "@type": "ImageObject", "url": "https://getmetatron.com/public/images/apple-touch-icon.png" }
+  },
+  "mainEntityOfPage": { "@type": "WebPage", "@id": "https://getmetatron.com/blog/open-knowledge-format/" }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://getmetatron.com/" },
+    { "@type": "ListItem", "position": 2, "name": "Blog", "item": "https://getmetatron.com/blog/" },
+    { "@type": "ListItem", "position": 3, "name": "Metatron speaks the Open Knowledge Format", "item": "https://getmetatron.com/blog/open-knowledge-format/" }
+  ]
+}
+</script>
+</head>
+<body>
+
+<!-- ============ NAV ============ -->
+<header class="nav">
+  <div class="nav-inner">
+    <a class="brand" href="/" aria-label="Metatron home">
+      <span data-cube-mark style="width:26px;height:26px;display:block"></span>
+      Metatron
+    </a>
+    <nav class="nav-links" aria-label="Primary">
+      <a href="/#problem">Problem</a>
+      <a href="/#how">How it works</a>
+      <a href="/#ui">The UI</a>
+      <a href="/blog/">Blog</a>
+      <a href="/docs/">Docs</a>
+    </nav>
+    <div class="nav-cta">
+      <a class="btn btn-ghost btn-sm" href="https://github.com/kerbelp/metatron" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.7.5.5 5.7.5 12c0 5.1 3.3 9.4 7.9 10.9.6.1.8-.3.8-.6v-2c-3.2.7-3.9-1.5-3.9-1.5-.5-1.3-1.3-1.7-1.3-1.7-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.7 1.3 3.4 1 .1-.8.4-1.3.7-1.6-2.6-.3-5.3-1.3-5.3-5.7 0-1.3.5-2.3 1.2-3.1-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0c2.3-1.5 3.3-1.2 3.3-1.2.6 1.6.2 2.8.1 3.1.8.8 1.2 1.8 1.2 3.1 0 4.4-2.7 5.4-5.3 5.7.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6 4.6-1.5 7.9-5.8 7.9-10.9C23.5 5.7 18.3.5 12 .5Z"/></svg>
+        GitHub
+      </a>
+      <a class="btn btn-primary btn-sm" href="/#updates">Get updates</a>
+    </div>
+    <button class="nav-burger" aria-label="Menu">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+    </button>
+  </div>
+</header>
+
+<main class="blog-main" id="top">
+  <article class="wrap blog-wrap">
+
+    <div class="crumb">
+      <a href="/">Home</a><span>/</span><a href="/blog/">Blog</a><span>/</span>Metatron speaks the Open Knowledge Format
+    </div>
+
+    <header class="article-head">
+      <span class="kicker">Interop</span>
+      <h1>Metatron speaks the Open Knowledge Format</h1>
+      <div class="article-meta">
+        <span>Pavel Kerbel</span>
+        <span class="dot">·</span>
+        <time datetime="2026-06-16">June 16, 2026</time>
+        <span class="dot">·</span>
+        <span>5 min read</span>
+      </div>
+      <p class="article-lede">
+        Your codebase's decisions just left the database. As of this release, Metatron
+        can mirror every decision into plain markdown files inside your own git repo —
+        and that bundle is a valid <strong>Open Knowledge Format (OKF)</strong> bundle,
+        the open standard Google Cloud published this month. Auditable in git, editable
+        with your agent, portable to anything that reads OKF.
+      </p>
+    </header>
+
+    <div class="prose">
+
+      <h2>The feedback I kept hearing</h2>
+      <p>
+        Metatron has always stored decisions in a local database and let you curate them
+        in a small web UI. The UI is good, but I kept hearing the same thing: <em>I don't
+        want another app to click around in. I live in my editor and my agent. Why can't
+        these just be files?</em>
+      </p>
+      <p>
+        It's a fair ask. Decisions are some of the most important text in a codebase —
+        the pattern to prefer, the approach you already rejected, the
+        <a href="/blog/why-i-built-metatron/">native dependency that must never reach the
+        browser</a>. Text that important deserves to live where the rest of your
+        engineering truth lives: in version control, with history, diffs, blame, and pull
+        requests. Not locked behind a tool's screen.
+      </p>
+
+      <h2>What the Open Knowledge Format is</h2>
+      <p>
+        On June 12, 2026, Google Cloud published the
+        <a href="https://github.com/GoogleCloudPlatform/knowledge-catalog/tree/main/okf" target="_blank" rel="noopener">Open
+        Knowledge Format</a> — OKF for short — an open specification for the knowledge
+        that AI agents need to do useful work. Its premise is refreshingly small: a
+        knowledge bundle is just a <strong>directory of markdown files with YAML
+        frontmatter</strong>. No SDK, no runtime, no proprietary platform. If you can
+        <code>cat</code> a file you can read it; if you can <code>git clone</code> a repo
+        you can ship it.
+      </p>
+      <p>
+        Each file is a <em>concept</em>. It needs exactly one required field —
+        <code>type</code> — and may carry any other fields the producer finds useful.
+        That's the whole contract. The point of the standard isn't a rich schema; it's
+        that knowledge written by one tool can be read by another without translation.
+      </p>
+      <div class="callout">
+        OKF is the format I'd have reached for anyway — human-readable, agent-parseable,
+        diffable in git, portable across tools and time. Adopting the standard means
+        Metatron's output isn't a Metatron-shaped silo. It's just knowledge.
+      </div>
+
+      <h2>Your decisions, as an OKF bundle</h2>
+      <p>
+        One command mirrors a repo's decisions to disk:
+      </p>
+      <pre><code>metatron mirror sync --okf</code></pre>
+      <p>
+        You get a tree of markdown under <code>metatron/</code>, one file per decision,
+        with the directory encoding status — candidates under <code>candidate/</code>,
+        canonical decisions under <code>decisions/</code>:
+      </p>
+      <pre><code>metatron/
+├── index.md                         # OKF directory listing
+├── candidate/
+│   └── prefer-zod-at-boundaries-…md
+└── decisions/
+    └── isolate-server-only-deps-…md</code></pre>
+      <p>
+        And each file is an OKF concept — readable in any editor, renderable on GitHub,
+        indexable by any search tool. Here's what that
+        <code>sharp</code> rule from the outage looks like as a concept document:
+      </p>
+      <pre><code>---
+type: Metatron Decision
+id: dec_01HZ…
+scope: web/api
+confidence: high
+---
+
+## Pattern
+Native, server-only dependencies (e.g. `sharp`) must be structurally
+isolated from client bundles — never rely on tree-shaking to keep them out.
+
+## Rationale
+Exporting a helper that transitively imports a server-only module pulls it
+into the browser chunk, where its init throws. Make the import lazy so it
+can never reach the client.</code></pre>
+
+      <h2>Git is the audit trail — and the editing surface</h2>
+      <p>
+        Because the bundle lives in your repo, the whole lifecycle becomes something git
+        already does well. Reviewing a proposed convention is reading a diff. Asking who
+        changed a decision and why is <code>git blame</code>. And the boundary that
+        matters most in Metatron — what becomes <em>canonical</em> — stays human-gated, the
+        way it always has:
+      </p>
+      <pre><code>git mv metatron/candidate/isolate-server-only-deps-…md \
+       metatron/decisions/
+metatron mirror import</code></pre>
+      <p>
+        Moving a file into <code>decisions/</code> <em>is</em> the act of promotion. A
+        human did it, deliberately, and it's recorded as a commit. Nothing self-promotes;
+        no agent and no score can cross that line. You can also just open a file and edit
+        the pattern or rationale — or ask your coding agent to — and
+        <code>mirror import</code> applies the human-owned fields back to the database.
+        Machine-derived fields (the helpfulness score, retrieval keywords, timestamps)
+        ride along read-only, so an edit can't quietly overwrite them. The database stays
+        the source of truth; the files are a faithful, two-way mirror.
+      </p>
+
+      <h2>Why this matters</h2>
+      <p>
+        I think knowledge should outlive the tool that captured it. If Metatron earns a
+        place in your workflow, it shouldn't be because your decisions are trapped inside
+        it — it should be because it's the best place to <em>capture and serve</em> them.
+        Emitting a standard, open bundle is how I keep myself honest about that. Your
+        conventions are yours: a portable OKF bundle you can read without Metatron,
+        hand to another tool, or share across teams.
+      </p>
+      <p>
+        It also fits the shape of the product. Metatron's job is to give a coding agent a
+        teammate to ask before it acts. The Open Knowledge Format is becoming a common
+        language for exactly that kind of agent knowledge — so speaking it natively means
+        the decisions you curate here can travel as far as the standard does.
+      </p>
+
+      <hr />
+
+      <p>
+        It's live now. Point Metatron at a repo, run
+        <code>metatron mirror sync --okf</code>, and watch your team's hard-won decisions
+        become plain, portable, version-controlled files — without giving up the
+        human-gated curation that makes them trustworthy. The
+        <a href="/docs/">docs</a> have the details.
+      </p>
+
+      <div class="article-foot">
+        <div class="foot-links">
+          <a class="btn btn-ghost btn-sm" href="https://github.com/kerbelp/metatron" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="currentColor" style="width:16px;height:16px"><path d="M12 .5C5.7.5.5 5.7.5 12c0 5.1 3.3 9.4 7.9 10.9.6.1.8-.3.8-.6v-2c-3.2.7-3.9-1.5-3.9-1.5-.5-1.3-1.3-1.7-1.3-1.7-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.7 1.3 3.4 1 .1-.8.4-1.3.7-1.6-2.6-.3-5.3-1.3-5.3-5.7 0-1.3.5-2.3 1.2-3.1-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0c2.3-1.5 3.3-1.2 3.3-1.2.6 1.6.2 2.8.1 3.1.8.8 1.2 1.8 1.2 3.1 0 4.4-2.7 5.4-5.3 5.7.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6 4.6-1.5 7.9-5.8 7.9-10.9C23.5 5.7 18.3.5 12 .5Z"/></svg>
+            Star on GitHub
+          </a>
+          <a class="btn btn-ghost btn-sm" href="/docs/">Read the docs</a>
+          <a class="btn btn-ghost btn-sm" href="/#updates">Get early updates</a>
+        </div>
+        <div class="article-byline">
+          <span class="mark"><span data-cube-mark style="width:20px;height:20px;display:block"></span></span>
+          <span>Written by <b>Pavel Kerbel</b>, who builds Metatron and AI Collection.</span>
+        </div>
+      </div>
+
+    </div>
+  </article>
+</main>
+
+<!-- ============ FOOTER ============ -->
+<footer class="foot">
+  <div class="wrap">
+    <div class="foot-inner">
+      <div class="foot-brand">
+        <a class="brand" href="/"><span data-cube-mark style="width:26px;height:26px;display:block"></span>Metatron</a>
+        <p>Self-hosted decisions for AI coding agents. Your conventions, served over MCP — so agents write code like they belong on the team.</p>
+        <div class="foot-social" style="display:flex;gap:14px;margin-top:16px">
+          <a href="https://github.com/kerbelp/metatron" target="_blank" rel="noopener" aria-label="GitHub" style="color:#8aa39c;display:inline-flex"><svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.7.5.5 5.7.5 12c0 5.1 3.3 9.4 7.9 10.9.6.1.8-.3.8-.6v-2c-3.2.7-3.9-1.5-3.9-1.5-.5-1.3-1.3-1.7-1.3-1.7-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.7 1.3 3.4 1 .1-.8.4-1.3.7-1.6-2.6-.3-5.3-1.3-5.3-5.7 0-1.3.5-2.3 1.2-3.1-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0c2.3-1.5 3.3-1.2 3.3-1.2.6 1.6.2 2.8.1 3.1.8.8 1.2 1.8 1.2 3.1 0 4.4-2.7 5.4-5.3 5.7.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6 4.6-1.5 7.9-5.8 7.9-10.9C23.5 5.7 18.3.5 12 .5Z"/></svg></a>
+          <a href="https://www.youtube.com/@getmetatron" target="_blank" rel="noopener" aria-label="YouTube" style="color:#8aa39c;display:inline-flex"><svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M23.5 6.2a3 3 0 0 0-2.11-2.12C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.39.58A3 3 0 0 0 .5 6.2 31.1 31.1 0 0 0 0 12a31.1 31.1 0 0 0 .5 5.8 3 3 0 0 0 2.11 2.12C4.5 20.5 12 20.5 12 20.5s7.5 0 9.39-.58A3 3 0 0 0 23.5 17.8 31.1 31.1 0 0 0 24 12a31.1 31.1 0 0 0-.5-5.8ZM9.6 15.6V8.4l6.3 3.6-6.3 3.6Z"/></svg></a>
+        </div>
+      </div>
+      <div class="foot-cols">
+        <div class="foot-col">
+          <h5>Product</h5>
+          <a href="/#problem">The problem</a>
+          <a href="/#how">How it works</a>
+          <a href="/#anatomy">Anatomy of a decision</a>
+          <a href="/#opensource">Open-source</a>
+        </div>
+        <div class="foot-col">
+          <h5>Resources</h5>
+          <a href="/blog/">Blog</a>
+          <a href="/docs/">Documentation</a>
+          <a href="https://github.com/kerbelp/metatron" target="_blank" rel="noopener">GitHub repo</a>
+          <a href="https://youtu.be/VoWp6jH4VLM" target="_blank" rel="noopener">Demo video</a>
+        </div>
+        <div class="foot-col">
+          <h5>Contact</h5>
+          <a href="mailto:kerbelp@gmail.com">kerbelp@gmail.com</a>
+          <a href="mailto:kerbelp@gmail.com?subject=Metatron%20hosted%20interest">Hosted version?</a>
+        </div>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>© 2026 Metatron · MIT licensed</span>
+      <span>Built with tree-sitter · MCP · SQLite</span>
+    </div>
+  </div>
+</footer>
+
+<script src="/metatron.js"></script>
+</body>
+</html>

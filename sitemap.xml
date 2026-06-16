@@ -16,9 +16,16 @@
   </url>
   <url>
     <loc>https://getmetatron.com/blog/</loc>
-    <lastmod>2026-06-08</lastmod>
+    <lastmod>2026-06-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://getmetatron.com/blog/open-knowledge-format/</loc>
+    <lastmod>2026-06-16</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.7</priority>
+    <image:image><image:loc>https://getmetatron.com/public/images/og/open-knowledge-format.png</image:loc></image:image>
   </url>
   <url>
     <loc>https://getmetatron.com/blog/why-i-built-metatron/</loc>
