@@ -78,6 +78,9 @@
         <a href="#ui">ui</a>
         <a href="#refine">refine-feedback</a>
         <a href="#version">version</a>
+        <span class="side-group">Files &amp; git</span>
+        <a href="#files-first">Files-first mode</a>
+        <a href="#mirror">mirror &amp; OKF</a>
         <span class="side-group">Agents</span>
         <a href="#connect">Connect an agent</a>
         <a href="#tools">MCP tools</a>
@@ -265,12 +268,15 @@
 <pre><span class="k">ANTHROPIC_API_KEY</span>=<span class="s">sk-ant-...</span></pre>
         </div>
         <p><strong>Non-secret settings</strong> live in an optional <code>metatron.toml</code>.
-          Environment variables <code>METATRON_DB</code> / <code>METATRON_MODEL</code> override it.</p>
+          Environment variables <code>METATRON_DB</code> / <code>METATRON_MODEL</code> /
+          <code>METATRON_OUTPUT_LANGUAGE</code> / <code>METATRON_CONTEXT_DIR</code> override it.</p>
         <div class="doc-code">
           <div class="doc-code-bar"><span class="dots"><i></i><i></i><i></i></span> metatron.toml</div>
 <pre><span class="c">[metatron]</span>
-<span class="k">db_path</span> = <span class="s">"metatron.db"</span>        <span class="c"># one SQLite file holds many repos</span>
-<span class="k">model</span>   = <span class="s">"claude-sonnet-4-6"</span>  <span class="c"># default extraction model</span></pre>
+<span class="k">db_path</span>         = <span class="s">"~/.metatron"</span>        <span class="c"># catalog dir: one .db file per repo</span>
+<span class="k">model</span>           = <span class="s">"claude-sonnet-4-6"</span>  <span class="c"># default extraction model</span>
+<span class="k">output_language</span> = <span class="s">"english"</span>            <span class="c"># language of generated decisions</span>
+<span class="k">context_dir</span>     = <span class="s">"context"</span>            <span class="c"># knowledge-base dir (files-first / mirror)</span></pre>
         </div>
       </section>
 
@@ -414,11 +420,83 @@
           <code>~/.metatron/install.json</code>.</p>
       </section>
 
+      <!-- FILES-FIRST -->
+      <section class="doc-sec" id="files-first">
+        <h2>Files-first mode</h2>
+        <p>Prefer plain files and pull requests over MCP and a UI? In files-first mode the
+          git-tracked markdown under <code>context/</code> <em>is</em> the source of truth:
+          the directory encodes the status (<code>candidate/</code> vs
+          <code>decisions/</code>), curation is a reviewed <code>git mv</code>, and the
+          database is just a rebuildable serving index. Onboard a repo with one command:</p>
+        <div class="doc-code">
+          <div class="doc-code-bar"><span class="dots"><i></i><i></i><i></i></span> context setup</div>
+<pre><span class="pr">$</span> <span class="cm">metatron context setup</span>              <span class="c"># onboard the current repo</span>
+<span class="pr">$</span> <span class="cm">metatron context setup apps/web</span>     <span class="c"># monorepo: onboard one app</span>
+<span class="pr">$</span> <span class="cm">metatron context setup --dir kb</span>     <span class="c"># custom knowledge-base directory name</span></pre>
+        </div>
+        <p>It is <strong>additive and idempotent</strong> — no MCP server, no hooks. It writes:</p>
+        <ul>
+          <li>A consult-first rule in <code>.roo/rules/</code>, re-stated to the agent every turn.</li>
+          <li>Two skills in <code>.roo/skills/</code>: <code>context-okf-llm-ingest</code>
+            (author candidate decisions as files — with <em>any</em> LLM, no API key) and
+            <code>context-okf-promote-candidates</code> (the mechanical, human-gated promotion move).</li>
+          <li>The knowledge-base scaffold: <code>context/candidate/</code>,
+            <code>context/decisions/</code>, and a README.</li>
+          <li>A managed block in <code>AGENTS.md</code> — appended to an existing file, never
+            overwriting it.</li>
+        </ul>
+        <p>The day-to-day loop: the agent reads <code>context/decisions/</code> before touching
+          code, records durable conventions it discovers as new files in
+          <code>context/candidate/</code>, and a human promotes with a reviewed move:</p>
+        <div class="doc-code">
+          <div class="doc-code-bar"><span class="dots"><i></i><i></i><i></i></span> promotion — the human curation act</div>
+<pre><span class="pr">$</span> <span class="cm">git mv context/candidate/use-repo-pattern.md context/decisions/</span>
+<span class="pr">$</span> <span class="cm">git commit &amp;&amp; gh pr create</span>                <span class="c"># reviewed like any other change</span>
+<span class="pr">$</span> <span class="cm">metatron mirror import</span>                    <span class="c"># optional: rebuild the serving index</span></pre>
+        </div>
+        <p>The canonical boundary stays <strong>human-gated</strong> in both modes: nothing
+          self-promotes, and approving the pull request that moves a file into
+          <code>decisions/</code> is the curation act. The directory name is
+          <code>context/</code> by default — configure another with
+          <code>context_dir</code> in <code>metatron.toml</code>,
+          <code>METATRON_CONTEXT_DIR</code>, or the <code>--dir</code> /
+          <code>--context-dir</code> flags (a legacy <code>metatron/</code> bundle is still
+          recognized). No installed metatron? The equivalent script is
+          <code>metatron_setup_files.sh</code> in the repo.</p>
+      </section>
+
+      <!-- MIRROR / OKF -->
+      <section class="doc-sec" id="mirror">
+        <h2><code>mirror</code> — decisions as a portable OKF bundle</h2>
+        <p>Whichever mode you run, <code>mirror</code> moves decisions between the store and
+          the git-tracked bundle. Each decision is one markdown file with YAML frontmatter —
+          a valid <a class="inline" href="https://github.com/GoogleCloudPlatform/knowledge-catalog/tree/main/okf"
+          target="_blank" rel="noopener">Open Knowledge Format (OKF) v0.1</a> <em>concept</em>,
+          readable in any editor, renderable on GitHub, portable to any tool that speaks the
+          standard. The layout implements the
+          <a class="inline" href="https://github.com/kerbelp/context-md" target="_blank"
+          rel="noopener">Repository Context Layer</a>.</p>
+        <div class="doc-code">
+          <div class="doc-code-bar"><span class="dots"><i></i><i></i><i></i></span> mirror</div>
+<pre><span class="pr">$</span> <span class="cm">metatron mirror sync</span>         <span class="c"># DB -&gt; files: write the bundle under context/</span>
+<span class="pr">$</span> <span class="cm">metatron mirror sync --okf</span>   <span class="c"># also emit an OKF concept index</span>
+<span class="pr">$</span> <span class="cm">metatron mirror import</span>       <span class="c"># files -&gt; DB: apply edits, promotions, new files</span></pre>
+        </div>
+        <p>Human-owned fields (<code>pattern</code>, <code>scope</code>, <code>rationale</code>,
+          <code>confidence</code>) round-trip through the files; machine-derived fields (the
+          helpfulness score, retrieval keywords, timestamps) render read-only and edits to them
+          are ignored. <code>sync</code> is deterministic, and <code>import</code> detects
+          concurrent DB+file edits as conflicts instead of clobbering either side. A
+          hand-authored file with no <code>id</code> becomes a new decision at the
+          directory-derived status.</p>
+      </section>
+
       <!-- CONNECT -->
       <section class="doc-sec" id="connect">
         <h2>Connect an agent</h2>
         <p>So a coding agent reliably <em>consults</em> decisions rather than rediscovering
-          conventions, run the onboarding script from inside the target repo:</p>
+          conventions, run the onboarding script from inside the target repo. (Prefer no MCP
+          at all? Use <a class="inline" href="#files-first">files-first mode</a> instead.)</p>
         <div class="doc-code">
           <div class="doc-code-bar"><span class="dots"><i></i><i></i><i></i></span> onboarding</div>
 <pre><span class="pr">$</span> <span class="cm">bash /path/to/metatron/metatron_setup.sh</span>   <span class="c"># or pass the repo dir as an arg</span></pre>

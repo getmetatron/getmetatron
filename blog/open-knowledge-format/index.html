@@ -181,7 +181,7 @@
       </p>
       <pre><code>metatron mirror sync --okf</code></pre>
       <p>
-        You get a tree of markdown under <code>metatron/</code>, one file per decision,
+        You get a tree of markdown under <code>context/</code>, one file per decision,
         with the directory encoding status — candidates under <code>candidate/</code>,
         canonical decisions under <code>decisions/</code>:
       </p>
@@ -220,8 +220,8 @@ can never reach the client.</code></pre>
         matters most in Metatron — what becomes <em>canonical</em> — stays human-gated, the
         way it always has:
       </p>
-      <pre><code>git mv metatron/candidate/isolate-server-only-deps-…md \
-       metatron/decisions/
+      <pre><code>git mv context/candidate/isolate-server-only-deps-…md \
+       context/decisions/
 metatron mirror import</code></pre>
       <p>
         Moving a file into <code>decisions/</code> <em>is</em> the act of promotion. A
