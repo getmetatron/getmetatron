@@ -21,6 +21,12 @@
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>https://getmetatron.com/blog/files-first/</loc>
+    <lastmod>2026-07-04</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://getmetatron.com/blog/open-knowledge-format/</loc>
     <lastmod>2026-06-16</lastmod>
     <changefreq>yearly</changefreq>
