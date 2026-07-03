@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-0P4SKXFNWL"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-0P4SKXFNWL');
+</script>
+
+<title>Files-first: run Metatron with no server at all</title>
+<meta name="description" content="Metatron now runs in a files-first mode where the git-tracked markdown is the source of truth: one command onboards a repo, any LLM authors candidate decisions as files, and promotion is a reviewed git mv. We dogfooded it on Metatron itself — and it immediately caught a bug in our own importer." />
+<link rel="canonical" href="https://getmetatron.com/blog/files-first/" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Hanken+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="/styles.css" />
+<link rel="stylesheet" href="/blog.css" />
+
+<!-- Favicons -->
+<link rel="icon" href="/public/images/favicon.ico" sizes="any" />
+<link rel="icon" type="image/png" sizes="32x32" href="/public/images/favicon-32x32.png" />
+<link rel="icon" type="image/png" sizes="16x16" href="/public/images/favicon-16x16.png" />
+<link rel="apple-touch-icon" sizes="180x180" href="/public/images/apple-touch-icon.png" />
+
+<!-- Open Graph -->
+<meta property="og:type" content="article" />
+<meta property="og:site_name" content="Metatron" />
+<meta property="og:url" content="https://getmetatron.com/blog/files-first/" />
+<meta property="og:title" content="Files-first: run Metatron with no server at all" />
+<meta property="og:description" content="Git as the source of truth: one command onboards a repo, any LLM authors candidate decisions as files, and promotion is a reviewed git mv. Dogfooded on Metatron itself — and it immediately caught a bug in our own importer." />
+<meta property="og:image" content="https://getmetatron.com/public/images/og/files-first.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content="Files-first Metatron — Metatron blog" />
+<meta property="article:published_time" content="2026-07-04" />
+<meta property="article:author" content="Pavel Kerbel" />
+
+<!-- Twitter / X -->
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Files-first: run Metatron with no server at all" />
+<meta name="twitter:description" content="Git as the source of truth: one command onboards a repo, any LLM authors candidate decisions as files, and promotion is a reviewed git mv." />
+<meta name="twitter:image" content="https://getmetatron.com/public/images/og/files-first.png" />
+
+<!-- JSON-LD -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Files-first: run Metatron with no server at all",
+  "description": "Metatron now runs in a files-first mode where the git-tracked markdown is the source of truth: one command onboards a repo, any LLM authors candidate decisions as files, and promotion is a reviewed git mv.",
+  "image": "https://getmetatron.com/public/images/og/files-first.png",
+  "datePublished": "2026-07-04",
+  "dateModified": "2026-07-04",
+  "author": { "@type": "Person", "name": "Pavel Kerbel", "url": "https://pavelkerbel.com" },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Metatron",
+    "logo": { "@type": "ImageObject", "url": "https://getmetatron.com/public/images/apple-touch-icon.png" }
+  },
+  "mainEntityOfPage": { "@type": "WebPage", "@id": "https://getmetatron.com/blog/files-first/" }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://getmetatron.com/" },
+    { "@type": "ListItem", "position": 2, "name": "Blog", "item": "https://getmetatron.com/blog/" },
+    { "@type": "ListItem", "position": 3, "name": "Files-first: run Metatron with no server at all", "item": "https://getmetatron.com/blog/files-first/" }
+  ]
+}
+</script>
+</head>
+<body>
+
+<!-- ============ NAV ============ -->
+<header class="nav">
+  <div class="nav-inner">
+    <a class="brand" href="/" aria-label="Metatron home">
+      <span data-cube-mark style="width:26px;height:26px;display:block"></span>
+      Metatron
+    </a>
+    <nav class="nav-links" aria-label="Primary">
+      <a href="/#problem">Problem</a>
+      <a href="/#how">How it works</a>
+      <a href="/#ui">The UI</a>
+      <a href="/blog/">Blog</a>
+      <a href="/docs/">Docs</a>
+    </nav>
+    <div class="nav-cta">
+      <a class="btn btn-ghost btn-sm" href="https://github.com/kerbelp/metatron" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.7.5.5 5.7.5 12c0 5.1 3.3 9.4 7.9 10.9.6.1.8-.3.8-.6v-2c-3.2.7-3.9-1.5-3.9-1.5-.5-1.3-1.3-1.7-1.3-1.7-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.7 1.3 3.4 1 .1-.8.4-1.3.7-1.6-2.6-.3-5.3-1.3-5.3-5.7 0-1.3.5-2.3 1.2-3.1-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0c2.3-1.5 3.3-1.2 3.3-1.2.6 1.6.2 2.8.1 3.1.8.8 1.2 1.8 1.2 3.1 0 4.4-2.7 5.4-5.3 5.7.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6 4.6-1.5 7.9-5.8 7.9-10.9C23.5 5.7 18.3.5 12 .5Z"/></svg>
+        GitHub
+      </a>
+      <a class="btn btn-primary btn-sm" href="/#updates">Get updates</a>
+    </div>
+    <button class="nav-burger" aria-label="Menu">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+    </button>
+  </div>
+</header>
+
+<main class="blog-main" id="top">
+  <article class="wrap blog-wrap">
+
+    <div class="crumb">
+      <a href="/">Home</a><span>/</span><a href="/blog/">Blog</a><span>/</span>Files-first: run Metatron with no server at all
+    </div>
+
+    <header class="article-head">
+      <span class="kicker">Workflow</span>
+      <h1>Files-first: run Metatron with no server at all</h1>
+      <div class="article-meta">
+        <span>Pavel Kerbel</span>
+        <span class="dot">·</span>
+        <time datetime="2026-07-04">July 4, 2026</time>
+        <span class="dot">·</span>
+        <span>6 min read</span>
+      </div>
+      <p class="article-lede">
+        The <a href="/blog/open-knowledge-format/">OKF release</a> made your decisions
+        readable as files. This release makes the files the boss. In
+        <strong>files-first mode</strong> the git-tracked markdown is the source of
+        truth: one command onboards a repo, any LLM authors candidate decisions as
+        plain files, and promotion is a <code>git mv</code> reviewed in a pull request.
+        No MCP server, no database to trust — and when we dogfooded it on Metatron
+        itself, it caught a bug in our own importer on day one.
+      </p>
+    </header>
+
+    <div class="prose">
+
+      <h2>Two kinds of teams</h2>
+      <p>
+        Since the OKF mirror shipped, I've watched teams split cleanly into two camps.
+        One camp is happy with the default setup: decisions live in a local database,
+        agents query them over MCP, retrieval is ranked and feedback-tuned, and curation
+        happens in the CLI or the web UI. The other camp keeps asking a sharper version
+        of the question that produced the mirror in the first place: <em>if the files
+        are readable, reviewable, and portable — why isn't the repo the source of
+        truth?</em>
+      </p>
+      <p>
+        For that camp, a mirror isn't enough. A mirror means the database is still the
+        boss and the files are a projection. They want the opposite: conventions curated
+        the way everything else in their engineering culture is curated — as text, in
+        git, through pull requests — with no extra server in the loop. Files-first mode
+        is exactly that, and it's a first-class way to run Metatron, not a downgrade.
+      </p>
+
+      <h2>The inversion</h2>
+      <p>
+        In files-first mode the roles flip. The git-tracked bundle under
+        <code>context/</code> is authoritative: the <strong>directory is the
+        status</strong> — proposals live in <code>context/candidate/</code>, canonical
+        conventions in <code>context/decisions/</code> — and the database becomes a
+        derived, rebuildable serving index you can regenerate at any time with
+        <code>metatron mirror import</code>. Delete it and nothing is lost; the truth
+        is in your repo's history.
+      </p>
+      <p>
+        The invariant Metatron is built around survives the inversion untouched:
+        <strong>nothing becomes canonical without a human</strong>. Here the curation
+        act is the most git-native gesture there is:
+      </p>
+      <pre><code>git mv context/candidate/use-repo-pattern.md context/decisions/
+git commit &amp;&amp; gh pr create     # reviewed and merged like any other change</code></pre>
+      <p>
+        Approving that pull request <em>is</em> the promotion. It's recorded as a
+        commit, attributable with <code>git blame</code>, revertible with
+        <code>git revert</code>. No agent, no score, no CI job can cross that line on
+        its own.
+      </p>
+
+      <h2>One command, no API key</h2>
+      <p>
+        Onboarding a repo is a single command from any installed Metatron:
+      </p>
+      <pre><code>metatron context setup</code></pre>
+      <p>
+        It's additive and idempotent, and it installs three things: a consult-first rule
+        the agent sees every turn, the <code>context/</code> scaffold, and — the part I
+        like most — <strong>two skills</strong> in <code>.roo/skills/</code>. The
+        <code>context-okf-llm-ingest</code> skill teaches <em>whatever LLM your
+        organization already uses</em> to extract your codebase's real decisions and
+        write them as candidate files. No Anthropic key, no
+        <code>metatron ingest</code> run — the skill is the extractor, and every output
+        lands in <code>candidate/</code> awaiting your review. Its companion,
+        <code>context-okf-promote-candidates</code>, handles the mechanical side of
+        promotion while refusing, by design, to decide what deserves promoting.
+      </p>
+      <p>
+        The onboarding directive itself goes into <code>AGENTS.md</code> — the
+        tool-agnostic convention — appended to whatever you already have there, never
+        overwriting it.
+      </p>
+
+      <h2>We dogfooded it — and it bit us, usefully</h2>
+      <p>
+        It would be embarrassing to ship a files-first mode without running Metatron on
+        Metatron. So the repo now carries its own <code>context/</code> knowledge base,
+        onboarded by its own setup command.
+      </p>
+      <p>
+        The dogfooding paid for itself within the hour. The first real import run
+        created <em>eleven</em> decisions from ten files. The eleventh was
+        <code>index.md</code> — a generated directory listing that one subsystem writes
+        into <code>decisions/</code> and another subsystem, the importer, happily
+        swallowed as a decision. An empty one. At <strong>canonical</strong> status.
+        With no human involved. The exact invariant this whole product preaches,
+        violated by our own tooling on machine-generated noise.
+      </p>
+      <p>
+        The fix shipped before the feature announcement did: the importer now skips
+        generated artifacts and refuses to create a decision from any file that doesn't
+        explicitly declare itself an OKF concept. A stray note dropped into
+        <code>decisions/</code> gets a warning, not a promotion. That's the kind of bug
+        you only find by being your own first user — and the kind of guarantee you want
+        tested before your conventions ride on it.
+      </p>
+
+      <h2>Why the directory is called <code>context/</code></h2>
+      <p>
+        Dogfooding also forced a naming reckoning. The bundle used to live under
+        <code>metatron/</code> — which collided head-on with our own Python package of
+        the same name, and put a product name where a neutral term belongs. Your
+        conventions aren't "Metatron files"; they're your repository's context. So the
+        default is now <code>context/</code>, which also matches the framing of the
+        <a href="https://github.com/kerbelp/context-md" target="_blank" rel="noopener">Repository
+        Context Layer</a> — the proposed standard for git-native, agent-maintained
+        project context (the
+        <a href="https://github.com/kerbelp/context-md/blob/main/whitepaper/context-md-manifesto.pdf" target="_blank" rel="noopener">manifesto</a>
+        makes the full argument) — of which Metatron is a reference implementation.
+      </p>
+      <p>
+        And because a name that collides once will collide again: it's configurable.
+        Set <code>context_dir</code> in <code>metatron.toml</code>, export
+        <code>METATRON_CONTEXT_DIR</code>, or pass <code>--dir</code> at setup. Repos
+        onboarded before the rename keep working — a legacy <code>metatron/</code>
+        bundle is recognized automatically.
+      </p>
+
+      <h2>Which mode is for you?</h2>
+      <p>
+        Both are first-class, and they share the same records, the same OKF format, and
+        the same human-gated boundary. Run <strong>MCP mode</strong> when you want
+        ranked retrieval, the feedback loop tuning what gets served first, and a
+        curation UI. Run <strong>files-first</strong> when you want zero servers,
+        PR-native curation, and any LLM as the extractor. You can even move between
+        them — <code>mirror sync</code> and <code>mirror import</code> are the bridge
+        in each direction.
+      </p>
+
+      <hr />
+
+      <p>
+        Files-first mode is live. Install Metatron, run
+        <code>metatron context setup</code> in a repo, and let your agent propose its
+        first candidates — the <a href="/docs/#files-first">docs</a> have the full
+        reference. Your conventions, in your repo, promoted by your review. The way it
+        should have worked all along.
+      </p>
+
+      <div class="article-foot">
+        <div class="foot-links">
+          <a class="btn btn-ghost btn-sm" href="https://github.com/kerbelp/metatron" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="currentColor" style="width:16px;height:16px"><path d="M12 .5C5.7.5.5 5.7.5 12c0 5.1 3.3 9.4 7.9 10.9.6.1.8-.3.8-.6v-2c-3.2.7-3.9-1.5-3.9-1.5-.5-1.3-1.3-1.7-1.3-1.7-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.7 1.3 3.4 1 .1-.8.4-1.3.7-1.6-2.6-.3-5.3-1.3-5.3-5.7 0-1.3.5-2.3 1.2-3.1-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0c2.3-1.5 3.3-1.2 3.3-1.2.6 1.6.2 2.8.1 3.1.8.8 1.2 1.8 1.2 3.1 0 4.4-2.7 5.4-5.3 5.7.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6 4.6-1.5 7.9-5.8 7.9-10.9C23.5 5.7 18.3.5 12 .5Z"/></svg>
+            Star on GitHub
+          </a>
+          <a class="btn btn-ghost btn-sm" href="/docs/">Read the docs</a>
+          <a class="btn btn-ghost btn-sm" href="/#updates">Get early updates</a>
+        </div>
+        <div class="article-byline">
+          <span class="mark"><span data-cube-mark style="width:20px;height:20px;display:block"></span></span>
+          <span>Written by <b>Pavel Kerbel</b>, who builds Metatron and AI Collection.</span>
+        </div>
+      </div>
+
+    </div>
+  </article>
+</main>
+
+<!-- ============ FOOTER ============ -->
+<footer class="foot">
+  <div class="wrap">
+    <div class="foot-inner">
+      <div class="foot-brand">
+        <a class="brand" href="/"><span data-cube-mark style="width:26px;height:26px;display:block"></span>Metatron</a>
+        <p>Self-hosted decisions for AI coding agents. Your conventions, served over MCP — so agents write code like they belong on the team.</p>
+        <div class="foot-social" style="display:flex;gap:14px;margin-top:16px">
+          <a href="https://github.com/kerbelp/metatron" target="_blank" rel="noopener" aria-label="GitHub" style="color:#8aa39c;display:inline-flex"><svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.7.5.5 5.7.5 12c0 5.1 3.3 9.4 7.9 10.9.6.1.8-.3.8-.6v-2c-3.2.7-3.9-1.5-3.9-1.5-.5-1.3-1.3-1.7-1.3-1.7-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.7 1.3 3.4 1 .1-.8.4-1.3.7-1.6-2.6-.3-5.3-1.3-5.3-5.7 0-1.3.5-2.3 1.2-3.1-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0c2.3-1.5 3.3-1.2 3.3-1.2.6 1.6.2 2.8.1 3.1.8.8 1.2 1.8 1.2 3.1 0 4.4-2.7 5.4-5.3 5.7.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6 4.6-1.5 7.9-5.8 7.9-10.9C23.5 5.7 18.3.5 12 .5Z"/></svg></a>
+          <a href="https://www.youtube.com/@getmetatron" target="_blank" rel="noopener" aria-label="YouTube" style="color:#8aa39c;display:inline-flex"><svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M23.5 6.2a3 3 0 0 0-2.11-2.12C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.39.58A3 3 0 0 0 .5 6.2 31.1 31.1 0 0 0 0 12a31.1 31.1 0 0 0 .5 5.8 3 3 0 0 0 2.11 2.12C4.5 20.5 12 20.5 12 20.5s7.5 0 9.39-.58A3 3 0 0 0 23.5 17.8 31.1 31.1 0 0 0 24 12a31.1 31.1 0 0 0-.5-5.8ZM9.6 15.6V8.4l6.3 3.6-6.3 3.6Z"/></svg></a>
+        </div>
+      </div>
+      <div class="foot-cols">
+        <div class="foot-col">
+          <h5>Product</h5>
+          <a href="/#problem">The problem</a>
+          <a href="/#how">How it works</a>
+          <a href="/#anatomy">Anatomy of a decision</a>
+          <a href="/#opensource">Open-source</a>
+        </div>
+        <div class="foot-col">
+          <h5>Resources</h5>
+          <a href="/blog/">Blog</a>
+          <a href="/docs/">Documentation</a>
+          <a href="https://github.com/kerbelp/metatron" target="_blank" rel="noopener">GitHub repo</a>
+          <a href="https://youtu.be/VoWp6jH4VLM" target="_blank" rel="noopener">Demo video</a>
+        </div>
+        <div class="foot-col">
+          <h5>Contact</h5>
+          <a href="mailto:kerbelp@gmail.com">kerbelp@gmail.com</a>
+          <a href="mailto:kerbelp@gmail.com?subject=Metatron%20hosted%20interest">Hosted version?</a>
+        </div>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>© 2026 Metatron · MIT licensed</span>
+      <span>Built with tree-sitter · MCP · SQLite</span>
+    </div>
+  </div>
+</footer>
+
+<script src="/metatron.js"></script>
+</body>
+</html>
