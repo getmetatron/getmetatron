@@ -404,14 +404,13 @@
           <div class="doc-code-bar"><span class="dots"><i></i><i></i><i></i></span> version</div>
 <pre><span class="pr">$</span> <span class="cm">metatron version</span>
 <span class="ot">metatron 0.7.0 (rev a3f1c2d)</span>
-<span class="ot">→ update available: 0.8.0  (run: brew upgrade metatron)</span></pre>
+<span class="ot">→ update available: 0.8.0  (run: uv tool upgrade getmetatron)</span></pre>
         </div>
         <p>The update notice is suppressed when already on the latest release, when running a
           dev checkout, or when <code>METATRON_NO_UPDATE_CHECK=1</code> is set. The PyPI check
           is throttled to once every 24 hours and cached locally — it adds no latency to normal
-          commands. The upgrade command shown is inferred from where the package is installed
-          (Homebrew, pipx, uv, or pip); override it by setting
-          <code>METATRON_INSTALL_CMD</code> or by editing
+          commands. The upgrade command shown matches how you installed (uv or pip); override it
+          by setting <code>METATRON_INSTALL_CMD</code> or by editing
           <code>~/.metatron/install.json</code>.</p>
       </section>
 
