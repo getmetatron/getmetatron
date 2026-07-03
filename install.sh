@@ -41,13 +41,21 @@ if ! command -v uv >/dev/null 2>&1; then
     error "Please add \$HOME/.local/bin to your PATH and run the installation again."
     exit 1
 fi
-info "Installing Metatron from PyPI..."
-if ! uv tool install getmetatron; then
-    error "Failed to install Metatron. Ensure you have internet access and Python 3.12+ is supported."
-    exit 1
+if uv tool list 2>/dev/null | grep -q "^getmetatron "; then
+    info "Metatron is already installed — upgrading to latest..."
+    if ! uv tool upgrade getmetatron; then
+        error "Failed to upgrade Metatron."
+        exit 1
+    fi
+    success "Metatron upgraded successfully!"
+else
+    info "Installing Metatron from PyPI..."
+    if ! uv tool install getmetatron; then
+        error "Failed to install Metatron. Ensure you have internet access and Python 3.12+ is supported."
+        exit 1
+    fi
+    success "Metatron installed successfully!"
 fi
-
-success "Metatron installed successfully!"
 success "Run 'metatron --help' to get started."
 
 # Verify if ~/.local/bin is in the user's PATH
