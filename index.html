@@ -13,8 +13,8 @@
 
   gtag('config', 'G-0P4SKXFNWL');
 </script>
-<title>Metatron — your codebase's conventions, served to AI agents over MCP</title>
-<meta name="description" content="Metatron is a self-hosted system that captures your team's real implementation decisions as structured records and serves them to AI coding agents over MCP." />
+<title>Metatron — your codebase's conventions, versioned in git and consulted by AI agents</title>
+<meta name="description" content="Metatron captures your team's real implementation decisions as versioned markdown in git, consulted by AI coding agents and curated through PR review — with an optional MCP serving layer." />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Hanken+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
@@ -30,17 +30,17 @@
 <meta property="og:type" content="website" />
 <meta property="og:site_name" content="Metatron" />
 <meta property="og:url" content="https://getmetatron.com/" />
-<meta property="og:title" content="Metatron — your codebase's conventions, served to AI agents over MCP" />
-<meta property="og:description" content="Self-hosted: captures your team's real implementation decisions as structured records and serves them to AI coding agents over MCP." />
+<meta property="og:title" content="Metatron — your codebase's conventions, versioned in git and consulted by AI agents" />
+<meta property="og:description" content="Your team's implementation decisions as versioned markdown in git, consulted by AI coding agents — optional MCP serving layer." />
 <meta property="og:image" content="https://getmetatron.com/public/images/og-image.png" />
 <meta property="og:image:width" content="1200" />
 <meta property="og:image:height" content="630" />
-<meta property="og:image:alt" content="Metatron — your codebase's conventions, served to AI agents over MCP" />
+<meta property="og:image:alt" content="Metatron — your codebase's conventions, versioned in git and consulted by AI agents" />
 
 <!-- Twitter / X card -->
 <meta name="twitter:card" content="summary_large_image" />
-<meta name="twitter:title" content="Metatron — your codebase's conventions, served to AI agents over MCP" />
-<meta name="twitter:description" content="Self-hosted: captures your team's real implementation decisions as structured records and serves them to AI coding agents over MCP." />
+<meta name="twitter:title" content="Metatron — your codebase's conventions, versioned in git and consulted by AI agents" />
+<meta name="twitter:description" content="Your team's implementation decisions as versioned markdown in git, consulted by AI coding agents — optional MCP serving layer." />
 <meta name="twitter:image" content="https://getmetatron.com/public/images/og-image.png" />
 </head>
 <body>
@@ -86,9 +86,11 @@
       <h1>AI agents that already <em>know your codebase.</em></h1>
       <p class="hero-sub">
         Your team already made the hard calls — patterns to prefer, approaches to avoid,
-        edge cases that bite. Metatron captures them as structured records and serves them
-        to coding agents over MCP, so agents write to your conventions instead of guessing.
-        When one hits a gap, it reports back — and the next agent knows more.
+        edge cases that bite. Metatron captures them as decision files versioned in git,
+        consulted by any coding agent before it writes a line — so agents follow your
+        conventions instead of guessing. Agents propose what they learn; your pull-request
+        review decides what becomes canonical. Prefer a serving layer? The same decisions
+        ship over MCP.
       </p>
       <div class="hero-cta">
         <a class="btn btn-primary" href="#updates">Get early updates</a>
@@ -226,16 +228,16 @@
             <div class="picon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><ellipse cx="12" cy="6" rx="7" ry="2.6"/><path d="M5 6v6c0 1.4 3.1 2.6 7 2.6s7-1.2 7-2.6V6"/><path d="M5 12v6c0 1.4 3.1 2.6 7 2.6s7-1.2 7-2.6v-6"/></svg></div>
             <span class="ptag">Canonical</span>
             <h4>Trusted decisions</h4>
-            <p>Approved by a human — the only decisions served to agents. Versioned in SQLite on your own infra.</p>
+            <p>Approved by a human — the only decisions agents follow. Versioned in git (files-first) or SQLite (MCP mode), on your own infra.</p>
           </div>
         </div>
         <!-- 3 · lower-left -->
         <div class="pstep proc">
           <div class="pcard">
             <div class="picon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M9 7V4M15 7V4M8 7h8v4a4 4 0 0 1-8 0z"/><path d="M12 15v5"/></svg></div>
-            <span class="ptag proc-label">Serve · MCP</span>
+            <span class="ptag proc-label">Consult · files or MCP</span>
             <h4>Live context</h4>
-            <p>Exposed to any MCP-capable agent, on demand.</p>
+            <p>Read straight from git by any agent — or served over MCP, on demand.</p>
           </div>
         </div>
         <!-- 4 · upper-left -->
@@ -251,9 +253,9 @@
         <div class="pstep pstep-mobile loopback">
           <div class="pcard">
             <div class="picon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 12a8 8 0 0 1 13.7-5.6L20 8"/><path d="M20 4v4h-4"/><path d="M20 12a8 8 0 0 1-13.7 5.6L4 16"/><path d="M4 20v-4h4"/></svg></div>
-            <span class="ptag proc-label">Feedback · MCP</span>
+            <span class="ptag proc-label">Feedback</span>
             <h4>↺ Back to Metatron</h4>
-            <p>The agent calls <span class="mono">submit_feedback()</span> to report what was missing — gaps return as new <b>candidates</b> for curation. Never auto-applied.</p>
+            <p>Agents author what they learned as decision files on a branch (files-first) or call <span class="mono">submit_feedback()</span> over MCP — either way it returns as a proposal for human review. Never auto-applied.</p>
           </div>
         </div>
       </div>
@@ -262,7 +264,7 @@
       <span class="mono">●</span> Each side carries <b>candidate decisions</b> forward — but only past the human gate do they become canonical.
     </div>
     <div class="pipe-note reveal">
-      <span class="mono" style="color:var(--accent)">↺</span> The accent edge closes the loop: agents call <span class="mono">submit_feedback()</span> over MCP, and the gaps come back as new candidates. Still curated, never auto-applied.
+      <span class="mono" style="color:var(--accent)">↺</span> The accent edge closes the loop: agents propose what they learned — a decision file on a branch, or <span class="mono">submit_feedback()</span> over MCP — and it comes back as a candidate. Still curated, never auto-applied.
     </div>
   </div>
 </section>
@@ -516,11 +518,11 @@
         <div class="term-bar"><span class="dots"><i></i><i></i><i></i></span><span>zsh · ~/your-repo</span></div>
         <div class="term-body">
           <div><span class="pr">$</span> <span class="cm">pip install getmetatron</span>         <span class="ot"># or: uv tool install getmetatron</span></div>
-          <div><span class="pr">$</span> <span class="cm">metatron ingest .</span>          <span class="ot"># parse repo + git history</span></div>
-          <div><span class="ot">  ↳ parsing 1,284 files with tree-sitter…</span></div>
-          <div><span class="ot">  ↳ <span class="hl">271 candidate decisions</span> → review queue</span></div>
-          <div><span class="pr">$</span> <span class="cm">metatron serve --repo .</span>      <span class="ot"># serve curated decisions over MCP</span></div>
-          <div><span class="ot">  ✓ MCP server listening · point your agent here</span></div>
+          <div><span class="pr">$</span> <span class="cm">metatron context setup</span>     <span class="ot"># the repo now carries its own agent context</span></div>
+          <div><span class="ot">  ↳ consult-first rule · authoring skills · <span class="hl">context/</span> knowledge base</span></div>
+          <div><span class="ot">  ↳ agents author decisions on branches · <span class="hl">your PR review is the gate</span></span></div>
+          <div><span class="pr">$</span> <span class="cm">metatron ingest .</span>          <span class="ot"># optional: bootstrap from git history</span></div>
+          <div><span class="pr">$</span> <span class="cm">metatron serve --repo .</span>      <span class="ot"># optional: serve over MCP instead</span></div>
         </div>
       </div>
     </div>
@@ -664,10 +666,13 @@
       <details class="faq-item">
         <summary>How do agents actually use the decisions?</summary>
         <div class="faq-a">
-          <p>Metatron runs an MCP server. Before working in an area, an agent calls
-            <span class="mono">get_decisions_for_context</span> and gets back the relevant canonical
-            decisions as compact, structured context — so it writes to your conventions on the
-            first try instead of rediscovering them.</p>
+          <p>In the default files-first mode, the decisions are markdown files in your repo
+            (<span class="mono">context/decisions/</span>), and onboarding adds a consult-first
+            rule: agents read the relevant decisions before planning or editing code — no server
+            involved. In the optional MCP mode, an agent instead calls
+            <span class="mono">get_decisions_for_context</span> and gets the relevant canonical
+            decisions back as compact, structured context. Either way it writes to your
+            conventions on the first try instead of rediscovering them.</p>
         </div>
       </details>
       <details class="faq-item">

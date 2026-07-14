@@ -14,7 +14,7 @@
   gtag('config', 'G-0P4SKXFNWL');
 </script>
 <title>Docs — Metatron</title>
-<meta name="description" content="Documentation for Metatron: install, configure, bootstrap candidate decisions, curate them, and serve them to AI coding agents over MCP." />
+<meta name="description" content="Documentation for Metatron: onboard a repo to git-native decision files consulted by AI coding agents, curate via PR review — or serve the same decisions over MCP." />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Hanken+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
@@ -93,9 +93,10 @@
       <h1>Documentation</h1>
       <p class="doc-lede">
         Metatron captures your codebase's real implementation decisions as structured
-        <strong>decisions</strong> and serves them to AI coding agents over MCP. Bootstrap once,
-        curate what's worth keeping, serve it to your agent — and let the agent's feedback
-        feed the next round of candidates.
+        <strong>decisions</strong> — git-tracked markdown files consulted by AI coding agents,
+        curated through your ordinary pull-request review (the default,
+        <a class="inline" href="#files-first">files-first mode</a>). Prefer a serving layer?
+        The same decisions ship over MCP with relevance ranking and an agent feedback loop.
       </p>
 
       <!-- OVERVIEW -->
@@ -165,7 +166,10 @@
       <section class="doc-sec" id="loop">
         <h2>The loop</h2>
         <p>
-          Bootstrap with <code>ingest</code>, curate candidates into the canonical set, then
+          In files-first mode the repo runs the loop by itself: agents consult
+          <code>context/decisions/</code> before coding, author what they learn on their working
+          branch, and your PR review promotes or rejects. In MCP mode, bootstrap with
+          <code>ingest</code>, curate candidates into the canonical set, then
           <code>serve</code> them to your agent over MCP. As the agent works it reports gaps via
           <code>submit_feedback</code>; <code>refine-feedback</code> reshapes those gaps into new
           candidate decisions — closing the loop on the conventions extraction can't see
@@ -284,7 +288,16 @@
       <section class="doc-sec" id="quickstart">
         <h2>Quick start</h2>
         <div class="doc-code">
-          <div class="doc-code-bar"><span class="dots"><i></i><i></i><i></i></span> three steps</div>
+          <div class="doc-code-bar"><span class="dots"><i></i><i></i><i></i></span> files-first (default)</div>
+<pre><span class="pr">$</span> <span class="cm">metatron context setup</span>                  <span class="c"># the repo now carries its own agent context</span>
+<span class="pr">$</span> <span class="cm">metatron ui --files</span>                     <span class="c"># browse &amp; curate the git bundle locally</span></pre>
+        </div>
+        <p>Agents consult <code>context/decisions/</code> before coding and author new decisions
+          on working branches; your PR review is the curation gate. Details in
+          <a class="inline" href="#files-first">Files-first mode</a>. Want the serving layer
+          instead?</p>
+        <div class="doc-code">
+          <div class="doc-code-bar"><span class="dots"><i></i><i></i><i></i></span> MCP mode (optional)</div>
 <pre><span class="pr">$</span> <span class="cm">metatron ingest /path/to/your/repo</span>      <span class="c"># 1. bootstrap candidates (needs API key)</span>
 <span class="pr">$</span> <span class="cm">metatron candidates list</span>                <span class="c"># 2. review …</span>
 <span class="pr">$</span> <span class="cm">metatron candidates approve &lt;id&gt;</span>        <span class="c">#    … and curate</span>
@@ -423,7 +436,7 @@
       <!-- FILES-FIRST -->
       <section class="doc-sec" id="files-first">
         <h2>Files-first mode</h2>
-        <p>Prefer plain files and pull requests over MCP and a UI? In files-first mode the
+        <p>The default mode: no server, no API key, no MCP. In files-first mode the
           git-tracked markdown under <code>context/</code> <em>is</em> the source of truth:
           the directory encodes the status (<code>candidate/</code> vs
           <code>decisions/</code>), curation is a reviewed <code>git mv</code>, and the
@@ -494,9 +507,10 @@
       <!-- CONNECT -->
       <section class="doc-sec" id="connect">
         <h2>Connect an agent</h2>
-        <p>So a coding agent reliably <em>consults</em> decisions rather than rediscovering
-          conventions, run the onboarding script from inside the target repo. (Prefer no MCP
-          at all? Use <a class="inline" href="#files-first">files-first mode</a> instead.)</p>
+        <p><a class="inline" href="#files-first">Files-first mode</a> (the default) connects
+          any agent that can read a file — <code>metatron context setup</code> is the whole
+          onboarding. For <strong>MCP mode</strong>, run the script below inside the target
+          repo so the agent reliably <em>consults</em> the served decisions.</p>
         <div class="doc-code">
           <div class="doc-code-bar"><span class="dots"><i></i><i></i><i></i></span> onboarding</div>
 <pre><span class="pr">$</span> <span class="cm">bash /path/to/metatron/metatron_setup.sh</span>   <span class="c"># or pass the repo dir as an arg</span></pre>
