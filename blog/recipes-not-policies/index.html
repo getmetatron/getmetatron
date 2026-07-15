@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-0P4SKXFNWL"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-0P4SKXFNWL');
+</script>
+
+<title>Small models don't follow policies. They follow recipes.</title>
+<meta name="description" content="Metatron only works if agents actually read your decision files — so we measured it. A local 8B model complied 2/20 times with a prose contract and 20/20 with a procedural one. Plus: your AGENTS.md may be invisible to headless Claude Code. Both fixes ship in 0.12.0." />
+<link rel="canonical" href="https://getmetatron.com/blog/recipes-not-policies/" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Hanken+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="/styles.css" />
+<link rel="stylesheet" href="/blog.css" />
+
+<!-- Favicons -->
+<link rel="icon" href="/public/images/favicon.ico" sizes="any" />
+<link rel="icon" type="image/png" sizes="32x32" href="/public/images/favicon-32x32.png" />
+<link rel="icon" type="image/png" sizes="16x16" href="/public/images/favicon-16x16.png" />
+<link rel="apple-touch-icon" sizes="180x180" href="/public/images/apple-touch-icon.png" />
+
+<!-- Open Graph -->
+<meta property="og:type" content="article" />
+<meta property="og:site_name" content="Metatron" />
+<meta property="og:url" content="https://getmetatron.com/blog/recipes-not-policies/" />
+<meta property="og:title" content="Small models don't follow policies. They follow recipes." />
+<meta property="og:description" content="We measured whether agents actually read the repository's decision files. A prose contract: 2/20. A procedural one: 20/20. Plus the invisible-AGENTS.md bug." />
+<meta property="og:image" content="https://getmetatron.com/public/images/og/recipes.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content="Small models don't follow policies. They follow recipes. — Metatron blog" />
+<meta property="article:published_time" content="2026-07-15" />
+<meta property="article:author" content="Pavel Kerbel" />
+
+<!-- Twitter / X -->
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Small models don't follow policies. They follow recipes." />
+<meta name="twitter:description" content="A prose consult-first contract: 2/20 compliance. The same contract as a recipe: 20/20. How we measured it, and the invisible-AGENTS.md bug we found on the way." />
+<meta name="twitter:image" content="https://getmetatron.com/public/images/og/recipes.png" />
+
+<!-- JSON-LD -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Small models don't follow policies. They follow recipes.",
+  "description": "Metatron only works if agents actually read your decision files — so we measured it, rewrote the consult-first contract as a procedure, and went from 2/20 to 20/20 compliance with a local 8B model.",
+  "image": "https://getmetatron.com/public/images/og/recipes.png",
+  "datePublished": "2026-07-15",
+  "dateModified": "2026-07-15",
+  "author": { "@type": "Person", "name": "Pavel Kerbel", "url": "https://pavelkerbel.com" },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Metatron",
+    "logo": { "@type": "ImageObject", "url": "https://getmetatron.com/public/images/apple-touch-icon.png" }
+  },
+  "mainEntityOfPage": { "@type": "WebPage", "@id": "https://getmetatron.com/blog/recipes-not-policies/" }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://getmetatron.com/" },
+    { "@type": "ListItem", "position": 2, "name": "Blog", "item": "https://getmetatron.com/blog/" },
+    { "@type": "ListItem", "position": 3, "name": "Small models don't follow policies. They follow recipes.", "item": "https://getmetatron.com/blog/recipes-not-policies/" }
+  ]
+}
+</script>
+</head>
+<body>
+
+<!-- ============ NAV ============ -->
+<header class="nav">
+  <div class="nav-inner">
+    <a class="brand" href="/" aria-label="Metatron home">
+      <span data-cube-mark style="width:26px;height:26px;display:block"></span>
+      Metatron
+    </a>
+    <nav class="nav-links" aria-label="Primary">
+      <a href="/#problem">Problem</a>
+      <a href="/#how">How it works</a>
+      <a href="/#ui">The UI</a>
+      <a href="/blog/">Blog</a>
+      <a href="/docs/">Docs</a>
+    </nav>
+    <div class="nav-cta">
+      <a class="btn btn-ghost btn-sm" href="https://github.com/kerbelp/metatron" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.7.5.5 5.7.5 12c0 5.1 3.3 9.4 7.9 10.9.6.1.8-.3.8-.6v-2c-3.2.7-3.9-1.5-3.9-1.5-.5-1.3-1.3-1.7-1.3-1.7-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.7 1.3 3.4 1 .1-.8.4-1.3.7-1.6-2.6-.3-5.3-1.3-5.3-5.7 0-1.3.5-2.3 1.2-3.1-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0c2.3-1.5 3.3-1.2 3.3-1.2.6 1.6.2 2.8.1 3.1.8.8 1.2 1.8 1.2 3.1 0 4.4-2.7 5.4-5.3 5.7.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6 4.6-1.5 7.9-5.8 7.9-10.9C23.5 5.7 18.3.5 12 .5Z"/></svg>
+        GitHub
+      </a>
+      <a class="btn btn-primary btn-sm" href="/#updates">Get updates</a>
+    </div>
+    <button class="nav-burger" aria-label="Menu">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+    </button>
+  </div>
+</header>
+
+<main class="blog-main" id="top">
+  <article class="wrap blog-wrap">
+
+    <div class="crumb">
+      <a href="/">Home</a><span>/</span><a href="/blog/">Blog</a><span>/</span>Small models don't follow policies. They follow recipes.
+    </div>
+
+    <header class="article-head">
+      <span class="kicker">Engineering</span>
+      <h1>Small models don't follow policies. They follow recipes.</h1>
+      <div class="article-meta">
+        <span>Pavel Kerbel</span>
+        <span class="dot">·</span>
+        <time datetime="2026-07-15">July 15, 2026</time>
+        <span class="dot">·</span>
+        <span>7 min read</span>
+      </div>
+      <p class="article-lede">
+        Metatron's entire premise is that a coding agent reads your team's decision
+        files <em>before</em> it writes code. That only matters if agents actually do
+        it — so we measured it. With a prose "consult first" contract, a local 8B
+        model complied in <strong>2 of 20</strong> episodes and never once opened a
+        file's contents. Rewriting the same contract as a numbered recipe took it to
+        <strong>20 of 20</strong>. Along the way we found a second, sneakier bug:
+        your AGENTS.md may be invisible to the agent you wrote it for. Both fixes
+        ship in <strong>Metatron 0.12.0</strong>.
+      </p>
+    </header>
+
+    <div class="prose">
+
+      <h2>Consultation is measurable, so we measured it</h2>
+      <p>
+        Our test bench is simple and brutal: real bugs from large open-source Python
+        projects (django, sphinx, xarray), a fresh checkout per bug carrying the
+        artifacts <code>metatron context setup</code> writes — <code>context.md</code>,
+        sharded <code>context/decisions/</code>, and the consult-first contract in
+        AGENTS.md — and an agent with a shell. Every command is logged, so
+        "did it consult?" isn't a feeling; it's a grep over the transcript. We track
+        two levels: did any command <em>touch</em> a context file, and did the
+        <em>contents</em> of a decision file ever actually enter the conversation.
+      </p>
+
+      <h2>The failure, verbatim</h2>
+      <p>
+        With the contract we shipped at the time — bold text and all: <em>"first read
+        the contents of the relevant files in the nearest
+        <code>context/decisions/</code> and follow them"</em> — an 8B local model
+        consulted in 2 of 20 episodes, and read actual file contents in 0 of 20.
+        One transcript summarizes the failure mode perfectly. First command:
+      </p>
+      <pre><code>ls -F context/decisions/</code></pre>
+      <p>Next reply:</p>
+      <blockquote>
+        "Plan: The decision files suggest that type hinting and autodoc are areas of
+        focus. I will now examine <code>sphinx/ext/autodoc/__init__.py</code>…"
+      </blockquote>
+      <p>
+        It formed beliefs about the repository's conventions from the
+        <strong>filenames</strong>, cited "the decision files" as its source, and
+        never opened one.
+      </p>
+      <p>
+        Our first fix was the obvious one: sterner language. We added, explicitly,
+        <em>"Open the files themselves — listing the directory is not consulting."</em>
+        Result on fresh bugs: zero out of ten. You cannot lawyer a small model into
+        compliance — and that result is what reframed the problem. The instruction
+        <em>"read the relevant files"</em> quietly demands a four-step judgment chain:
+        survey what exists, map it to the task, choose, read. Small models drop
+        judgment chains the moment there's a bug report pulling at their attention.
+      </p>
+
+      <h2>The recipe</h2>
+      <p>We stopped writing policy and wrote a procedure:</p>
+      <pre><code>## Repository context — required first step
+
+1. Run `cat context.md` — it lists the binding conventions
+   and where each one lives.
+2. Open the decision files relevant to your task with
+   `cat context/decisions/&lt;topic&gt;.md`. They say where fixes
+   belong and which pitfalls to avoid.
+3. Only then plan your change — and state which decision
+   files you read.
+
+Reading these files is required, not optional: a change that
+contradicts a decision will be rejected in review. Listing
+the directory is not reading.</code></pre>
+      <p>
+        Same model, same bugs: <strong>20 of 20 consulted, 20 of 20 read full
+        contents, every one as its literal first command</strong> — including on ten
+        bugs from a repository we never looked at while writing the wording. And the
+        reads weren't ritual. Watch an episode on a django migration-optimizer bug:
+      </p>
+      <pre><code>t0: cat context.md
+t1: cat context/decisions/migration-operation-optimization-reduction.md
+t2: grep -r "AlterField" django/db/migrations/operations/fields.py</code></pre>
+      <p>
+        Right decision file for the task, then straight to the module where the real
+        fix belongs.
+      </p>
+
+      <figure>
+        <img src="/public/images/blog/recipes-compliance.png"
+             alt="Bar chart: prose contract 30% consulted / 0% read contents; stricter prose 10% / 0%; recipe contract 100% / 100%; Claude Code with bridge 100% / 80%."
+             loading="lazy" style="width:100%;border-radius:12px" />
+        <figcaption>Consultation across contract styles. Local 8B model on real
+        open-source bugs; Claude Code shown with the CLAUDE.md bridge in place.</figcaption>
+      </figure>
+
+      <h2>Why it works</h2>
+      <p>
+        Two ingredients carry the effect. First, <strong>step 1 requires zero
+        judgment</strong>: <code>cat context.md</code> is copy-pasteable, and a model
+        that must emit some first command takes the one sitting in front of it. The
+        prose contract asked the model to plan; the recipe asks it to execute, and
+        executing is what instruction-tuned small models are good at. Second,
+        <strong>step 1 manufactures the evidence step 2 needs</strong>: once
+        <code>context.md</code>'s decision index is in the transcript, "pick the
+        relevant file" stops being judgment and becomes pattern-matching against text
+        the model just read.
+      </p>
+      <p>
+        The supporting cast: numbered lists read as algorithms to instruction-tuned
+        models; a concrete consequence ("rejected in review") beats an abstract
+        obligation; naming the observed loophole helps — but note that the loophole
+        sentence <em>alone</em>, without the recipe, moved nothing.
+      </p>
+
+      <h2>The invisible AGENTS.md</h2>
+      <p>
+        Testing frontier models surfaced a different bug entirely. We planted marker
+        files in a repo — <code>AGENTS.md</code> saying <code>zebra-42</code>,
+        <code>CLAUDE.md</code> saying <code>falcon-77</code> — and asked headless
+        Claude Code which markers it could see. Answer: <code>falcon-77</code>. Only.
+        <strong>Headless Claude Code loads CLAUDE.md and never reads AGENTS.md</strong> —
+        so a contract that lives only in AGENTS.md is invisible to it, no matter how
+        well written. The bridge is one line in CLAUDE.md:
+      </p>
+      <pre><code>@AGENTS.md</code></pre>
+      <p>
+        With the bridge in place, Claude Code consulted the decision files in
+        <strong>10 of 10</strong> episodes — usually as its very first tool call —
+        and localized the right file every time, under the ordinary prose contract.
+        Frontier models don't need the recipe treatment; they operationalize policy
+        just fine. They need the file to actually load. Two failure modes, two fixes:
+        <strong>wording binds small models, plumbing binds frameworks.</strong>
+      </p>
+
+      <h2>Shipped in 0.12.0</h2>
+      <p>
+        Both fixes are live. The consult-first contract is now a procedure in every
+        managed artifact — AGENTS.md root and app blocks, the agent rules file, both
+        review-gate modes — and <code>metatron context setup</code> writes the
+        <code>CLAUDE.md → @AGENTS.md</code> bridge automatically (creating the file
+        when missing, appending a managed block when yours lacks any AGENTS.md
+        reference, and leaving it untouched when one is already there).
+      </p>
+      <pre><code>pip install --upgrade getmetatron
+metatron context setup     # re-run in onboarded repos to refresh the contract</code></pre>
+      <p>
+        Two takeaways if you write instruction files for agents — any agent files,
+        not just ours:
+      </p>
+      <p>
+        <strong>1. Don't write rules. Write the first command.</strong> If your
+        instruction requires the model to decide anything before it can act, the
+        smallest models will skip it. Give a literal command whose output makes the
+        next decision trivial.<br />
+        <strong>2. Verify your instruction file loads at all.</strong> Marker files
+        take thirty seconds and will surprise you.
+      </p>
+
+      <hr />
+
+      <p>
+        Metatron's promise is a repository that teaches its own agents. This release
+        is the part of the promise nobody talks about: making sure the student shows
+        up to class. The <a href="/docs/#files-first">docs</a> cover the full
+        files-first reference.
+      </p>
+
+      <div class="article-foot">
+        <div class="foot-links">
+          <a class="btn btn-ghost btn-sm" href="https://github.com/kerbelp/metatron" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="currentColor" style="width:16px;height:16px"><path d="M12 .5C5.7.5.5 5.7.5 12c0 5.1 3.3 9.4 7.9 10.9.6.1.8-.3.8-.6v-2c-3.2.7-3.9-1.5-3.9-1.5-.5-1.3-1.3-1.7-1.3-1.7-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.7 1.3 3.4 1 .1-.8.4-1.3.7-1.6-2.6-.3-5.3-1.3-5.3-5.7 0-1.3.5-2.3 1.2-3.1-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0c2.3-1.5 3.3-1.2 3.3-1.2.6 1.6.2 2.8.1 3.1.8.8 1.2 1.8 1.2 3.1 0 4.4-2.7 5.4-5.3 5.7.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6 4.6-1.5 7.9-5.8 7.9-10.9C23.5 5.7 18.3.5 12 .5Z"/></svg>
+            Star on GitHub
+          </a>
+          <a class="btn btn-ghost btn-sm" href="/docs/">Read the docs</a>
+          <a class="btn btn-ghost btn-sm" href="/#updates">Get early updates</a>
+        </div>
+        <div class="article-byline">
+          <span class="mark"><span data-cube-mark style="width:20px;height:20px;display:block"></span></span>
+          <span>Written by <b>Pavel Kerbel</b>.</span>
+        </div>
+      </div>
+
+    </div>
+  </article>
+</main>
+
+<!-- ============ FOOTER ============ -->
+<footer class="foot">
+  <div class="wrap">
+    <div class="foot-inner">
+      <div class="foot-brand">
+        <a class="brand" href="/"><span data-cube-mark style="width:26px;height:26px;display:block"></span>Metatron</a>
+        <p>Self-hosted decisions for AI coding agents. Your conventions, served over MCP — so agents write code like they belong on the team.</p>
+        <div class="foot-social" style="display:flex;gap:14px;margin-top:16px">
+          <a href="https://github.com/kerbelp/metatron" target="_blank" rel="noopener" aria-label="GitHub" style="color:#8aa39c;display:inline-flex"><svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.7.5.5 5.7.5 12c0 5.1 3.3 9.4 7.9 10.9.6.1.8-.3.8-.6v-2c-3.2.7-3.9-1.5-3.9-1.5-.5-1.3-1.3-1.7-1.3-1.7-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.7 1.3 3.4 1 .1-.8.4-1.3.7-1.6-2.6-.3-5.3-1.3-5.3-5.7 0-1.3.5-2.3 1.2-3.1-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0c2.3-1.5 3.3-1.2 3.3-1.2.6 1.6.2 2.8.1 3.1.8.8 1.2 1.8 1.2 3.1 0 4.4-2.7 5.4-5.3 5.7.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6 4.6-1.5 7.9-5.8 7.9-10.9C23.5 5.7 18.3.5 12 .5Z"/></svg></a>
+          <a href="https://www.youtube.com/@getmetatron" target="_blank" rel="noopener" aria-label="YouTube" style="color:#8aa39c;display:inline-flex"><svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M23.5 6.2a3 3 0 0 0-2.11-2.12C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.39.58A3 3 0 0 0 .5 6.2 31.1 31.1 0 0 0 0 12a31.1 31.1 0 0 0 .5 5.8 3 3 0 0 0 2.11 2.12C4.5 20.5 12 20.5 12 20.5s7.5 0 9.39-.58A3 3 0 0 0 23.5 17.8 31.1 31.1 0 0 0 24 12a31.1 31.1 0 0 0-.5-5.8ZM9.6 15.6V8.4l6.3 3.6-6.3 3.6Z"/></svg></a>
+        </div>
+      </div>
+      <div class="foot-cols">
+        <div class="foot-col">
+          <h5>Product</h5>
+          <a href="/#problem">The problem</a>
+          <a href="/#how">How it works</a>
+          <a href="/#anatomy">Anatomy of a decision</a>
+          <a href="/#opensource">Open-source</a>
+        </div>
+        <div class="foot-col">
+          <h5>Resources</h5>
+          <a href="/blog/">Blog</a>
+          <a href="/docs/">Documentation</a>
+          <a href="https://github.com/kerbelp/metatron" target="_blank" rel="noopener">GitHub repo</a>
+          <a href="https://youtu.be/VoWp6jH4VLM" target="_blank" rel="noopener">Demo video</a>
+        </div>
+        <div class="foot-col">
+          <h5>Contact</h5>
+          <a href="mailto:kerbelp@gmail.com">kerbelp@gmail.com</a>
+          <a href="mailto:kerbelp@gmail.com?subject=Metatron%20hosted%20interest">Hosted version?</a>
+        </div>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>© 2026 Metatron · MIT licensed</span>
+      <span>Built with tree-sitter · MCP · SQLite</span>
+    </div>
+  </div>
+</footer>
+
+<script src="/metatron.js"></script>
+</body>
+</html>

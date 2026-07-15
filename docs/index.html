@@ -457,7 +457,20 @@
             <code>context/decisions/</code>, and a README.</li>
           <li>A managed block in <code>AGENTS.md</code> — appended to an existing file, never
             overwriting it.</li>
+          <li>A <code>CLAUDE.md</code> bridge (<code>@AGENTS.md</code>) so Claude Code sessions
+            load the contract — headless Claude Code reads <code>CLAUDE.md</code> only. Your
+            existing <code>CLAUDE.md</code> is left untouched if it already references
+            AGENTS.md.</li>
         </ul>
+        <p><strong>The contract is a recipe, not a policy</strong> (since 0.12.0). The
+          consult-first block gives agents numbered steps with literal commands —
+          <code>cat context.md</code>, then <code>cat context/decisions/&lt;topic&gt;.md</code>
+          for the relevant files — because measured compliance with a prose contract was 2/20
+          for a local 8B model versus 20/20 for the procedural form.
+          <a href="/blog/recipes-not-policies/">The blog post</a> has the full measurements,
+          including why "read the relevant files" silently fails on small models. If you
+          onboarded a repo before 0.12.0, re-run <code>metatron context setup</code> to refresh
+          the managed artifacts.</p>
         <p>The day-to-day loop: the agent reads <code>context/decisions/</code> before touching
           code, records durable conventions it discovers as new files in
           <code>context/candidate/</code>, and a human promotes with a reviewed move:</p>
