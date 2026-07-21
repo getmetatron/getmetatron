@@ -504,7 +504,7 @@
         TODO(provider): replace mailto with a real POST, e.g.
         fetch("/api/subscribe", {method:"POST", body: JSON.stringify({email})})
      ---------------------------------------------------------- */
-  var SIGNUP_TO = "kerbelp@gmail.com"; // <- swap for list provider later
+  var SIGNUP_TO = "hello@getmetatron.com"; // <- swap for list provider later
   function initEmail() {
     document.querySelectorAll("form[data-signup]").forEach(function (form) {
       var ok = form.parentElement.querySelector(".email-ok");
