@@ -27,7 +27,7 @@ the CDN; everything else is local.
 
 ## Things to wire up
 
-- **Email signup** — currently uses a **mailto fallback** to `kerbelp@gmail.com`.
+- **Email signup** — currently uses a **mailto fallback** to `hello@getmetatron.com`.
   To switch to a real list provider, see `metatron.js`:
   - `SIGNUP_TO` constant (the fallback address), and
   - the `TODO(provider)` block in `initEmail()` — replace the `mailto` redirect
