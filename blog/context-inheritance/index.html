@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-0P4SKXFNWL"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-0P4SKXFNWL');
+</script>
+
+<title>Context inheritance: who wrote the context decides whether it helps</title>
+<meta name="description" content="Giving a coding agent your repository's context sometimes transforms it and sometimes does nothing. We ran a pre-registered SWE-bench study and found the difference is one variable: the capability of whoever wrote the context relative to the agent reading it. A weak model doubles its localization from frontier-written context and gains nothing from its own." />
+<link rel="canonical" href="https://getmetatron.com/blog/context-inheritance/" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Hanken+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="/styles.css" />
+<link rel="stylesheet" href="/blog.css" />
+
+<!-- Favicons -->
+<link rel="icon" href="/public/images/favicon.ico" sizes="any" />
+<link rel="icon" type="image/png" sizes="32x32" href="/public/images/favicon-32x32.png" />
+<link rel="icon" type="image/png" sizes="16x16" href="/public/images/favicon-16x16.png" />
+<link rel="apple-touch-icon" sizes="180x180" href="/public/images/apple-touch-icon.png" />
+
+<!-- Open Graph -->
+<meta property="og:type" content="article" />
+<meta property="og:site_name" content="Metatron" />
+<meta property="og:url" content="https://getmetatron.com/blog/context-inheritance/" />
+<meta property="og:title" content="Context inheritance: who wrote the context decides whether it helps" />
+<meta property="og:description" content="A pre-registered SWE-bench study: a weak agent doubles its localization from frontier-written context and gains nothing from its own. Repository context flows down a capability gradient." />
+<meta property="og:image" content="https://getmetatron.com/public/images/og/context-inheritance.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content="Context inheritance — Metatron blog" />
+<meta property="article:published_time" content="2026-07-21" />
+<meta property="article:author" content="Pavel Kerbel" />
+
+<!-- Twitter / X -->
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Context inheritance: who wrote the context decides whether it helps" />
+<meta name="twitter:description" content="Repository context helps a coding agent — but only if a more capable model wrote it. A weak model doubles its localization from frontier context and gains nothing from its own. Pre-registered on SWE-bench." />
+<meta name="twitter:image" content="https://getmetatron.com/public/images/og/context-inheritance.png" />
+
+<!-- JSON-LD -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Context inheritance: who wrote the context decides whether it helps",
+  "description": "A pre-registered SWE-bench study of repository context for AI coding agents. Benefit is capability-dependent: a weak model doubles its localization from frontier-written context and gains nothing from its own.",
+  "image": "https://getmetatron.com/public/images/og/context-inheritance.png",
+  "datePublished": "2026-07-21",
+  "dateModified": "2026-07-21",
+  "author": { "@type": "Person", "name": "Pavel Kerbel", "url": "https://pavelkerbel.com" },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Metatron",
+    "logo": { "@type": "ImageObject", "url": "https://getmetatron.com/public/images/apple-touch-icon.png" }
+  },
+  "mainEntityOfPage": { "@type": "WebPage", "@id": "https://getmetatron.com/blog/context-inheritance/" }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://getmetatron.com/" },
+    { "@type": "ListItem", "position": 2, "name": "Blog", "item": "https://getmetatron.com/blog/" },
+    { "@type": "ListItem", "position": 3, "name": "Context inheritance: who wrote the context decides whether it helps", "item": "https://getmetatron.com/blog/context-inheritance/" }
+  ]
+}
+</script>
+</head>
+<body>
+
+<!-- ============ NAV ============ -->
+<header class="nav">
+  <div class="nav-inner">
+    <a class="brand" href="/" aria-label="Metatron home">
+      <span data-cube-mark style="width:26px;height:26px;display:block"></span>
+      Metatron
+    </a>
+    <nav class="nav-links" aria-label="Primary">
+      <a href="/#problem">Problem</a>
+      <a href="/#how">How it works</a>
+      <a href="/#ui">The UI</a>
+      <a href="/blog/">Blog</a>
+      <a href="/docs/">Docs</a>
+    </nav>
+    <div class="nav-cta">
+      <a class="btn btn-ghost btn-sm" href="https://github.com/kerbelp/metatron" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.7.5.5 5.7.5 12c0 5.1 3.3 9.4 7.9 10.9.6.1.8-.3.8-.6v-2c-3.2.7-3.9-1.5-3.9-1.5-.5-1.3-1.3-1.7-1.3-1.7-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.7 1.3 3.4 1 .1-.8.4-1.3.7-1.6-2.6-.3-5.3-1.3-5.3-5.7 0-1.3.5-2.3 1.2-3.1-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0c2.3-1.5 3.3-1.2 3.3-1.2.6 1.6.2 2.8.1 3.1.8.8 1.2 1.8 1.2 3.1 0 4.4-2.7 5.4-5.3 5.7.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6 4.6-1.5 7.9-5.8 7.9-10.9C23.5 5.7 18.3.5 12 .5Z"/></svg>
+        GitHub
+      </a>
+      <a class="btn btn-primary btn-sm" href="/#updates">Get updates</a>
+    </div>
+    <button class="nav-burger" aria-label="Menu">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+    </button>
+  </div>
+</header>
+
+<main class="blog-main" id="top">
+  <article class="wrap blog-wrap">
+
+    <div class="crumb">
+      <a href="/">Home</a><span>/</span><a href="/blog/">Blog</a><span>/</span>Context inheritance
+    </div>
+
+    <header class="article-head">
+      <span class="kicker">Research</span>
+      <h1>Context inheritance: who wrote the context decides whether it helps</h1>
+      <div class="article-meta">
+        <span>Pavel Kerbel</span>
+        <span class="dot">·</span>
+        <time datetime="2026-07-21">July 21, 2026</time>
+        <span class="dot">·</span>
+        <span>9 min read</span>
+      </div>
+      <p class="article-lede">
+        Give a coding agent your repository's context — the decisions, the
+        constraints, the conventions — and sometimes it transforms the agent's
+        behavior, and sometimes it does nothing at all. That inconsistency bothered
+        us enough to run a pre-registered experiment on SWE-bench Verified. The
+        answer turns out to be one variable: the capability of whoever
+        <em>wrote</em> the context relative to the agent that <em>reads</em> it. A
+        small model doubles its ability to find the right file when a stronger model
+        wrote its context — and gains <strong>exactly nothing</strong> from context
+        it wrote itself. We call the pattern <strong>context inheritance</strong>:
+        repository context is senior knowledge, and its value flows downhill.
+      </p>
+    </header>
+
+    <div class="prose">
+
+      <h2>The puzzle: same context, opposite outcomes</h2>
+      <p>
+        Metatron's whole premise is that a repository should carry its own
+        agent-facing context — decisions and constraints as versioned markdown the
+        agent consults before it writes code. We had already shown agents
+        <a href="/blog/recipes-not-policies/">actually read it</a> when the contract
+        is written as a procedure. The open question was harder: once they read it,
+        does it <em>help</em>? And the honest early answer was "sometimes, a lot;
+        sometimes, not at all" — which is not an answer you can ship advice on.
+      </p>
+      <p>
+        So we froze a protocol — hypotheses, conditions, metrics, and an analysis
+        plan — timestamped it in git before collecting any confirmatory data, and
+        ran it. Two executors: a small local model (Gemma&nbsp;3, 8B) and a frontier
+        model (Claude Opus 4.8). Real historical bugs from large open-source Python
+        projects, graded by the projects' own hidden test suites. Every episode a
+        fresh model session in a freshly cloned checkout — no memory carried across
+        runs. The variable we cared about wasn't <em>whether</em> context was
+        present, but <em>who authored it</em>.
+      </p>
+
+      <h2>The capability gradient</h2>
+      <p>
+        Hold the reader fixed at the small 8B model and vary only who wrote its
+        context. Measure whether it edits the same file the project's real fix
+        touched — "localization," a clean proxy for working in the right place.
+      </p>
+      <ul>
+        <li><strong>No context:</strong> 21.1% localization — the baseline.</li>
+        <li><strong>Context the 8B model wrote itself</strong> (its own promoted
+          lessons from earlier tasks): 21.1%. That is <strong>+0.0 points</strong>,
+          <em>p</em>&nbsp;=&nbsp;1.0 — identical to no context, to the decimal.</li>
+        <li><strong>Context written blind by a frontier model</strong> (given only
+          an old checkout and topic names, never the bug): 47.2%.
+          <strong>+26.1 points</strong>, <em>p</em>&nbsp;&lt;&nbsp;0.0001.</li>
+      </ul>
+      <p>
+        A stronger author more than <strong>doubles</strong> the weak model's
+        ability to find the right file. The model's own lessons move it not one
+        inch. And this isn't because the 8B model can't <em>use</em> context — it
+        uses frontier-written context decisively. It just can't <em>write</em>
+        context worth reading. Inspect what it recorded and you see why: it writes
+        down tooling tactics ("run pytest with <code>-x</code>"), while the frontier
+        model, under the identical prompt, writes down the actual repository
+        constraints — where fixes belong and which pitfalls to avoid.
+      </p>
+      <p>
+        The shape matters. It's not a smooth dose curve where more capable authorship
+        buys proportionally more benefit; a gold-standard "oracle" author (shown the
+        real fix) landed at 42.8% — statistically tied with the blind frontier
+        author. It's a <strong>threshold</strong>: context helps if and only if its
+        author outranks its reader. Below that line, nothing; above it, roughly
+        double.
+      </p>
+
+      <figure>
+        <img src="/public/images/blog/context-inheritance-gradient.png"
+             alt="Horizontal bar chart: gold-file localization by context author. No context and self-authored (8B) both 21.1%; gold-distilled 42.8% (+21.7pp); frontier blind seed 47.2% (+26.1pp, p<0.0001)."
+             loading="lazy" style="width:100%;border-radius:12px" />
+        <figcaption>Localization of the 8B reader by who authored its context. Any
+        author more capable than the reader roughly doubles localization;
+        self-authored context sits exactly on the no-context floor.</figcaption>
+      </figure>
+
+      <h2>What gets inherited flips at the top</h2>
+      <p>
+        Now make the reader the frontier model and let it run the full lifecycle —
+        work a task, distill what the <em>failure</em> taught, carry that lesson to a
+        different task sharing the same constraint. On roughly one-hour-class bugs it
+        resolved <strong>72.9% vs 58.3%</strong> without the lifecycle
+        (<strong>+14.6 points</strong>, <em>p</em>&nbsp;=&nbsp;0.041) while spending
+        <strong>32% fewer tokens per resolved task</strong> (81.8K&nbsp;→&nbsp;55.7K).
+      </p>
+      <p>
+        But here's the inversion. Lessons distilled from the <em>answer key</em> — the
+        project's actual fix — transferred <em>nothing</em> at the frontier
+        (statistically indistinguishable from no context), even though answer-derived
+        context was the <em>strongest</em> author for the weak model. Read it plainly:
+        a weak model needs to be told <em>where things are</em>; a strong model
+        already localizes and needs to be told <em>where it will go wrong</em>.
+        Answer-derived lessons encode solutions; failure-derived lessons encode traps
+        and process. What is worth inheriting depends on who's inheriting it.
+      </p>
+
+      <h2>Delivery: selection beats volume</h2>
+      <p>
+        Content is only half of it; <em>how</em> you put it in front of the agent is
+        the other half. Holding the content fixed and varying delivery for the small
+        model across 800+ episodes per arm: a <strong>sharded</strong> store the
+        agent reads selectively (an index, then only the relevant decision files)
+        beat a single monolithic file on localization and paid roughly
+        <strong>three times fewer</strong> context tokens (305 vs 902 per episode).
+        The monolith actually landed <em>below</em> the no-context baseline while
+        costing the most — dumping everything into the window crowds out the task.
+        Making the agent <em>choose</em> what to read both helps and costs less. It's
+        the same lesson as the gradient, one level down: a reader inherits more when
+        it inherits <em>selectively</em>.
+      </p>
+
+      <h2>The honest ceiling</h2>
+      <p>
+        One result we could have buried and didn't. Point the frontier model at a
+        <em>broad, random</em> sample of well-specified bugs — not the
+        constraint-sharing cases the layer is built for — and it resolves
+        <strong>90.9% with no context at all</strong>. On that distribution, no
+        delivery mechanism beats the baseline, and the selective store costs
+        <em>more</em> tokens, not fewer, because a capable model turns "read what you
+        need" into thorough exploration.
+      </p>
+      <p>
+        That is not a knock on repository context; it's the boundary of when it pays.
+        A frontier model fixing a crisp, isolated bug it already localizes has no
+        headroom for context to add. The value shows up exactly where the ceiling
+        isn't: weaker and cheaper models across the board, and strong models on the
+        work that is ambiguous, convention-laden, or re-hits a constraint the team
+        already settled — the parts of real repositories that SWE-bench's isolated
+        fixes don't capture. Inheritance needs an author above the reader
+        <em>and</em> a reader below its ceiling.
+      </p>
+
+      <h2>What this means if you run agents</h2>
+      <p>
+        The findings collapse into three practical rules.
+      </p>
+      <p>
+        <strong>1. Author your context with the strongest writer you have.</strong>
+        A human expert, a frontier model, or distillation from authoritative fixes —
+        never your cheap working agents authoring their own. A weak self-taught loop
+        equals no context, exactly.<br />
+        <strong>2. The benefit accrues to the cheap agents.</strong> One frontier
+        authoring pass, paid once, propagates senior-level navigational knowledge to
+        every local agent that later reads the repository, at zero marginal inference
+        cost. Expensive knowledge, written once, read cheaply forever.<br />
+        <strong>3. Keep it selective.</strong> Shard the context and let agents read
+        the slice they need. Volume is not the goal; the right slice at the right
+        moment is.
+      </p>
+      <p>
+        This is exactly the shape Metatron is built around: decisions authored and
+        curated by the people (or models) who know the codebase, stored as sharded
+        markdown in git, served to whatever agent shows up next. The research names
+        the reason it works. Context is senior knowledge — and a repository that
+        carries it lets every junior agent inherit it.
+      </p>
+
+      <hr />
+
+      <p>
+        The full write-up — architecture, the pre-registered protocol, every number,
+        and the deviations — is in the
+        <a href="https://github.com/kerbelp/context-md" target="_blank" rel="noopener">research
+        repository</a>, released for replication. A note on scope we hold to
+        throughout: this validates the <em>pattern</em> and its delivery, not any
+        automatic extraction step. The context in the study was written by hand and
+        by blind models on purpose, so the effect we measured is the author's
+        capability and nothing else.
+      </p>
+
+      <div class="article-foot">
+        <div class="foot-links">
+          <a class="btn btn-ghost btn-sm" href="https://github.com/kerbelp/metatron" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="currentColor" style="width:16px;height:16px"><path d="M12 .5C5.7.5.5 5.7.5 12c0 5.1 3.3 9.4 7.9 10.9.6.1.8-.3.8-.6v-2c-3.2.7-3.9-1.5-3.9-1.5-.5-1.3-1.3-1.7-1.3-1.7-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.7 1.3 3.4 1 .1-.8.4-1.3.7-1.6-2.6-.3-5.3-1.3-5.3-5.7 0-1.3.5-2.3 1.2-3.1-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0c2.3-1.5 3.3-1.2 3.3-1.2.6 1.6.2 2.8.1 3.1.8.8 1.2 1.8 1.2 3.1 0 4.4-2.7 5.4-5.3 5.7.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6 4.6-1.5 7.9-5.8 7.9-10.9C23.5 5.7 18.3.5 12 .5Z"/></svg>
+            Star on GitHub
+          </a>
+          <a class="btn btn-ghost btn-sm" href="/docs/">Read the docs</a>
+          <a class="btn btn-ghost btn-sm" href="/#updates">Get early updates</a>
+        </div>
+        <div class="article-byline">
+          <span class="mark"><span data-cube-mark style="width:20px;height:20px;display:block"></span></span>
+          <span>Written by <b>Pavel Kerbel</b>.</span>
+        </div>
+      </div>
+
+    </div>
+  </article>
+</main>
+
+<!-- ============ FOOTER ============ -->
+<footer class="foot">
+  <div class="wrap">
+    <div class="foot-inner">
+      <div class="foot-brand">
+        <a class="brand" href="/"><span data-cube-mark style="width:26px;height:26px;display:block"></span>Metatron</a>
+        <p>Self-hosted decisions for AI coding agents. Your conventions, served over MCP — so agents write code like they belong on the team.</p>
+        <div class="foot-social" style="display:flex;gap:14px;margin-top:16px">
+          <a href="https://github.com/kerbelp/metatron" target="_blank" rel="noopener" aria-label="GitHub" style="color:#8aa39c;display:inline-flex"><svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.7.5.5 5.7.5 12c0 5.1 3.3 9.4 7.9 10.9.6.1.8-.3.8-.6v-2c-3.2.7-3.9-1.5-3.9-1.5-.5-1.3-1.3-1.7-1.3-1.7-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.7 1.3 3.4 1 .1-.8.4-1.3.7-1.6-2.6-.3-5.3-1.3-5.3-5.7 0-1.3.5-2.3 1.2-3.1-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0c2.3-1.5 3.3-1.2 3.3-1.2.6 1.6.2 2.8.1 3.1.8.8 1.2 1.8 1.2 3.1 0 4.4-2.7 5.4-5.3 5.7.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6 4.6-1.5 7.9-5.8 7.9-10.9C23.5 5.7 18.3.5 12 .5Z"/></svg></a>
+          <a href="https://www.youtube.com/@getmetatron" target="_blank" rel="noopener" aria-label="YouTube" style="color:#8aa39c;display:inline-flex"><svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M23.5 6.2a3 3 0 0 0-2.11-2.12C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.39.58A3 3 0 0 0 .5 6.2 31.1 31.1 0 0 0 0 12a31.1 31.1 0 0 0 .5 5.8 3 3 0 0 0 2.11 2.12C4.5 20.5 12 20.5 12 20.5s7.5 0 9.39-.58A3 3 0 0 0 23.5 17.8 31.1 31.1 0 0 0 24 12a31.1 31.1 0 0 0-.5-5.8ZM9.6 15.6V8.4l6.3 3.6-6.3 3.6Z"/></svg></a>
+        </div>
+      </div>
+      <div class="foot-cols">
+        <div class="foot-col">
+          <h5>Product</h5>
+          <a href="/#problem">The problem</a>
+          <a href="/#how">How it works</a>
+          <a href="/#anatomy">Anatomy of a decision</a>
+          <a href="/#opensource">Open-source</a>
+        </div>
+        <div class="foot-col">
+          <h5>Resources</h5>
+          <a href="/blog/">Blog</a>
+          <a href="/docs/">Documentation</a>
+          <a href="https://github.com/kerbelp/metatron" target="_blank" rel="noopener">GitHub repo</a>
+          <a href="https://youtu.be/RdPn6OMtfOs" target="_blank" rel="noopener">Demo video</a>
+        </div>
+        <div class="foot-col">
+          <h5>Contact</h5>
+          <a href="mailto:hello@getmetatron.com">hello@getmetatron.com</a>
+          <a href="mailto:hello@getmetatron.com?subject=Metatron%20hosted%20interest">Hosted version?</a>
+        </div>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>© 2026 Metatron · MIT licensed</span>
+      <span>Built with tree-sitter · MCP · SQLite</span>
+    </div>
+  </div>
+</footer>
+
+<script src="/metatron.js"></script>
+</body>
+</html>
