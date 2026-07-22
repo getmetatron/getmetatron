@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-0P4SKXFNWL"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-0P4SKXFNWL');
+</script>
+
+<title>Verification contracts: teaching your repo how to prove itself</title>
+<meta name="description" content="Repos carry code and sometimes tests, but never a durable, human-reviewed artifact that says how we prove this behavior works — and what a failure implies. We're designing verification contracts: git-tracked OKF files with a curated Failure Means section, authored by the agent that just built the feature, run only by a human or CI." />
+<link rel="canonical" href="https://getmetatron.com/blog/verification-contracts/" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Hanken+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="/styles.css" />
+<link rel="stylesheet" href="/blog.css" />
+
+<!-- Favicons -->
+<link rel="icon" href="/public/images/favicon.ico" sizes="any" />
+<link rel="icon" type="image/png" sizes="32x32" href="/public/images/favicon-32x32.png" />
+<link rel="icon" type="image/png" sizes="16x16" href="/public/images/favicon-16x16.png" />
+<link rel="apple-touch-icon" sizes="180x180" href="/public/images/apple-touch-icon.png" />
+
+<!-- Open Graph -->
+<meta property="og:type" content="article" />
+<meta property="og:site_name" content="Metatron" />
+<meta property="og:url" content="https://getmetatron.com/blog/verification-contracts/" />
+<meta property="og:title" content="Verification contracts: teaching your repo how to prove itself" />
+<meta property="og:description" content="A verification contract is a git-tracked OKF file — setup, checks, and a curated Failure Means section that routes a red check to the right subsystem. Authored by the agent that just built the feature; run only by a human or CI. Shipped in Metatron 0.13.0." />
+<meta property="og:image" content="https://getmetatron.com/public/images/og/verification-contracts.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content="Verification contracts — Metatron blog" />
+<meta property="article:published_time" content="2026-07-22" />
+<meta property="article:author" content="Pavel Kerbel" />
+
+<!-- Twitter / X -->
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Verification contracts: teaching your repo how to prove itself" />
+<meta name="twitter:description" content="A git-tracked artifact that says how we prove this works — and what a failure implies. The curated Failure Means section routes a red check to the right fix. Authored at the moment of most context; run only by a human or CI. Shipped in Metatron 0.13.0." />
+<meta name="twitter:image" content="https://getmetatron.com/public/images/og/verification-contracts.png" />
+
+<!-- JSON-LD -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Verification contracts: teaching your repo how to prove itself",
+  "description": "A Metatron feature (shipped in 0.13.0): git-tracked OKF verification contracts with a curated Failure Means section that routes a red check to the right subsystem, authored by the agent that just built the feature, run only by a human or CI.",
+  "image": "https://getmetatron.com/public/images/og/verification-contracts.png",
+  "datePublished": "2026-07-22",
+  "dateModified": "2026-07-22",
+  "author": { "@type": "Person", "name": "Pavel Kerbel", "url": "https://pavelkerbel.com" },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Metatron",
+    "logo": { "@type": "ImageObject", "url": "https://getmetatron.com/public/images/apple-touch-icon.png" }
+  },
+  "mainEntityOfPage": { "@type": "WebPage", "@id": "https://getmetatron.com/blog/verification-contracts/" }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://getmetatron.com/" },
+    { "@type": "ListItem", "position": 2, "name": "Blog", "item": "https://getmetatron.com/blog/" },
+    { "@type": "ListItem", "position": 3, "name": "Verification contracts: teaching your repo how to prove itself", "item": "https://getmetatron.com/blog/verification-contracts/" }
+  ]
+}
+</script>
+</head>
+<body>
+
+<!-- ============ NAV ============ -->
+<header class="nav">
+  <div class="nav-inner">
+    <a class="brand" href="/" aria-label="Metatron home">
+      <span data-cube-mark style="width:26px;height:26px;display:block"></span>
+      Metatron
+    </a>
+    <nav class="nav-links" aria-label="Primary">
+      <a href="/#problem">Problem</a>
+      <a href="/#how">How it works</a>
+      <a href="/#ui">The UI</a>
+      <a href="/blog/">Blog</a>
+      <a href="/docs/">Docs</a>
+    </nav>
+    <div class="nav-cta">
+      <a class="btn btn-ghost btn-sm" href="https://github.com/kerbelp/metatron" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.7.5.5 5.7.5 12c0 5.1 3.3 9.4 7.9 10.9.6.1.8-.3.8-.6v-2c-3.2.7-3.9-1.5-3.9-1.5-.5-1.3-1.3-1.7-1.3-1.7-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.7 1.3 3.4 1 .1-.8.4-1.3.7-1.6-2.6-.3-5.3-1.3-5.3-5.7 0-1.3.5-2.3 1.2-3.1-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0c2.3-1.5 3.3-1.2 3.3-1.2.6 1.6.2 2.8.1 3.1.8.8 1.2 1.8 1.2 3.1 0 4.4-2.7 5.4-5.3 5.7.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6 4.6-1.5 7.9-5.8 7.9-10.9C23.5 5.7 18.3.5 12 .5Z"/></svg>
+        GitHub
+      </a>
+      <a class="btn btn-primary btn-sm" href="/#updates">Get updates</a>
+    </div>
+    <button class="nav-burger" aria-label="Menu">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+    </button>
+  </div>
+</header>
+
+<main class="blog-main" id="top">
+  <article class="wrap blog-wrap">
+
+    <div class="crumb">
+      <a href="/">Home</a><span>/</span><a href="/blog/">Blog</a><span>/</span>Verification contracts
+    </div>
+
+    <header class="article-head">
+      <span class="kicker">Engineering</span>
+      <h1>Verification contracts: teaching your repo how to prove itself</h1>
+      <div class="article-meta">
+        <span>Pavel Kerbel</span>
+        <span class="dot">·</span>
+        <time datetime="2026-07-22">July 22, 2026</time>
+        <span class="dot">·</span>
+        <span>8 min read</span>
+      </div>
+      <p class="article-lede">
+        A repository carries its code, and if you're lucky its tests. What it almost
+        never carries is a durable answer to a plainer question: <em>how do we prove
+        this behavior actually works, and what does a red check imply?</em> An agent
+        finishes a feature, figures out the run-and-verify steps in its head — the
+        migrations, the seed fixtures, the sample request, the status code it expects —
+        and then the session ends and every one of those steps evaporates. The next
+        agent rediscovers them from scratch. We think that operational knowledge deserves
+        the same treatment Metatron already gives architectural knowledge: a reviewed,
+        versioned artifact. That is the <strong>Repository Verification Layer</strong>,
+        shipped in Metatron 0.13.0, and its unit is a
+        <strong>verification contract</strong>.
+      </p>
+    </header>
+
+    <div class="prose">
+
+      <h2>The gap: proof that never gets written down</h2>
+      <p>
+        Metatron's job so far has been to capture how an agent should <em>think</em>
+        about a repository — the intent, the invariants, the conventions — as curated
+        markdown it consults before writing code. It says nothing about how to
+        <em>prove a change works when you run it</em>. And that's a real gap, because
+        the run-and-verify knowledge is exactly the kind that lives nowhere durable.
+      </p>
+      <p>
+        Watch what happens today. An agent lands a change, writes a unit test or two,
+        and then — when a human or the next agent asks "how do I actually run this?" —
+        reconstructs the operational steps inside its prompt window: bring the services
+        up, apply the migrations, seed the fixtures, fire a request, check the status
+        code and the response shape. None of that is committed. When the session closes
+        it's gone, and the next agent rediscovers it from first principles. It's the
+        same rediscovery problem Metatron already solves for architecture, only pointed
+        at verification. Repositories have no durable, machine-readable, human-reviewed
+        artifact that answers <strong>"how do we prove this behavior, and what does a
+        failure imply?"</strong>
+      </p>
+
+      <h2>What a verification contract is</h2>
+      <p>
+        A verification contract is a git-tracked <a href="/blog/open-knowledge-format/">OKF</a>
+        markdown file that lives right beside your decisions, under
+        <code>context/verification/</code>. It reuses the machinery decisions already
+        run on: the same frontmatter and <code>scope:</code> model that binds a contract
+        to a subsystem, the same reserved-filename discipline, the same mirror
+        import/export path. A contract has a handful of explicit sections the parser
+        keys off — the body stays human-readable and diffs cleanly:
+      </p>
+      <ul>
+        <li><strong>Assumptions</strong> — the pre-existing state to verify before
+          anything runs (a database reachable, an env var set).</li>
+        <li><strong>Setup</strong> — the commands that stage the world: migrations,
+          seed fixtures.</li>
+        <li><strong>Checks</strong> — each an action plus its expected assertions
+          (a status code, a JSONPath value, a substring), tagged so you can select a
+          slice like <code>smoke</code> or <code>critical-path</code>.</li>
+        <li><strong>Failure Means</strong> — the part that doesn't exist anywhere else.</li>
+        <li><strong>Teardown</strong> — put the world back, whether the checks passed
+          or not.</li>
+      </ul>
+      <p>
+        Because a contract is scoped to one subsystem and indexed like a decision, an
+        agent working on auth pulls the auth contract and nothing else. That's a
+        deliberate echo of what our <a href="/blog/context-inheritance/">context
+        inheritance</a> study found about delivery: selection beats volume. A single
+        monolithic <code>testing.md</code> read into a context window crowds out the
+        task the same way a decision monolith did — it landed <em>below</em> the
+        no-context baseline while costing the most tokens. Scoped, served on demand,
+        never concatenated. That selective serving is the whole reason to build this
+        inside Metatron rather than leave it a loose <code>docs/testing.md</code>
+        convention.
+      </p>
+
+      <h2>The differentiator: "Failure Means"</h2>
+      <p>
+        Every test runner tells you a check went red. None of them tells you what red
+        <em>implies</em>. That's the section we care about most. <strong>Failure
+        Means</strong> is a curated mapping from a specific red check to the subsystem
+        that is probably at fault — so a failure routes to the right fix instead of
+        sending someone off to guess.
+      </p>
+      <p>
+        Concretely, for an auth contract it reads like this: a 401 on the happy path
+        points at a seed hash mismatch or a missing user, or a <code>JWT_SECRET</code>
+        that isn't set; a 500 on the wrong-password path means the auth middleware is
+        leaking an unhandled exception; a connection refused means the gateway is down
+        and setup never completed. No existing tool — not pytest, not Postman, not
+        Playwright, not Bruno — encodes what a failure implies about which subsystem.
+        It is a curated decision about failure modes, the same kind of distilled
+        operational judgment Metatron already stores for architecture, and it's what
+        lets a reading agent turn a red result into a directed fix.
+      </p>
+
+      <h2>Who authors it: the agent that just built the feature</h2>
+      <p>
+        Here's where the design leans directly on something we published. In the
+        <a href="/blog/context-inheritance/">context inheritance</a> study, the single
+        variable that decided whether repository context helped was the capability of
+        whoever <em>wrote</em> it relative to the agent that <em>reads</em> it. Context
+        is worth most when it's authored by whoever holds the most capability and the
+        most context. For a verification contract, that author has an obvious identity:
+        the agent that just finished building the feature, at the exact moment it holds
+        the most context it will ever have about how the thing works.
+      </p>
+      <p>
+        So <code>metatron verification setup</code> wires a one-time instruction into
+        <strong>AGENTS.md</strong>: after finishing a testable feature, draft a
+        verification contract describing how to prove it works and what a failure
+        implies. The just-built agent is its strongest possible author. But — and this
+        is the invariant we hold everywhere — a draft is never self-canonical. It lands
+        through the same review gate as decisions: either straight onto a working branch
+        where the reviewed pull request that merges it is the curation act, or staged as
+        a candidate a human promotes with a reviewed <code>git mv</code>. A human placing
+        or approving the file into <code>verification/</code> is the curation act.
+        Nothing crosses that boundary on its own.
+      </p>
+
+      <h2>Running it: executable-first, and selective</h2>
+      <p>
+        The contract is inert markdown until someone runs it. That's
+        <code>metatron verification run</code> — a plain developer-and-CI command. The
+        first milestone is deliberately boring in the best way:
+        <strong>executable-first</strong>. It evaluates the declared assertions
+        deterministically — status and exit codes, substrings, JSONPath, regex, with a
+        shell-assertion escape hatch — with no model in the loop. It's cheap, offline,
+        and it exits non-zero on failure, so it drops into CI and pre-commit unchanged.
+      </p>
+      <p>
+        It's <strong>selective</strong> by design, the same lesson as serving, one level
+        down. With no scope it runs every canonical contract; narrow it with
+        <code>--scope</code> or <code>--tags</code> and CI can run just the
+        <code>smoke</code> and <code>critical-path</code> checks on every pull request
+        while a nightly job runs the full set. Run beats a monolith. And when a check
+        goes red, the report prints that check's <strong>Failure Means</strong> line
+        right next to it — the differentiator carried all the way through to the output,
+        so the person (or the agent reading the report) routes the failure instead of
+        guessing.
+      </p>
+      <p>
+        There's a later, opt-in <code>--judge</code> mode on the roadmap for invariants
+        no assertion can express — "the error copy stays user-neutral," "the migration
+        is reversible" — where a model judges a check against the contract's intent.
+        It's explicitly opt-in, clearly labeled non-deterministic, and never the default
+        or a merge gate on its own. Phase one ships without it.
+      </p>
+
+      <h2>The honest fence: Metatron serves, the operator runs</h2>
+      <p>
+        Now the part we want to be exact about, because it's easy to get wrong. Metatron
+        runs against private codebases with an on-prem, offline posture — your source
+        never leaves the machine. Given that, execution has to sit on the right side of
+        a trust boundary, and we draw it hard.
+      </p>
+      <p>
+        <strong>Metatron's serving path never executes a contract.</strong> There is no
+        <code>run_verification</code> MCP tool, no runner behind the request path. On a
+        private on-prem deployment, a primitive that let the serving layer pipe
+        markdown-defined shell commands into a runner would turn any writable
+        <code>context/</code> file — or a prompt-injected candidate — into an
+        arbitrary-code-execution vector reachable over the wire by any agent. So the
+        serving surfaces stay strictly read-only: an agent can fetch a contract to read,
+        never to run.
+      </p>
+      <p>
+        <code>run</code> is a different trust boundary entirely. It's a command a
+        developer (or a CI job they configured) invokes in their own shell, foreground,
+        with their own privileges — identical in trust to running the commands or
+        <code>pytest</code> by hand, which they could always do. And it's readable before
+        it's run: <code>--dry-run</code> resolves and prints the ordered plan and the
+        resolved assertions <em>without executing anything</em>, so you can see exactly
+        what a contract would do before you let it. Two rules keep the fence honest:
+        nothing an agent reaches over MCP ever runs, and only a human or a CI job they
+        set up ever triggers execution. An agent-authored or injected contract is inert
+        until a person chooses to run it — the same human gate that guards
+        canonicalization guards execution.
+      </p>
+
+      <h2>Where this is headed</h2>
+      <p>
+        Phase one is live in Metatron 0.13.0 — the <code>metatron verification</code>
+        commands and the read-only MCP tools — with the <code>--judge</code> mode still
+        ahead. The shape is consistent with everything Metatron already is. A repository
+        should carry not just how to think about itself, but how to prove itself: a
+        curated artifact, authored by whoever holds the most context at the moment of
+        most context, served selectively to whatever agent shows up next, and executed
+        only by a human or CI on their own trusted side of the wire. The durable value
+        stays where Metatron always puts it — in the reviewed artifact and, above all,
+        in the curated reading of what a failure means.
+      </p>
+
+      <div class="article-foot">
+        <div class="foot-links">
+          <a class="btn btn-ghost btn-sm" href="https://github.com/kerbelp/metatron" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="currentColor" style="width:16px;height:16px"><path d="M12 .5C5.7.5.5 5.7.5 12c0 5.1 3.3 9.4 7.9 10.9.6.1.8-.3.8-.6v-2c-3.2.7-3.9-1.5-3.9-1.5-.5-1.3-1.3-1.7-1.3-1.7-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.7 1.3 3.4 1 .1-.8.4-1.3.7-1.6-2.6-.3-5.3-1.3-5.3-5.7 0-1.3.5-2.3 1.2-3.1-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0c2.3-1.5 3.3-1.2 3.3-1.2.6 1.6.2 2.8.1 3.1.8.8 1.2 1.8 1.2 3.1 0 4.4-2.7 5.4-5.3 5.7.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6 4.6-1.5 7.9-5.8 7.9-10.9C23.5 5.7 18.3.5 12 .5Z"/></svg>
+            Star on GitHub
+          </a>
+          <a class="btn btn-ghost btn-sm" href="/docs/">Read the docs</a>
+          <a class="btn btn-ghost btn-sm" href="/#updates">Get early updates</a>
+        </div>
+        <div class="article-byline">
+          <span class="mark"><span data-cube-mark style="width:20px;height:20px;display:block"></span></span>
+          <span>Written by <b>Pavel Kerbel</b>.</span>
+        </div>
+      </div>
+
+    </div>
+  </article>
+</main>
+
+<!-- ============ FOOTER ============ -->
+<footer class="foot">
+  <div class="wrap">
+    <div class="foot-inner">
+      <div class="foot-brand">
+        <a class="brand" href="/"><span data-cube-mark style="width:26px;height:26px;display:block"></span>Metatron</a>
+        <p>Self-hosted decisions for AI coding agents. Your conventions, served over MCP — so agents write code like they belong on the team.</p>
+        <div class="foot-social" style="display:flex;gap:14px;margin-top:16px">
+          <a href="https://github.com/kerbelp/metatron" target="_blank" rel="noopener" aria-label="GitHub" style="color:#8aa39c;display:inline-flex"><svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.7.5.5 5.7.5 12c0 5.1 3.3 9.4 7.9 10.9.6.1.8-.3.8-.6v-2c-3.2.7-3.9-1.5-3.9-1.5-.5-1.3-1.3-1.7-1.3-1.7-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.7 1.3 3.4 1 .1-.8.4-1.3.7-1.6-2.6-.3-5.3-1.3-5.3-5.7 0-1.3.5-2.3 1.2-3.1-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0c2.3-1.5 3.3-1.2 3.3-1.2.6 1.6.2 2.8.1 3.1.8.8 1.2 1.8 1.2 3.1 0 4.4-2.7 5.4-5.3 5.7.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6 4.6-1.5 7.9-5.8 7.9-10.9C23.5 5.7 18.3.5 12 .5Z"/></svg></a>
+          <a href="https://www.youtube.com/@getmetatron" target="_blank" rel="noopener" aria-label="YouTube" style="color:#8aa39c;display:inline-flex"><svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M23.5 6.2a3 3 0 0 0-2.11-2.12C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.39.58A3 3 0 0 0 .5 6.2 31.1 31.1 0 0 0 0 12a31.1 31.1 0 0 0 .5 5.8 3 3 0 0 0 2.11 2.12C4.5 20.5 12 20.5 12 20.5s7.5 0 9.39-.58A3 3 0 0 0 23.5 17.8 31.1 31.1 0 0 0 24 12a31.1 31.1 0 0 0-.5-5.8ZM9.6 15.6V8.4l6.3 3.6-6.3 3.6Z"/></svg></a>
+        </div>
+      </div>
+      <div class="foot-cols">
+        <div class="foot-col">
+          <h5>Product</h5>
+          <a href="/#problem">The problem</a>
+          <a href="/#how">How it works</a>
+          <a href="/#anatomy">Anatomy of a decision</a>
+          <a href="/#opensource">Open-source</a>
+        </div>
+        <div class="foot-col">
+          <h5>Resources</h5>
+          <a href="/blog/">Blog</a>
+          <a href="/docs/">Documentation</a>
+          <a href="https://github.com/kerbelp/metatron" target="_blank" rel="noopener">GitHub repo</a>
+          <a href="https://youtu.be/RdPn6OMtfOs" target="_blank" rel="noopener">Demo video</a>
+        </div>
+        <div class="foot-col">
+          <h5>Contact</h5>
+          <a href="mailto:hello@getmetatron.com">hello@getmetatron.com</a>
+          <a href="mailto:hello@getmetatron.com?subject=Metatron%20hosted%20interest">Hosted version?</a>
+        </div>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>© 2026 Metatron · MIT licensed</span>
+      <span>Built with tree-sitter · MCP · SQLite</span>
+    </div>
+  </div>
+</footer>
+
+<script src="/metatron.js"></script>
+</body>
+</html>
