@@ -172,6 +172,13 @@ section { position: relative; }
   background: radial-gradient(circle at 50% 50%, var(--accent-wash), transparent 62%);
   filter: blur(8px); z-index: -1; pointer-events: none;
 }
+/* HDR halo image behind the cube: on high-dynamic-range displays its PQ-coded
+   teal bloom renders above SDR white (physically glows); on SDR displays it is
+   a faint translucent wash layered with the ::after gradient. */
+.hero-halo {
+  position: absolute; inset: 4%; width: 92%; height: 92%;
+  z-index: -1; pointer-events: none; user-select: none;
+}
 
 /* background grid + glow for hero */
 .hero-bg { position: absolute; inset: 0; z-index: 0; pointer-events: none; }
