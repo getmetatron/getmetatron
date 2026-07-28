@@ -14,12 +14,12 @@
   gtag('config', 'G-0P4SKXFNWL');
 </script>
 <title>Docs — Metatron</title>
-<meta name="description" content="Documentation for Metatron: onboard a repo to git-native decision files consulted by AI coding agents, curate via PR review — or serve the same decisions over MCP." />
+<meta name="description" content="Documentation for Metatron: git-native repository decisions and verification contracts for AI coding agents, curated through human review and optionally served over MCP." />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Hanken+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&amp;family=Hanken+Grotesk:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="../styles.css" />
-<link rel="stylesheet" href="../docs.css" />
+<link rel="stylesheet" href="../docs.css?v=20260728-4" />
 
 <!-- Favicons / app icons -->
 <link rel="icon" href="../public/images/favicon.ico" sizes="any" />
@@ -57,39 +57,101 @@
 </header>
 
 <div class="docs-wrap">
+  <div class="docs-mobile-bar" aria-label="Documentation controls">
+    <button class="docs-menu-toggle" type="button" aria-label="Browse documentation topics"
+            aria-controls="docs-sidebar" aria-expanded="false">
+      <span class="menu-lines" aria-hidden="true"></span>
+      <span>Topics</span>
+    </button>
+    <div class="doc-search doc-search-mobile">
+      <label class="visually-hidden" for="docs-search-mobile">Search documentation</label>
+      <span class="search-mark" aria-hidden="true"></span>
+      <input id="docs-search-mobile" type="search" placeholder="Search docs…" autocomplete="off"
+             spellcheck="false" data-doc-search aria-controls="docs-results-mobile" />
+      <kbd>/</kbd>
+      <div class="doc-search-results" id="docs-results-mobile" role="listbox" hidden></div>
+    </div>
+  </div>
+  <div class="docs-scrim" aria-hidden="true"></div>
+
   <div class="docs-shell">
 
     <!-- ============ SIDEBAR ============ -->
-    <aside class="docs-side">
-      <a class="doc-back" href="../">← Back to home</a>
+    <aside class="docs-side" id="docs-sidebar" aria-label="Documentation navigation">
+      <div class="docs-side-top">
+        <a class="doc-back" href="../">← Back to home</a>
+        <button class="docs-menu-close" type="button" aria-label="Close documentation menu">×</button>
+      </div>
+      <div class="docs-side-title">
+        <span>Metatron Docs</span>
+        <span class="docs-version">v0.13</span>
+      </div>
+      <div class="doc-search doc-search-side">
+        <label class="visually-hidden" for="docs-search-side">Search documentation</label>
+        <span class="search-mark" aria-hidden="true"></span>
+        <input id="docs-search-side" type="search" placeholder="Search docs…" autocomplete="off"
+               spellcheck="false" data-doc-search aria-controls="docs-results-side" />
+        <kbd>/</kbd>
+        <div class="doc-search-results" id="docs-results-side" role="listbox" hidden></div>
+      </div>
       <nav aria-label="Docs">
-        <span class="side-group">Start</span>
-        <a href="#overview">Overview</a>
-        <a href="#loop">The loop</a>
-        <a href="#install">Install</a>
-        <a href="#docker">Docker</a>
-        <a href="#configure">Configure</a>
-        <a href="#quickstart">Quick start</a>
-        <span class="side-group">Commands</span>
-        <a href="#ingest">ingest</a>
-        <a href="#candidates">candidates</a>
-        <a href="#triage">triage</a>
-        <a href="#serve">serve</a>
-        <a href="#ui">ui</a>
-        <a href="#refine">refine-feedback</a>
-        <a href="#version">version</a>
-        <span class="side-group">Files &amp; git</span>
-        <a href="#files-first">Files-first mode</a>
-        <a href="#mirror">mirror &amp; OKF</a>
-        <span class="side-group">Agents</span>
-        <a href="#connect">Connect an agent</a>
-        <a href="#tools">MCP tools</a>
-        <a href="#privacy">Privacy</a>
+        <div class="side-section">
+          <button class="side-group" type="button" aria-expanded="true">
+            <span>Start</span><span class="side-chevron" aria-hidden="true"></span>
+          </button>
+          <div class="side-links">
+            <a href="#overview">Overview</a>
+            <a href="#loop">The loop</a>
+            <a href="#install">Install</a>
+            <a href="#docker">Docker</a>
+            <a href="#configure">Configure</a>
+            <a href="#quickstart">Quick start</a>
+          </div>
+        </div>
+        <div class="side-section">
+          <button class="side-group" type="button" aria-expanded="true">
+            <span>Commands</span><span class="side-chevron" aria-hidden="true"></span>
+          </button>
+          <div class="side-links">
+            <a href="#repo">repo</a>
+            <a href="#ingest">ingest</a>
+            <a href="#candidates">candidates</a>
+            <a href="#triage">triage</a>
+            <a href="#enrich">enrich-keywords</a>
+            <a href="#serve">serve</a>
+            <a href="#ui">ui</a>
+            <a href="#refine">refine-feedback</a>
+            <a href="#version">version</a>
+          </div>
+        </div>
+        <div class="side-section">
+          <button class="side-group" type="button" aria-expanded="true">
+            <span>Files &amp; git</span><span class="side-chevron" aria-hidden="true"></span>
+          </button>
+          <div class="side-links">
+            <a href="#files-first">Files-first mode</a>
+            <a href="#files">files</a>
+            <a href="#mirror">mirror &amp; OKF</a>
+            <a href="#verification">Verification (RVL)</a>
+            <a href="#team">Team handoff</a>
+          </div>
+        </div>
+        <div class="side-section">
+          <button class="side-group" type="button" aria-expanded="true">
+            <span>Agents</span><span class="side-chevron" aria-hidden="true"></span>
+          </button>
+          <div class="side-links">
+            <a href="#connect">Connect an agent</a>
+            <a href="#tools">MCP tools</a>
+            <a href="#privacy">Privacy</a>
+          </div>
+        </div>
       </nav>
     </aside>
 
     <!-- ============ CONTENT ============ -->
     <main class="doc-main">
+      <div class="doc-kicker"><span>Guides &amp; reference</span><span>v0.13</span></div>
       <h1>Documentation</h1>
       <p class="doc-lede">
         Metatron captures your codebase's real implementation decisions as structured
@@ -97,6 +159,9 @@
         curated through your ordinary pull-request review (the default,
         <a class="inline" href="#files-first">files-first mode</a>). Prefer a serving layer?
         The same decisions ship over MCP with relevance ranking and an agent feedback loop.
+        Metatron also records executable, human-reviewed
+        <a class="inline" href="#verification">verification contracts</a>: how to prove a
+        change works and what each failure means.
       </p>
 
       <!-- OVERVIEW -->
@@ -114,7 +179,8 @@
           <span><strong>Nothing becomes canonical without a human.</strong> A
           <em>canonical</em> decision is one a human has approved — the only decisions Metatron
           serves to agents. Bootstrapped, agent-submitted, and feedback-refined decisions all
-          start as <em>candidates</em> for curation. None self-promote.</span>
+          start as <em>candidates</em> for curation. Verification contracts follow the same
+          review gate. None self-promote.</span>
         </div>
 
         <h3 style="margin-top: 32px;">How Metatron Compares</h3>
@@ -213,18 +279,21 @@
 <pre><span class="pr">$</span> <span class="cm">git clone https://github.com/kerbelp/metatron.git</span>
 <span class="pr">$</span> <span class="cm">cd metatron</span>
 <span class="pr">$</span> <span class="cm">uv sync</span>            <span class="c"># create venv and install dependencies</span></pre>
-        
+        </div>
       </section>
 
       <!-- DOCKER -->
       <section class="doc-sec" id="docker">
         <h2>Run with Docker</h2>
-        <p>A <code>Dockerfile</code> is included (it's also what the Glama.ai listing builds). The
-          image's entrypoint is the <code>metatron</code> CLI and its default command serves the MCP
-          server over stdio, so <code>docker run</code> with no arguments starts the server.</p>
+        <p>A prebuilt multi-architecture image is published as
+          <code>kerbelp/getmetatron</code>. Its entrypoint is the <code>metatron</code> CLI and
+          its default command serves the MCP server over stdio, so <code>docker run</code> with
+          no arguments starts the server.</p>
         <div class="doc-code">
-          <div class="doc-code-bar"><span class="dots"><i></i><i></i><i></i></span> build</div>
-<pre><span class="pr">$</span> <span class="cm">docker build -t getmetatron .</span></pre>
+          <div class="doc-code-bar"><span class="dots"><i></i><i></i><i></i></span> image</div>
+<pre><span class="pr">$</span> <span class="cm">docker pull kerbelp/getmetatron</span>
+<span class="c"># Or build the included Dockerfile:</span>
+<span class="pr">$</span> <span class="cm">docker build -t kerbelp/getmetatron .</span></pre>
         </div>
         <p>Decisions live in a SQLite database, so mount a volume to persist it across runs. Ingest a
           repo, then serve the curated decisions:</p>
@@ -235,12 +304,12 @@
     -e ANTHROPIC_API_KEY \
     -v metatron-data:/data -e METATRON_DB=/data/metatron.db \
     -v /path/to/your/repo:/repo:ro \
-    getmetatron ingest /repo</span>
+    kerbelp/getmetatron ingest /repo</span>
 
 <span class="c"># 2. serve the curated decisions over stdio (no API key needed)</span>
 <span class="pr">$</span> <span class="cm">docker run -i --rm \
     -v metatron-data:/data -e METATRON_DB=/data/metatron.db \
-    getmetatron serve --repo &lt;id&gt;</span></pre>
+    kerbelp/getmetatron serve --repo &lt;id&gt;</span></pre>
         </div>
         <p><code>ingest</code> prints the <code>&lt;id&gt;</code> to pass to <code>serve</code>. The
           <code>-i</code> flag on <code>serve</code> is required — stdio needs an open stdin. To point
@@ -254,7 +323,7 @@
       <span class="k">"args"</span>: [<span class="s">"run"</span>, <span class="s">"-i"</span>, <span class="s">"--rm"</span>,
                <span class="s">"-v"</span>, <span class="s">"metatron-data:/data"</span>,
                <span class="s">"-e"</span>, <span class="s">"METATRON_DB=/data/metatron.db"</span>,
-               <span class="s">"getmetatron"</span>, <span class="s">"serve"</span>, <span class="s">"--repo"</span>, <span class="s">"&lt;id&gt;"</span>]
+               <span class="s">"kerbelp/getmetatron"</span>, <span class="s">"serve"</span>, <span class="s">"--repo"</span>, <span class="s">"&lt;id&gt;"</span>]
     }
   }
 }</pre>
@@ -273,15 +342,24 @@
         </div>
         <p><strong>Non-secret settings</strong> live in an optional <code>metatron.toml</code>.
           Environment variables <code>METATRON_DB</code> / <code>METATRON_MODEL</code> /
-          <code>METATRON_OUTPUT_LANGUAGE</code> / <code>METATRON_CONTEXT_DIR</code> override it.</p>
+          <code>METATRON_OUTPUT_LANGUAGE</code> / <code>METATRON_CONTEXT_DIR</code> /
+          <code>METATRON_REVIEW_GATE</code> override it.</p>
         <div class="doc-code">
           <div class="doc-code-bar"><span class="dots"><i></i><i></i><i></i></span> metatron.toml</div>
 <pre><span class="c">[metatron]</span>
 <span class="k">db_path</span>         = <span class="s">"~/.metatron"</span>        <span class="c"># catalog dir: one .db file per repo</span>
 <span class="k">model</span>           = <span class="s">"claude-sonnet-4-6"</span>  <span class="c"># default extraction model</span>
 <span class="k">output_language</span> = <span class="s">"english"</span>            <span class="c"># language of generated decisions</span>
-<span class="k">context_dir</span>     = <span class="s">"context"</span>            <span class="c"># knowledge-base dir (files-first / mirror)</span></pre>
+<span class="k">context_dir</span>     = <span class="s">"context"</span>            <span class="c"># knowledge-base dir (files-first / mirror)</span>
+<span class="k">review_gate</span>     = <span class="s">"pr"</span>                 <span class="c"># pr (default) or candidates</span>
+<span class="k">default_repo</span>    = <span class="s">"github.com/acme/app"</span> <span class="c"># optional; repo set writes this</span></pre>
         </div>
+        <p>By default <code>db_path</code> is a catalog directory containing one self-contained
+          SQLite file per repository. Pointing <code>--db</code>,
+          <code>METATRON_DB</code>, or <code>db_path</code> at a file enters single-file mode,
+          which is useful for an exported repository database. Existing shared
+          <code>metatron.db</code> installations are split into the catalog automatically and
+          the original file is archived.</p>
       </section>
 
       <!-- QUICK START -->
@@ -290,6 +368,7 @@
         <div class="doc-code">
           <div class="doc-code-bar"><span class="dots"><i></i><i></i><i></i></span> files-first (default)</div>
 <pre><span class="pr">$</span> <span class="cm">metatron context setup</span>                  <span class="c"># the repo now carries its own agent context</span>
+<span class="pr">$</span> <span class="cm">metatron verification setup</span>             <span class="c"># optional: add verification contracts</span>
 <span class="pr">$</span> <span class="cm">metatron ui --files</span>                     <span class="c"># browse &amp; curate the git bundle locally</span></pre>
         </div>
         <p>Agents consult <code>context/decisions/</code> before coding and author new decisions
@@ -305,6 +384,27 @@
         </div>
         <p><code>ingest</code> prints the <code>&lt;id&gt;</code> to use for <code>serve</code>. To wire
           it into a coding agent automatically, see <a class="inline" href="#connect">Connect an agent</a>.</p>
+      </section>
+
+      <!-- REPO -->
+      <section class="doc-sec" id="repo">
+        <h2><code>repo</code></h2>
+        <p>Inspect the repositories in the local catalog and optionally persist the default used
+          by repo-scoped commands.</p>
+        <div class="doc-code">
+          <div class="doc-code-bar"><span class="dots"><i></i><i></i><i></i></span> repo</div>
+<pre><span class="pr">$</span> <span class="cm">metatron repo list</span>
+<span class="ot">github.com/acme/app  (canonical=606, candidates=290)  (default)</span>
+<span class="ot">github.com/acme/lib  (canonical=42, candidates=11)</span>
+
+<span class="pr">$</span> <span class="cm">metatron repo set github.com/acme/lib</span>   <span class="c"># persist a default</span>
+<span class="pr">$</span> <span class="cm">metatron repo unset</span>                      <span class="c"># clear it</span></pre>
+        </div>
+        <p>Repo-scoped commands resolve their target in this order: explicit
+          <code>--repo</code>, <code>METATRON_REPO</code>, the persisted default, the current
+          directory's normalized <code>origin</code>, or the sole repository in the catalog.
+          If several repositories remain possible, Metatron refuses to guess and lists the
+          available IDs.</p>
       </section>
 
       <!-- INGEST -->
@@ -330,7 +430,8 @@
         </table>
         <p>Decisions are keyed by a <strong>repo identity</strong> derived from the <code>origin</code>
           remote (constant across developers; a checkout path isn't), with a directory-name
-          fallback when there's no remote. One DB holds many repos; each is isolated on retrieval.</p>
+          fallback when there's no remote. Each repository has its own SQLite file inside the
+          catalog, and retrieval remains repository-isolated.</p>
       </section>
 
       <!-- CANDIDATES -->
@@ -367,15 +468,33 @@
         <p>Flags: <code>--repo &lt;id&gt;</code> (limit to one repo), <code>--limit N</code> (max candidates to judge).</p>
       </section>
 
+      <!-- ENRICH -->
+      <section class="doc-sec" id="enrich">
+        <h2><code>enrich-keywords</code></h2>
+        <p>Backfill retrieval keywords on canonical decisions that do not have them. This
+          improves lexical retrieval without changing decision status or crossing the human
+          curation boundary.</p>
+        <div class="doc-code">
+          <div class="doc-code-bar"><span class="dots"><i></i><i></i><i></i></span> enrich-keywords</div>
+<pre><span class="pr">$</span> <span class="cm">metatron enrich-keywords --repo github.com/acme/app</span>
+<span class="pr">$</span> <span class="cm">metatron enrich-keywords --limit 100</span></pre>
+        </div>
+        <p>This is an LLM extraction step and requires <code>ANTHROPIC_API_KEY</code>. It does
+          not curate or promote decisions.</p>
+      </section>
+
       <!-- SERVE -->
       <section class="doc-sec" id="serve">
         <h2><code>serve</code></h2>
         <p>Expose canonical decisions to agents over MCP (stdio). One served instance serves exactly
-          one repo (<code>--repo</code>, the id printed by <code>ingest</code>), so an agent only
-          ever sees that repo's decisions. It also records usage events to the same DB for the UI.</p>
+          one repo, so an agent only ever sees that repo's decisions. Pass <code>--repo</code>
+          explicitly or let the normal <a class="inline" href="#repo">repo resolution</a> choose
+          from the environment, persisted default, current directory, or sole catalog entry. It
+          also records usage events to the same repository database for the UI.</p>
         <div class="doc-code">
           <div class="doc-code-bar"><span class="dots"><i></i><i></i><i></i></span> serve</div>
-<pre><span class="pr">$</span> <span class="cm">metatron serve --repo github.com/acme/app</span></pre>
+<pre><span class="pr">$</span> <span class="cm">metatron serve --repo github.com/acme/app</span>
+<span class="pr">$</span> <span class="cm">metatron serve</span>   <span class="c"># infer the repo from context</span></pre>
         </div>
         <div class="callout"><span class="mono">›</span><span>Normally you don't run this by hand — an MCP-capable agent launches it. See <a class="inline" href="#connect">Connect an agent</a>.</span></div>
       </section>
@@ -383,20 +502,26 @@
       <!-- UI -->
       <section class="doc-sec" id="ui">
         <h2><code>ui</code></h2>
-        <p>The local curation web UI. Binds to <code>localhost</code> (bumping to the next free
-          port if taken) and reads/writes the same store as the CLI.</p>
+        <p>The local curation web UI supports both Metatron modes. Database mode reads and
+          writes the SQLite catalog; <code>--files</code> mounts the repository's git-tracked
+          OKF bundle.</p>
         <div class="doc-code">
           <div class="doc-code-bar"><span class="dots"><i></i><i></i><i></i></span> ui</div>
-<pre><span class="pr">$</span> <span class="cm">metatron ui</span>
+<pre><span class="pr">$</span> <span class="cm">metatron ui --files</span>   <span class="c"># files-first: the git bundle</span>
+<span class="pr">$</span> <span class="cm">metatron ui</span>           <span class="c"># MCP/database mode: SQLite catalog</span>
 <span class="ot">Metatron curation UI on http://127.0.0.1:1337  (Ctrl-C to stop)</span></pre>
         </div>
+        <p>In files mode, promote and reject actions become working-tree edits
+          (<code>git mv</code> / <code>git rm</code>) for you to review and commit; the UI never
+          commits automatically. Knowledge Activity is reconstructed from git history.</p>
         <ul>
-          <li><strong>Decisions</strong> — browse paginated; filter by status / scope / triage / origin; full-text search; approve/reject with a click.</li>
-          <li><strong>Usage</strong> — how often agents query, coverage, most-queried scopes, recent queries.</li>
-          <li><strong>Quality</strong> — decision quality by origin (ingest vs feedback) and one-time ingest cost.</li>
-          <li><strong>Feedback</strong> — the agent feedback stream, filterable All / Unhandled / Handled, with a <em>Refine into decisions</em> button per report.</li>
+          <li><strong>Impact</strong> — Agent Impact or git-derived Knowledge Activity, helpfulness signals, and the feedback loop.</li>
+          <li><strong>Knowledge</strong> — overview, searchable decisions, and the human-gated curation queue.</li>
+          <li><strong>Sources</strong> — decision origins plus ingest history, telemetry, and extraction cost.</li>
         </ul>
-        <p>Flag: <code>--port N</code> (starting port, default <code>1337</code>).</p>
+        <p>Binds to <code>localhost</code>, advancing to the next free port when necessary.
+          Flags: <code>--files</code>, <code>--root</code>, and <code>--port N</code> (starting
+          port, default <code>1337</code>).</p>
       </section>
 
       <!-- REFINE -->
@@ -418,18 +543,20 @@
       <!-- VERSION -->
       <section class="doc-sec" id="version">
         <h2><code>version</code></h2>
-        <p>Print the installed version and check for an available update.</p>
+        <p>Print the installed version, check for an available update, or upgrade in place.</p>
         <div class="doc-code">
           <div class="doc-code-bar"><span class="dots"><i></i><i></i><i></i></span> version</div>
 <pre><span class="pr">$</span> <span class="cm">metatron version</span>
-<span class="ot">metatron 0.7.0 (rev a3f1c2d)</span>
-<span class="ot">→ update available: 0.8.0  (run: uv tool upgrade getmetatron)</span></pre>
+<span class="ot">metatron 0.13.0 (rev 33eb40f)</span>
+
+<span class="pr">$</span> <span class="cm">metatron version --upgrade</span></pre>
         </div>
         <p>The update notice is suppressed when already on the latest release, when running a
           dev checkout, or when <code>METATRON_NO_UPDATE_CHECK=1</code> is set. The PyPI check
           is throttled to once every 24 hours and cached locally — it adds no latency to normal
-          commands. The upgrade command shown matches how you installed (uv or pip); override it
-          by setting <code>METATRON_INSTALL_CMD</code> or by editing
+          commands. <code>--upgrade</code> uses the detected uv-tool or pipx install method. If
+          plain pip is ambiguous, it prints the command instead of risking a parallel install.
+          Override the command with <code>METATRON_INSTALL_CMD</code> or
           <code>~/.metatron/install.json</code>.</p>
       </section>
 
@@ -437,21 +564,22 @@
       <section class="doc-sec" id="files-first">
         <h2>Files-first mode</h2>
         <p>The default mode: no server, no API key, no MCP. In files-first mode the
-          git-tracked markdown under <code>context/</code> <em>is</em> the source of truth:
-          the directory encodes the status (<code>candidate/</code> vs
-          <code>decisions/</code>), curation is a reviewed <code>git mv</code>, and the
-          database is just a rebuildable serving index. Onboard a repo with one command:</p>
+          git-tracked markdown under <code>context/</code> <em>is</em> the source of truth and
+          the database is only a rebuildable serving index. By default agents author decision
+          files directly under <code>decisions/</code> on a working branch; the pull request
+          that lands them is the human curation gate.</p>
         <div class="doc-code">
           <div class="doc-code-bar"><span class="dots"><i></i><i></i><i></i></span> context setup</div>
 <pre><span class="pr">$</span> <span class="cm">metatron context setup</span>              <span class="c"># onboard the current repo</span>
 <span class="pr">$</span> <span class="cm">metatron context setup apps/web</span>     <span class="c"># monorepo: onboard one app</span>
-<span class="pr">$</span> <span class="cm">metatron context setup --dir kb</span>     <span class="c"># custom knowledge-base directory name</span></pre>
+<span class="pr">$</span> <span class="cm">metatron context setup --dir kb</span>     <span class="c"># custom knowledge-base directory name</span>
+<span class="pr">$</span> <span class="cm">metatron context setup --review-gate=candidates</span>  <span class="c"># optional staging workflow</span></pre>
         </div>
         <p>It is <strong>additive and idempotent</strong> — no MCP server, no hooks. It writes:</p>
         <ul>
           <li>A consult-first rule in <code>.roo/rules/</code>, re-stated to the agent every turn.</li>
           <li>Two skills in <code>.roo/skills/</code>: <code>context-okf-llm-ingest</code>
-            (author candidate decisions as files — with <em>any</em> LLM, no API key) and
+            (author decisions as files — with <em>any</em> LLM, no API key) and
             <code>context-okf-promote-candidates</code> (the mechanical, human-gated promotion move).</li>
           <li>The knowledge-base scaffold: <code>context/candidate/</code>,
             <code>context/decisions/</code>, and a README.</li>
@@ -471,24 +599,56 @@
           including why "read the relevant files" silently fails on small models. If you
           onboarded a repo before 0.12.0, re-run <code>metatron context setup</code> to refresh
           the managed artifacts.</p>
-        <p>The day-to-day loop: the agent reads <code>context/decisions/</code> before touching
-          code, records durable conventions it discovers as new files in
-          <code>context/candidate/</code>, and a human promotes with a reviewed move:</p>
+        <p><strong>Default <code>pr</code> gate.</strong> The agent reads
+          <code>context/decisions/</code> before touching code, then records a durable
+          convention directly in that directory on its working branch. It becomes canonical
+          only when a human approves and merges the pull request:</p>
         <div class="doc-code">
-          <div class="doc-code-bar"><span class="dots"><i></i><i></i><i></i></span> promotion — the human curation act</div>
-<pre><span class="pr">$</span> <span class="cm">git mv context/candidate/use-repo-pattern.md context/decisions/</span>
-<span class="pr">$</span> <span class="cm">git commit &amp;&amp; gh pr create</span>                <span class="c"># reviewed like any other change</span>
-<span class="pr">$</span> <span class="cm">metatron mirror import</span>                    <span class="c"># optional: rebuild the serving index</span></pre>
+          <div class="doc-code-bar"><span class="dots"><i></i><i></i><i></i></span> default pr gate</div>
+<pre><span class="pr">$</span> <span class="cm">git add context/decisions/use-repo-pattern.md</span>
+<span class="pr">$</span> <span class="cm">git commit &amp;&amp; gh pr create</span>                <span class="c"># PR review is the curation act</span></pre>
         </div>
-        <p>The canonical boundary stays <strong>human-gated</strong> in both modes: nothing
-          self-promotes, and approving the pull request that moves a file into
-          <code>decisions/</code> is the curation act. The directory name is
+        <p><strong>Optional <code>candidates</code> gate.</strong> Agents instead stage
+          proposals under <code>context/candidate/</code>; a human promotes them with a
+          reviewed <code>git mv</code>. Use this when curation should be separate from feature
+          PRs or agents can write to the default branch.</p>
+        <div class="doc-code">
+          <div class="doc-code-bar"><span class="dots"><i></i><i></i><i></i></span> candidates gate</div>
+<pre><span class="pr">$</span> <span class="cm">git mv context/candidate/use-repo-pattern.md context/decisions/</span>
+<span class="pr">$</span> <span class="cm">git commit &amp;&amp; gh pr create</span>                <span class="c"># promotion is reviewed</span></pre>
+        </div>
+        <p>The selected gate is persisted as <code>review_gate</code> in
+          <code>metatron.toml</code>. Re-running setup with the other value refreshes every
+          managed rule, skill, README, and <code>AGENTS.md</code> block while preserving
+          hand-authored content. The canonical boundary stays <strong>human-gated</strong> in
+          both modes. The directory name is
           <code>context/</code> by default — configure another with
           <code>context_dir</code> in <code>metatron.toml</code>,
           <code>METATRON_CONTEXT_DIR</code>, or the <code>--dir</code> /
           <code>--context-dir</code> flags (a legacy <code>metatron/</code> bundle is still
           recognized). No installed metatron? The equivalent script is
           <code>metatron_setup_files.sh</code> in the repo.</p>
+      </section>
+
+      <!-- FILES CLI -->
+      <section class="doc-sec" id="files">
+        <h2><code>files</code> — maintain a git-authoritative knowledge base</h2>
+        <p>Companion commands for authoring, validating, indexing, and measuring decision files
+          in files-first mode. Paths default to the configured
+          <code>&lt;context-dir&gt;/decisions</code>.</p>
+        <div class="doc-code">
+          <div class="doc-code-bar"><span class="dots"><i></i><i></i><i></i></span> files</div>
+<pre><span class="pr">$</span> <span class="cm">metatron files lint</span>                         <span class="c"># validate decision files</span>
+<span class="pr">$</span> <span class="cm">metatron files index</span>                        <span class="c"># regenerate index.md</span>
+<span class="pr">$</span> <span class="cm">metatron files new retry-policy --title "Retry policy"</span>
+<span class="pr">$</span> <span class="cm">metatron files record --since "7 days ago"</span>  <span class="c"># update usage ledger</span>
+<span class="pr">$</span> <span class="cm">metatron files report --days 30</span>             <span class="c"># adoption, reuse, drift, curation</span>
+<span class="pr">$</span> <span class="cm">metatron files check-fields --base origin/main --actor ci</span></pre>
+        </div>
+        <p><code>record</code> reads merged commit trailers into the usage ledger and rolls up
+          counts. <code>report</code> renders a Markdown digest for a time window.
+          <code>check-fields</code> enforces frontmatter ownership boundaries so human-owned
+          fields and CI-owned counters cannot overwrite one another.</p>
       </section>
 
       <!-- MIRROR / OKF -->
@@ -515,6 +675,75 @@
           concurrent DB+file edits as conflicts instead of clobbering either side. A
           hand-authored file with no <code>id</code> becomes a new decision at the
           directory-derived status.</p>
+      </section>
+
+      <!-- VERIFICATION / RVL -->
+      <section class="doc-sec" id="verification">
+        <h2><code>verification</code> — Repository Verification Layer (RVL)</h2>
+        <p>A verification contract is a git-tracked OKF file that records
+          <em>how to prove a change works and what a failure implies</em>. Contracts live under
+          <code>&lt;context-dir&gt;/verification/</code>, are scoped to a subsystem, and follow
+          the same human review gate as decisions. The agent that just built a feature drafts
+          the contract; a reviewer decides whether it becomes canonical.</p>
+        <div class="doc-code">
+          <div class="doc-code-bar"><span class="dots"><i></i><i></i><i></i></span> verification</div>
+<pre><span class="pr">$</span> <span class="cm">metatron verification setup</span>             <span class="c"># AGENTS.md workflow + worked example</span>
+<span class="pr">$</span> <span class="cm">metatron verification template</span>          <span class="c"># print the canonical skeleton</span>
+<span class="pr">$</span> <span class="cm">metatron verification new auth --scope services/auth</span>
+<span class="pr">$</span> <span class="cm">metatron verification audit</span>             <span class="c"># read-only contract lint</span>
+<span class="pr">$</span> <span class="cm">metatron verification run</span>               <span class="c"># run every canonical contract</span>
+<span class="pr">$</span> <span class="cm">metatron verification run --scope services/auth --tags smoke</span>
+<span class="pr">$</span> <span class="cm">metatron verification run --dry-run</span>     <span class="c"># resolve and print; execute nothing</span>
+<span class="pr">$</span> <span class="cm">metatron verification run --report junit --out report.xml</span></pre>
+        </div>
+        <p>Each contract contains assumptions, setup, ordered checks, expected results,
+          teardown, and a curated <strong>Failure Means</strong> section. The latter routes a
+          red check to the subsystem or precondition most likely at fault instead of leaving
+          the next engineer or agent to rediscover it.</p>
+        <h3>Assertions</h3>
+        <table class="doc-table">
+          <thead><tr><th>Assertion</th><th>Example</th></tr></thead>
+          <tbody>
+            <tr><td>Exit code</td><td><code>exit 0</code></td></tr>
+            <tr><td>Substring</td><td><code>stdout contains wrote</code></td></tr>
+            <tr><td>Regular expression</td><td><code>stderr matches timeout after \d+s</code></td></tr>
+            <tr><td>JSONPath</td><td><code>stdout jsonpath $.accessToken exists</code></td></tr>
+            <tr><td>Shell escape hatch</td><td><code>shell test -f ./out/index.md</code></td></tr>
+          </tbody>
+        </table>
+        <div class="callout">
+          <span class="mono">▲</span>
+          <span><strong>Execution boundary:</strong> only a developer or configured CI job runs
+          <code>metatron verification run</code>, in its own foreground process and with its
+          own privileges. MCP exposes read-only contract retrieval and templates; it never
+          executes a contract. The optional <code>--judge</code> flag is a Phase 2 hook and is
+          skipped until a provider is wired.</span>
+        </div>
+        <p>See the
+          <a class="inline" href="https://github.com/kerbelp/metatron/blob/main/docs/verification.md"
+             target="_blank" rel="noopener">complete contract format and security guide</a>
+          or the <a class="inline" href="../blog/verification-contracts/">design introduction</a>.</p>
+      </section>
+
+      <!-- TEAM HANDOFF -->
+      <section class="doc-sec" id="team">
+        <h2>Team identity and database handoff</h2>
+        <p>In MCP/database mode, Metatron stamps queries, submissions, and feedback with the
+          local operator identity. Export and import move one repository's self-contained
+          database between employees without requiring a hosted service.</p>
+        <div class="doc-code">
+          <div class="doc-code-bar"><span class="dots"><i></i><i></i><i></i></span> identity and handoff</div>
+<pre><span class="pr">$</span> <span class="cm">metatron whoami</span>
+<span class="pr">$</span> <span class="cm">metatron whoami --set-email you@corp.com --set-name "You"</span>
+
+<span class="pr">$</span> <span class="cm">metatron export --repo github.com/acme/app --out app.db</span>
+<span class="pr">$</span> <span class="cm">metatron import app.db</span></pre>
+        </div>
+        <p>Identity is local metadata, seeded from <code>git config</code> and stored in
+          <code>~/.metatron/config.toml</code>; it is not an authentication server.
+          <code>export</code> creates a consistent compact snapshot. <code>import</code> merges
+          a repository database or catalog directory by ID, so repeating the same import is a
+          no-op and event attribution travels with the data.</p>
       </section>
 
       <!-- CONNECT -->
@@ -586,6 +815,14 @@
               <td><code>submit_candidate_decision</code></td>
               <td>record a convention the agent learned as a new <strong>candidate</strong> (never auto-promoted)</td>
             </tr>
+            <tr>
+              <td><code>get_verification</code></td>
+              <td>fetch canonical verification contracts for a scope and optional tags; declarations only, never execution</td>
+            </tr>
+            <tr>
+              <td><code>get_verification_template</code></td>
+              <td>return the canonical verification-contract skeleton so an agent can draft in the supported format</td>
+            </tr>
           </tbody>
         </table>
         <p>A <code>get_decisions_for_context</code> call returns context like this:</p>
@@ -608,6 +845,7 @@
           <li>Extraction sends only <strong>structural signals</strong> — imports, decorators, base classes, commit subjects — to the model. Never raw source.</li>
           <li>Agent feedback and usage are stored only in your <strong>local SQLite database</strong>.</li>
           <li><code>serve</code>, <code>ui</code>, and <code>candidates</code> are fully local and need no API key.</li>
+          <li>MCP can read verification contracts and templates but can never execute them; only an operator or configured CI job can run a contract.</li>
           <li>No decision self-promotes — a human curates everything that becomes canonical.</li>
         </ul>
         <div class="callout">
@@ -632,18 +870,263 @@
 
 <script src="../metatron.js"></script>
 <script>
-/* docs sidebar scroll-spy (kept inline; main metatron.js handles brand mark, favicon, nav) */
+/* docs navigation, search, and scroll-spy */
 (function () {
+  var body = document.body;
+  var side = document.querySelector(".docs-side");
+  var sideNav = side && side.querySelector("nav");
+  var menuToggle = document.querySelector(".docs-menu-toggle");
+  var menuClose = document.querySelector(".docs-menu-close");
+  var scrim = document.querySelector(".docs-scrim");
   var links = Array.prototype.slice.call(document.querySelectorAll(".docs-side a[href^='#']"));
+  var groupButtons = Array.prototype.slice.call(document.querySelectorAll(".side-group"));
+  var searchInputs = Array.prototype.slice.call(document.querySelectorAll("[data-doc-search]"));
+  var lastFocus = null;
+
+  function isDrawer() {
+    return window.matchMedia("(max-width: 980px)").matches;
+  }
+
+  function openMenu() {
+    if (!side || !menuToggle) return;
+    lastFocus = document.activeElement;
+    side.removeAttribute("aria-hidden");
+    side.removeAttribute("inert");
+    side.setAttribute("role", "dialog");
+    side.setAttribute("aria-modal", "true");
+    body.classList.add("docs-menu-open");
+    menuToggle.setAttribute("aria-expanded", "true");
+    window.setTimeout(function () {
+      var input = side.querySelector("[data-doc-search]");
+      if (input) input.focus();
+    }, 80);
+  }
+
+  function closeMenu(restoreFocus) {
+    if (!side || !menuToggle) return;
+    body.classList.remove("docs-menu-open");
+    menuToggle.setAttribute("aria-expanded", "false");
+    side.removeAttribute("role");
+    side.removeAttribute("aria-modal");
+    if (restoreFocus && lastFocus && lastFocus.focus) lastFocus.focus();
+    else if (side.contains(document.activeElement)) menuToggle.focus();
+    if (isDrawer()) {
+      side.setAttribute("aria-hidden", "true");
+      side.setAttribute("inert", "");
+    } else {
+      side.removeAttribute("aria-hidden");
+      side.removeAttribute("inert");
+    }
+  }
+
+  if (menuToggle) menuToggle.addEventListener("click", openMenu);
+  if (menuClose) menuClose.addEventListener("click", function () { closeMenu(true); });
+  if (scrim) scrim.addEventListener("click", function () { closeMenu(true); });
+
+  groupButtons.forEach(function (button) {
+    button.addEventListener("click", function () {
+      button.setAttribute(
+        "aria-expanded",
+        button.getAttribute("aria-expanded") === "true" ? "false" : "true"
+      );
+    });
+  });
+
+  links.forEach(function (link) {
+    link.addEventListener("click", function () {
+      if (isDrawer()) closeMenu(false);
+    });
+  });
+
+  window.addEventListener("resize", function () {
+    closeMenu(false);
+  });
+  closeMenu(false);
+
+  document.addEventListener("keydown", function (event) {
+    if (event.key === "Escape" && body.classList.contains("docs-menu-open")) {
+      closeMenu(true);
+      return;
+    }
+    if (event.key !== "/" || event.metaKey || event.ctrlKey || event.altKey) return;
+    var tag = document.activeElement && document.activeElement.tagName;
+    if (tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT") return;
+    event.preventDefault();
+    var input = document.querySelector(isDrawer() ? "#docs-search-mobile" : "#docs-search-side");
+    if (input) input.focus();
+  });
+
+  if (side) {
+    side.addEventListener("keydown", function (event) {
+      if (event.key !== "Tab" || !isDrawer() || !body.classList.contains("docs-menu-open")) return;
+      var focusable = Array.prototype.slice.call(
+        side.querySelectorAll("a[href], button:not([disabled]), input:not([disabled])")
+      ).filter(function (el) { return el.offsetParent !== null; });
+      if (!focusable.length) return;
+      var first = focusable[0];
+      var last = focusable[focusable.length - 1];
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    });
+  }
+
+  /* Search is deliberately local and dependency-free: the page is the index. */
+  var records = Array.prototype.slice.call(document.querySelectorAll(".doc-sec[id]")).map(function (section) {
+    var heading = section.querySelector("h2");
+    var firstParagraph = section.querySelector("p");
+    return {
+      id: section.id,
+      title: heading ? heading.textContent.trim() : section.id,
+      text: section.textContent.replace(/\s+/g, " ").trim().toLowerCase(),
+      summary: firstParagraph ? firstParagraph.textContent.replace(/\s+/g, " ").trim() : ""
+    };
+  });
+
+  function rankedResults(query) {
+    var terms = query.toLowerCase().trim().split(/\s+/).filter(Boolean);
+    if (!terms.length) return [];
+    return records.map(function (record) {
+      var title = record.title.toLowerCase();
+      var score = 0;
+      for (var i = 0; i < terms.length; i += 1) {
+        var term = terms[i];
+        var titleAt = title.indexOf(term);
+        var textAt = record.text.indexOf(term);
+        if (titleAt === 0) score += 60;
+        else if (titleAt > -1) score += 35;
+        else if (textAt > -1) score += 8;
+        else return null;
+      }
+      return { record: record, score: score };
+    }).filter(Boolean).sort(function (a, b) {
+      return b.score - a.score;
+    }).slice(0, 8);
+  }
+
+  function setupSearch(input) {
+    var results = document.getElementById(input.getAttribute("aria-controls"));
+    var selected = -1;
+
+    function closeResults() {
+      results.hidden = true;
+      results.textContent = "";
+      input.setAttribute("aria-expanded", "false");
+      selected = -1;
+    }
+
+    function select(index) {
+      var options = Array.prototype.slice.call(results.querySelectorAll(".doc-search-result"));
+      if (!options.length) return;
+      selected = (index + options.length) % options.length;
+      options.forEach(function (option, optionIndex) {
+        option.classList.toggle("is-selected", optionIndex === selected);
+        option.setAttribute("aria-selected", optionIndex === selected ? "true" : "false");
+      });
+      options[selected].scrollIntoView({ block: "nearest" });
+    }
+
+    function render() {
+      var query = input.value.trim();
+      results.textContent = "";
+      selected = -1;
+      if (!query) {
+        closeResults();
+        return;
+      }
+      var matches = rankedResults(query);
+      results.hidden = false;
+      input.setAttribute("aria-expanded", "true");
+      if (!matches.length) {
+        var empty = document.createElement("div");
+        empty.className = "doc-search-empty";
+        empty.textContent = "No documentation found";
+        results.appendChild(empty);
+        return;
+      }
+      matches.forEach(function (match) {
+        var result = document.createElement("a");
+        var title = document.createElement("strong");
+        var summary = document.createElement("span");
+        result.className = "doc-search-result";
+        result.href = "#" + match.record.id;
+        result.setAttribute("role", "option");
+        result.setAttribute("aria-selected", "false");
+        title.textContent = match.record.title;
+        summary.textContent = match.record.summary;
+        result.appendChild(title);
+        result.appendChild(summary);
+        result.addEventListener("click", function () {
+          closeResults();
+          input.value = "";
+          if (isDrawer()) closeMenu(false);
+        });
+        results.appendChild(result);
+      });
+    }
+
+    input.setAttribute("role", "combobox");
+    input.setAttribute("aria-autocomplete", "list");
+    input.setAttribute("aria-expanded", "false");
+    input.addEventListener("input", render);
+    input.addEventListener("focus", function () {
+      if (input.value.trim()) render();
+    });
+    input.addEventListener("keydown", function (event) {
+      var options = results.querySelectorAll(".doc-search-result");
+      if (event.key === "ArrowDown" && options.length) {
+        event.preventDefault();
+        select(selected + 1);
+      } else if (event.key === "ArrowUp" && options.length) {
+        event.preventDefault();
+        select(selected - 1);
+      } else if (event.key === "Enter" && options.length) {
+        event.preventDefault();
+        options[selected > -1 ? selected : 0].click();
+      } else if (event.key === "Escape") {
+        closeResults();
+        input.blur();
+      }
+    });
+  }
+
+  searchInputs.forEach(setupSearch);
+  document.addEventListener("click", function (event) {
+    if (event.target.closest(".doc-search")) return;
+    document.querySelectorAll(".doc-search-results").forEach(function (results) {
+      results.hidden = true;
+    });
+    searchInputs.forEach(function (input) { input.setAttribute("aria-expanded", "false"); });
+  });
+
   if (!links.length || !("IntersectionObserver" in window)) return;
   var map = {};
   links.forEach(function (a) { map[a.getAttribute("href").slice(1)] = a; });
+  function activate(a) {
+    links.forEach(function (l) { l.classList.remove("active"); });
+    if (!a) return;
+    var group = a.closest(".side-section");
+    var groupButton = group && group.querySelector(".side-group");
+    if (groupButton) groupButton.setAttribute("aria-expanded", "true");
+    a.classList.add("active");
+    if (!sideNav || sideNav.scrollHeight <= sideNav.clientHeight) return;
+    var navRect = sideNav.getBoundingClientRect();
+    var linkRect = a.getBoundingClientRect();
+    var top = linkRect.top - navRect.top + sideNav.scrollTop;
+    var bottom = top + a.offsetHeight;
+    if (top < sideNav.scrollTop) sideNav.scrollTop = Math.max(0, top - 10);
+    else if (bottom > sideNav.scrollTop + sideNav.clientHeight) {
+      sideNav.scrollTop = bottom - sideNav.clientHeight + 10;
+    }
+  }
   var spy = new IntersectionObserver(function (ents) {
     ents.forEach(function (en) {
       if (en.isIntersecting) {
-        links.forEach(function (l) { l.classList.remove("active"); });
-        var a = map[en.target.id];
-        if (a) a.classList.add("active");
+        activate(map[en.target.id]);
       }
     });
   }, { rootMargin: "-86px 0px -65% 0px", threshold: 0 });
