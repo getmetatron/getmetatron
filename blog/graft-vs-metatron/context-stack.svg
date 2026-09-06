@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 540" role="img" aria-labelledby="title desc">
+  <title id="title">A three-layer context stack for coding agents</title>
+  <desc id="desc">Source code forms the base. A structural intelligence layer above it answers what and where. An engineering memory layer at the top answers why and why not. A coding agent consults all three.</desc>
+  <defs>
+    <linearGradient id="source" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#17211f"/>
+      <stop offset="1" stop-color="#1d2d29"/>
+    </linearGradient>
+    <linearGradient id="structural" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#123b38"/>
+      <stop offset="1" stop-color="#17504a"/>
+    </linearGradient>
+    <linearGradient id="memory" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#16574f"/>
+      <stop offset="1" stop-color="#187465"/>
+    </linearGradient>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="130%">
+      <feDropShadow dx="0" dy="10" stdDeviation="14" flood-color="#020706" flood-opacity=".35"/>
+    </filter>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+      <path d="M0 0 10 5 0 10Z" fill="#79d9c4"/>
+    </marker>
+  </defs>
+
+  <rect width="960" height="540" rx="24" fill="#09110f"/>
+  <text x="60" y="62" fill="#dff8f1" font-family="Space Grotesk, Arial, sans-serif" font-size="26" font-weight="700">The repository context stack</text>
+
+  <g filter="url(#shadow)">
+    <rect x="72" y="350" width="650" height="116" rx="16" fill="url(#source)" stroke="#35534c"/>
+    <text x="100" y="387" fill="#79d9c4" font-family="JetBrains Mono, monospace" font-size="14" font-weight="600">LAYER 1</text>
+    <text x="100" y="423" fill="#f1fbf8" font-family="Space Grotesk, Arial, sans-serif" font-size="25" font-weight="700">Source code</text>
+    <text x="100" y="449" fill="#a9bdb7" font-family="Hanken Grotesk, Arial, sans-serif" font-size="16">The implementation, tests, configuration, and documentation.</text>
+
+    <rect x="112" y="218" width="610" height="116" rx="16" fill="url(#structural)" stroke="#28776d"/>
+    <text x="140" y="255" fill="#91ead6" font-family="JetBrains Mono, monospace" font-size="14" font-weight="600">LAYER 2 · GRAFT-LIKE</text>
+    <text x="140" y="291" fill="#f1fbf8" font-family="Space Grotesk, Arial, sans-serif" font-size="25" font-weight="700">Structural code intelligence</text>
+    <text x="140" y="317" fill="#b7d8d0" font-family="Hanken Grotesk, Arial, sans-serif" font-size="16">WHAT / WHERE · symbols, calls, dependencies, affected files</text>
+
+    <rect x="152" y="86" width="570" height="116" rx="16" fill="url(#memory)" stroke="#3ab5a0"/>
+    <text x="180" y="123" fill="#b7ffec" font-family="JetBrains Mono, monospace" font-size="14" font-weight="600">LAYER 3 · METATRON</text>
+    <text x="180" y="159" fill="#ffffff" font-family="Space Grotesk, Arial, sans-serif" font-size="25" font-weight="700">Engineering memory</text>
+    <text x="180" y="185" fill="#d3eee8" font-family="Hanken Grotesk, Arial, sans-serif" font-size="16">WHY / WHY NOT · rationale, constraints, rejected approaches</text>
+  </g>
+
+  <rect x="780" y="202" width="128" height="128" rx="64" fill="#102621" stroke="#4fcbb4" stroke-width="2"/>
+  <circle cx="844" cy="245" r="20" fill="none" stroke="#91ead6" stroke-width="3"/>
+  <path d="M808 302c7-25 22-38 36-38s29 13 36 38" fill="none" stroke="#91ead6" stroke-width="3" stroke-linecap="round"/>
+  <text x="844" y="354" text-anchor="middle" fill="#dff8f1" font-family="Space Grotesk, Arial, sans-serif" font-size="18" font-weight="700">Coding agent</text>
+
+  <path d="M762 267H730" stroke="#79d9c4" stroke-width="3" marker-end="url(#arrow)"/>
+  <path d="M760 285C738 327 727 359 722 389" fill="none" stroke="#79d9c4" stroke-width="2" stroke-dasharray="6 7" marker-end="url(#arrow)"/>
+  <path d="M760 248C745 214 731 179 722 150" fill="none" stroke="#79d9c4" stroke-width="2" stroke-dasharray="6 7" marker-end="url(#arrow)"/>
+
+  <text x="60" y="510" fill="#6f8e86" font-family="Hanken Grotesk, Arial, sans-serif" font-size="14">The layers overlap, but they are not substitutes: maps accelerate reconstruction; memory preserves what reconstruction cannot recover.</text>
+</svg>

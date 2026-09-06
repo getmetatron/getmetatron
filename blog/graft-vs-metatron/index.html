@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-0P4SKXFNWL"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-0P4SKXFNWL');
+</script>
+
+<title>Graft vs Metatron: two kinds of context coding agents need</title>
+<meta name="description" content="Graft maps what a codebase contains. Metatron preserves why engineers made their decisions. A technical comparison of two complementary context layers." />
+<link rel="canonical" href="https://getmetatron.com/blog/graft-vs-metatron/" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&amp;family=Hanken+Grotesk:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="/styles.css" />
+<link rel="stylesheet" href="/blog.css" />
+
+<!-- Favicons -->
+<link rel="icon" href="/public/images/favicon.ico" sizes="any" />
+<link rel="icon" type="image/png" sizes="32x32" href="/public/images/favicon-32x32.png" />
+<link rel="icon" type="image/png" sizes="16x16" href="/public/images/favicon-16x16.png" />
+<link rel="apple-touch-icon" sizes="180x180" href="/public/images/apple-touch-icon.png" />
+
+<!-- Open Graph -->
+<meta property="og:type" content="article" />
+<meta property="og:site_name" content="Metatron" />
+<meta property="og:url" content="https://getmetatron.com/blog/graft-vs-metatron/" />
+<meta property="og:title" content="Graft, Metatron, and the two kinds of context coding agents need" />
+<meta property="og:description" content="Codebase maps and engineering memory solve related but different problems. Here is where Graft and Metatron fit — and why the ideal context stack may need both." />
+<meta property="og:image" content="https://getmetatron.com/public/images/og/graft-vs-metatron.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content="Graft and Metatron as complementary layers in a repository context stack" />
+<meta property="article:published_time" content="2026-09-06" />
+<meta property="article:modified_time" content="2026-09-06" />
+<meta property="article:author" content="Pavel Kerbel" />
+
+<!-- Twitter / X -->
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Graft, Metatron, and the two kinds of context coding agents need" />
+<meta name="twitter:description" content="Graft helps agents reconstruct what a codebase contains. Metatron helps them inherit what previous engineers learned." />
+<meta name="twitter:image" content="https://getmetatron.com/public/images/og/graft-vs-metatron.png" />
+
+<!-- JSON-LD -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Graft, Metatron, and the Two Kinds of Context Coding Agents Need",
+  "alternativeHeadline": "Graft vs Metatron",
+  "description": "Graft maps what a codebase contains. Metatron preserves why engineers made their decisions. A technical comparison of two complementary context layers.",
+  "image": "https://getmetatron.com/public/images/og/graft-vs-metatron.png",
+  "datePublished": "2026-09-06",
+  "dateModified": "2026-09-06",
+  "author": { "@type": "Person", "name": "Pavel Kerbel", "url": "https://pavelkerbel.com" },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Metatron",
+    "logo": { "@type": "ImageObject", "url": "https://getmetatron.com/public/images/apple-touch-icon.png" }
+  },
+  "about": [
+    { "@type": "SoftwareApplication", "name": "Graft", "url": "https://github.com/trailhq/Graft" },
+    { "@type": "SoftwareApplication", "name": "Metatron", "url": "https://github.com/kerbelp/metatron" }
+  ],
+  "mainEntityOfPage": { "@type": "WebPage", "@id": "https://getmetatron.com/blog/graft-vs-metatron/" }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://getmetatron.com/" },
+    { "@type": "ListItem", "position": 2, "name": "Blog", "item": "https://getmetatron.com/blog/" },
+    { "@type": "ListItem", "position": 3, "name": "Graft, Metatron, and the Two Kinds of Context Coding Agents Need", "item": "https://getmetatron.com/blog/graft-vs-metatron/" }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What is the main difference between Graft and Metatron?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Graft primarily builds structural code intelligence from the current repository: symbols, calls, imports, dependencies, relevant files, and generated summaries. Metatron primarily stores reviewed engineering decisions: rationale, constraints, rejected alternatives, edge cases, and lessons learned. In shorthand, Graft answers what and where; Metatron answers why and why not." }
+    },
+    {
+      "@type": "Question",
+      "name": "Do stronger coding models make structural context tools unnecessary?",
+      "acceptedAnswer": { "@type": "Answer", "text": "No. Stronger models may reduce the correctness gain on tasks they can already solve, but precomputed structural context can still reduce tokens, tool calls, and latency. Graft's published controlled benchmark reports equal 93% correctness with 42% fewer tokens, 46% fewer tool calls, and 60% less latency." }
+    },
+    {
+      "@type": "Question",
+      "name": "Can Graft and Metatron be used together?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Yes. They are potentially complementary: source code is the ground truth, a Graft-like structural layer accelerates navigation and impact analysis, and a Metatron engineering-memory layer preserves reviewed rationale and constraints that the current code may not reveal." }
+    }
+  ]
+}
+</script>
+</head>
+<body>
+
+<!-- ============ NAV ============ -->
+<header class="nav">
+  <div class="nav-inner">
+    <a class="brand" href="/" aria-label="Metatron home">
+      <span data-cube-mark style="width:26px;height:26px;display:block"></span>
+      Metatron
+    </a>
+    <nav class="nav-links" aria-label="Primary">
+      <a href="/#problem">Problem</a>
+      <a href="/#how">How it works</a>
+      <a href="/#ui">The UI</a>
+      <a href="/blog/">Blog</a>
+      <a href="/docs/">Docs</a>
+    </nav>
+    <div class="nav-cta">
+      <a class="btn btn-ghost btn-sm" href="https://github.com/kerbelp/metatron" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.7.5.5 5.7.5 12c0 5.1 3.3 9.4 7.9 10.9.6.1.8-.3.8-.6v-2c-3.2.7-3.9-1.5-3.9-1.5-.5-1.3-1.3-1.7-1.3-1.7-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.7 1.3 3.4 1 .1-.8.4-1.3.7-1.6-2.6-.3-5.3-1.3-5.3-5.7 0-1.3.5-2.3 1.2-3.1-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0c2.3-1.5 3.3-1.2 3.3-1.2.6 1.6.2 2.8.1 3.1.8.8 1.2 1.8 1.2 3.1 0 4.4-2.7 5.4-5.3 5.7.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6 4.6-1.5 7.9-5.8 7.9-10.9C23.5 5.7 18.3.5 12 .5Z"/></svg>
+        GitHub
+      </a>
+      <a class="btn btn-primary btn-sm" href="/#updates">Get updates</a>
+    </div>
+    <button class="nav-burger" aria-label="Menu">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+    </button>
+  </div>
+</header>
+
+<main class="blog-main" id="top">
+  <article class="wrap blog-wrap">
+
+    <div class="crumb">
+      <a href="/">Home</a><span>/</span><a href="/blog/">Blog</a><span>/</span>Graft and Metatron
+    </div>
+
+    <header class="article-head">
+      <span class="kicker">Research</span>
+      <h1>Graft, Metatron, and the two kinds of context coding agents need</h1>
+      <div class="article-meta">
+        <span>Pavel Kerbel</span>
+        <span class="dot">·</span>
+        <time datetime="2026-09-06">September 6, 2026</time>
+        <span class="dot">·</span>
+        <span>13 min read</span>
+      </div>
+      <p class="article-lede">
+        <a href="https://github.com/trailhq/Graft" target="_blank" rel="noopener">Graft</a>
+        helps an agent reconstruct what a codebase contains.
+        <a href="https://github.com/kerbelp/metatron" target="_blank" rel="noopener">Metatron</a>
+        helps an agent inherit what previous engineers learned. They address the same
+        recurring cost — agents starting cold — but they preserve different kinds of context.
+      </p>
+    </header>
+
+    <div class="prose">
+
+      <p style="font-size:.9em;color:#8aa39c">
+        <strong>Source note:</strong> I reviewed Graft 0.17.0 at
+        <a href="https://github.com/trailhq/Graft/tree/05760b07abc0e427f5af8ad378889ee402c5afc6" target="_blank" rel="noopener"><code>05760b0</code></a>,
+        Metatron 0.13.0 at
+        <a href="https://github.com/kerbelp/metatron/tree/8cd80db5fbb0bdf9fa64642ff7b4020708506a83" target="_blank" rel="noopener"><code>8cd80db</code></a>,
+        and both projects' current READMEs, code, examples, and published benchmark material on September 6, 2026.
+        Graft moves quickly; follow the linked README for the latest feature and benchmark claims.
+      </p>
+
+      <h2>Two projects, one shared observation</h2>
+      <p>
+        Every fresh coding-agent session pays an onboarding tax. The agent greps for a
+        name, opens a file, follows an import, finds a caller, backs out, and tries another
+        path. Some of that exploration is necessary. Much of it reconstructs facts that a
+        previous session — or a teammate — already reconstructed.
+      </p>
+      <p>
+        Graft and Metatron both begin there: repository context should survive longer than
+        one agent run. But “context” is doing too much work in that sentence. A map of the
+        current implementation and a record of the team's engineering judgment are both
+        context, in the same way that a street map and a local's warning about a flood-prone
+        road are both navigation. One tells you what is there. The other tells you what
+        happened before.
+      </p>
+      <div class="callout">
+        <strong>Graft is primarily WHAT / WHERE:</strong> symbols, calls, imports,
+        dependencies, affected files.<br />
+        <strong>Metatron is primarily WHY / WHY NOT:</strong> rationale, constraints,
+        rejected approaches, lessons, conventions.
+      </div>
+
+      <h2>What Graft is solving</h2>
+      <p>
+        Graft is unusually serious about structural code intelligence. A plain
+        <code>graft build</code> uses tree-sitter to produce a per-symbol wiring graph and
+        per-file cards. The graph connects functions, classes, calls, imports, inheritance,
+        and implementations. Its query surface turns that structure into practical agent
+        operations: find relevant code, show a file's API without its bodies, trace callers
+        and dependencies, search by enclosing symbol, build a token-budgeted repository
+        map, and calculate the blast radius of a diff. An optional LSP layer adds
+        compiler-resolved edges where static syntax is not enough.
+      </p>
+      <p>
+        The optional <code>--deep</code> build adds model-written file and symbol summaries,
+        concept nodes, and small “crux” excerpts containing the lines that carry the logic.
+        Sources are content-hashed; structural refreshes track the working tree, including
+        uncommitted changes. The generated graph is plain markdown and JSON, so an agent can
+        use its ordinary file-reading habits rather than depending on a proprietary search
+        service. Graft can also expose the same capabilities as MCP tools.
+      </p>
+      <p>
+        That is a strong answer to a real problem. A call graph can tell an agent that an
+        authorization helper has twelve callers. A repository map can reveal that a small
+        file is a highly connected hub. Blast-radius analysis can keep a one-file patch from
+        ignoring four siblings. These are exactly the situations where naive grep-and-open
+        exploration is slow and brittle.
+      </p>
+      <p>
+        Graft also publishes a
+        <a href="https://github.com/trailhq/Graft#tested-on-your-popular-repos" target="_blank" rel="noopener">repository-specific PocketBase evaluation</a>:
+        across ten architecture questions and five implementation tasks, both arms touched
+        the same files as the maintainers on all five implementations, while the Graft arm
+        used 21% less cost and 14% less wall-clock time. “Same files” is a localization proxy
+        rather than a test-suite verdict, but it is well matched to Graft's navigation claim.
+      </p>
+
+      <h2>What Metatron is solving</h2>
+      <p>
+        Metatron stores a different unit: a reviewed engineering decision. Each decision
+        has a pattern, scope, rationale, confidence, and source references. The default
+        files-first mode keeps those decisions as markdown under <code>context/</code>, next
+        to the code. An agent is instructed to consult them before planning and to record
+        durable lessons it discovers while working.
+      </p>
+      <p>
+        The lifecycle is roughly:
+      </p>
+      <pre><code>consult → work → discover → propose → review → canonical decision</code></pre>
+      <p>
+        With the default pull-request review gate, an agent writes the proposed decision on
+        its working branch and human review of the PR is the curation act. Teams that want a
+        separate queue can stage it under <code>context/candidate/</code> before promotion.
+        Metatron's optional MCP mode adds relevance-ranked serving, feedback, and an explicit
+        candidate store, but the invariant is the same: nothing self-promotes into canonical
+        knowledge.
+      </p>
+      <p>
+        Metatron can bootstrap candidates from structural signals and Git history, but that
+        is not the whole system. The important part is the write-back loop. An agent can
+        discover a constraint during a failed implementation, record it, and offer it for
+        review so that a future agent does not need to repeat the failure.
+      </p>
+
+      <h2>Recoverable context and non-recoverable context</h2>
+      <p>
+        Here is the conceptual center of the comparison. Most of Graft's core facts are
+        <em>recoverable</em> from the current repository. Given enough time, tokens, and tool
+        calls, a sufficiently capable agent can parse the symbols, follow the imports, read
+        the bodies, inspect the tests, and reconstruct much of the architecture. Graft makes
+        that reconstruction faster, cheaper, and more dependable. “Recoverable” does not
+        mean “free.”
+      </p>
+      <p>
+        Many Metatron decisions are not recoverable from the current tree because the
+        missing information is historical or counterfactual. The code tells you which
+        approach survived. It may not tell you which plausible alternatives were tried,
+        which production incident killed them, or which constraint the team expects every
+        future change to preserve.
+      </p>
+      <pre><code>Do not move JWT validation into every service. We tried that previously and
+it caused authorization semantics to diverge across services. Keep validation
+at the gateway.</code></pre>
+      <p>
+        An AST or call graph can show that JWT validation happens at the gateway today. It
+        can show every service depending on the authenticated request. A generated summary
+        can accurately describe the current design. None of those artifacts necessarily
+        contains the causal statement: validation used to be distributed, the semantics
+        diverged, and the team deliberately centralized it. If that history never made it
+        into code, tests, a commit message, or documentation, model capability cannot infer
+        it reliably. It can only guess.
+      </p>
+      <p>
+        The boundary is not perfectly clean. Graft's node format includes a human Notes
+        region that survives regeneration, so teams can add knowledge beyond generated
+        summaries. Metatron's ingest also starts from recoverable structural and Git
+        signals. The distinction is about each project's center of gravity and default
+        lifecycle: Graft treats its generated <code>graft/</code> graph as a local,
+        gitignored, regenerable cache; Metatron treats reviewed decisions as shared,
+        Git-tracked source material.
+      </p>
+
+      <h2>What happens as coding models get stronger?</h2>
+      <p>
+        A tempting argument says better models will make code maps unnecessary. I do not
+        think the evidence supports it. We need to separate two outcomes:
+      </p>
+      <ol>
+        <li><strong>Correctness:</strong> does the extra context help the agent produce the
+          right answer or patch?</li>
+        <li><strong>Efficiency:</strong> does it reduce tokens, tool calls, API requests,
+          wall-clock time, or cost?</li>
+      </ol>
+      <p>
+        A strong model can reach a correctness ceiling while still wasting work getting
+        there. Graft's own published results are a useful example:
+      </p>
+      <div style="overflow-x:auto;margin:24px 0">
+        <table style="width:100%;border-collapse:collapse;font-size:.94em">
+          <thead>
+            <tr>
+              <th style="text-align:left;padding:12px;border-bottom:1px solid rgba(138,163,156,.35)">Graft benchmark</th>
+              <th style="text-align:left;padding:12px;border-bottom:1px solid rgba(138,163,156,.35)">Correctness</th>
+              <th style="text-align:left;padding:12px;border-bottom:1px solid rgba(138,163,156,.35)">Efficiency reported by Graft</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style="vertical-align:top;padding:12px;border-bottom:1px solid rgba(138,163,156,.18)"><a href="https://github.com/trailhq/Graft#benchmark" target="_blank" rel="noopener">Controlled question benchmark</a><br /><small>162 runs, two repos, Claude Sonnet 5</small></td>
+              <td style="vertical-align:top;padding:12px;border-bottom:1px solid rgba(138,163,156,.18)">Cold 93%<br />Graft push 93%</td>
+              <td style="vertical-align:top;padding:12px;border-bottom:1px solid rgba(138,163,156,.18)">42% fewer tokens, 46% fewer tool calls, 60% less latency, 32% lower mean cost per task</td>
+            </tr>
+            <tr>
+              <td style="vertical-align:top;padding:12px"><a href="https://github.com/trailhq/Graft#swe-bench-verified" target="_blank" rel="noopener">SWE-bench Verified subset</a><br /><small>50 instances, Claude Sonnet 5, official grader</small></td>
+              <td style="vertical-align:top;padding:12px">Cold 27/50 (54%)<br />Graft 33/50 (66%)</td>
+              <td style="vertical-align:top;padding:12px">23% fewer tokens, 25% fewer tool calls, 24% fewer API requests, 32% less wall-clock time</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p>
+        In the first benchmark, correctness was already 93%, yet the push configuration
+        removed a large share of the exploration cost. In the lower-baseline SWE-bench run,
+        Graft reported both a 12-point correctness gain and efficiency gains. That is
+        consistent with the idea that correctness gains shrink near a ceiling while
+        efficiency gains remain. It does not prove it: the task sets, graders, and
+        conditions differ, the controlled benchmark used a model judge, and the SWE-bench
+        run covered 50 instances. Graft's README also notes that its SWE-bench efficiency
+        totals are calculated on instances both arms resolved for a like-for-like comparison.
+      </p>
+      <p>
+        Metatron's own research reaches a similarly qualified boundary. Our
+        <a href="https://github.com/getmetatron/context-md/blob/main/experiment/paper/camera-ready-agenticdev2026/context-inheritance-agenticdev-2026-camera-ready.pdf" target="_blank" rel="noopener"><em>Context Inheritance</em> paper</a>,
+        accepted at the forthcoming AgenticDev 2026 workshop, co-located with ASE,
+        reports that blind
+        frontier-authored context raised an 8B local model's gold-file localization from
+        21.1% to 47.2% on topic-matched tasks (+26.1 percentage points, <em>p</em>&lt;0.0001).
+        The same executor's own lessons moved localization by 0.0 points. Resolve stayed
+        low and did not improve significantly at that tier, so this is a localization
+        result, not a general claim that the context doubled bug-fixing ability.
+      </p>
+      <p>
+        On constraint-sharing tasks, the frontier lifecycle moved resolve from 58.3% to
+        72.9%, but that result was directional rather than confirmed after the registered
+        multiple-comparison correction (raw <em>p</em>=0.041; Holm-adjusted
+        <em>p</em>=0.081). On a broader 88-instance sample, the same frontier executor
+        already resolved 90.9% without context and no delivery condition beat it. That is
+        evidence of a possible task-specific ceiling, not a universal law about models or
+        memory.
+      </p>
+      <p>
+        The paper evaluated the Repository Context Layer architecture in a minimal harness,
+        not Metatron's product end to end, and it did not test Metatron's automatic ingest.
+        The protocol, transcripts, raw outcomes, and verification scripts are available in
+        the <a href="https://github.com/kerbelp/context-md/tree/main/experiment" target="_blank" rel="noopener">public replication artifact</a>.
+      </p>
+
+      <h2>Why Git matters</h2>
+      <p>
+        Both projects use files and both understand Git, but Git plays a different role.
+        Graft uses Git to decide which working-tree files are visible and keeps its graph
+        fresh as those files change. By default, <code>graft build</code> adds the generated
+        <code>graft/</code> directory to <code>.gitignore</code>; teammates regenerate it
+        locally. That is sensible for derived structural state. A stale map should be
+        rebuilt from the source of truth.
+      </p>
+      <p>
+        In Metatron, the decision files themselves are source of truth. Git supplies
+        provenance, review, branching, blame, rollback, and temporal alignment with the
+        code. If a team changes the JWT rule, the context diff can land with the code diff.
+        If the change was wrong, both can be reverted. If two branches disagree, the
+        disagreement is visible rather than silently resolved by regeneration.
+      </p>
+      <p>
+        This is why the human gate matters. Persistent context is standing instruction to
+        future agents. A plausible but wrong code summary is inconvenient; a plausible but
+        wrong rule that every future agent obeys is institutional damage. Metatron makes
+        review part of the storage model because durable knowledge requires an owner and an
+        audit trail.
+      </p>
+
+      <h2>Why Graft and Metatron may belong together</h2>
+      <p>
+        Once the recoverable/non-recoverable distinction is explicit, the projects stop
+        looking like substitutes. An agent preparing to change authentication needs both a
+        current map of the gateway's callers and the historical warning against distributing
+        validation. One cannot replace the other.
+      </p>
+      <p>
+        <img src="./context-stack.svg" alt="Three-layer coding-agent context stack: source code at the base, a Graft-like structural intelligence layer answering what and where, and a Metatron engineering-memory layer answering why and why not" style="width:100%;border-radius:12px;border:1px solid rgba(45,212,191,.14)" loading="lazy" />
+      </p>
+      <p>
+        The ideal context stack may therefore have three layers:
+      </p>
+      <ol>
+        <li><strong>Source code:</strong> the executable ground truth.</li>
+        <li><strong>Structural code intelligence:</strong> a Graft-like layer for symbols,
+          calls, dependencies, architecture, repository navigation, and blast radius.</li>
+        <li><strong>Engineering memory:</strong> a Metatron-like layer for rationale,
+          constraints, rejected alternatives, edge cases, and reviewed lessons.</li>
+      </ol>
+      <p>
+        The structural layer reduces the price of understanding the present. The memory
+        layer makes parts of the past available at all.
+      </p>
+
+      <h2>The experiment I would like to see</h2>
+      <p>
+        The clean test is a factorial study, not two unrelated benchmark percentages placed
+        side by side. Run the same tasks, model, scaffold, tools, budget, and grading under
+        four conditions:
+      </p>
+      <pre><code>1. Cold baseline
+2. Graft
+3. Metatron
+4. Graft + Metatron</code></pre>
+      <p>
+        Repeat the matrix across several model capability levels. Measure correctness,
+        tokens, tool calls, API requests, latency, and cost. Include ordinary bug fixing,
+        but also tasks where success depends on a recurring team constraint or a previously
+        rejected approach — cases that test engineering memory rather than repository
+        localization alone.
+      </p>
+      <p>
+        My hypothesis is an interaction, not a winner. Structural context should help most
+        on large, unfamiliar, cross-file changes and may retain efficiency gains after its
+        correctness effect narrows. Reviewed engineering memory should help most when the
+        decisive fact is historical, conventional, or absent from the current code. The
+        combined arm should show whether faster navigation makes the right decision easier
+        to apply, or whether the two contexts sometimes compete for a finite attention
+        budget. Any of those outcomes would teach us more than “tool A scored X and tool B
+        scored Y” across incomparable experiments.
+      </p>
+
+      <h2>FAQ</h2>
+      <p><strong>What is the main difference between Graft and Metatron?</strong><br />
+        Graft primarily derives structural intelligence from the current repository.
+        Metatron primarily preserves reviewed engineering decisions. In shorthand: Graft
+        answers WHAT / WHERE; Metatron answers WHY / WHY NOT.</p>
+      <p><strong>Do stronger coding models make Graft-like tools unnecessary?</strong><br />
+        No. Correctness gains may narrow on tasks a model already solves, while token,
+        tool-call, and latency gains remain valuable. Graft's controlled benchmark is a
+        concrete example: equal 93% correctness with substantially lower reported usage.</p>
+      <p><strong>Can the projects be used together?</strong><br />
+        Conceptually, yes. Their default artifacts and integration mechanisms differ, but a
+        coding agent can benefit from a current structural map and a reviewed decision
+        history in the same repository.</p>
+
+      <hr />
+
+      <p>
+        Graft asks why an agent should rediscover the structure of a repository on every
+        task. Metatron asks the next question: why should it rediscover the team's engineering
+        knowledge?
+      </p>
+      <p>
+        A capable agent can always spend more effort reading code. It cannot read an argument
+        nobody saved.
+      </p>
+
+      <div class="article-foot">
+        <div class="foot-links">
+          <a class="btn btn-ghost btn-sm" href="https://github.com/trailhq/Graft" target="_blank" rel="noopener">Read Graft's source and benchmarks</a>
+          <a class="btn btn-ghost btn-sm" href="https://github.com/kerbelp/metatron" target="_blank" rel="noopener">Explore Metatron</a>
+          <a class="btn btn-ghost btn-sm" href="https://github.com/getmetatron/context-md/blob/main/experiment/paper/camera-ready-agenticdev2026/context-inheritance-agenticdev-2026-camera-ready.pdf" target="_blank" rel="noopener">Read the AgenticDev paper</a>
+          <a class="btn btn-ghost btn-sm" href="https://github.com/kerbelp/context-md/tree/main/experiment" target="_blank" rel="noopener">Inspect the research artifact</a>
+        </div>
+        <div class="article-byline">
+          <span class="mark"><span data-cube-mark style="width:20px;height:20px;display:block"></span></span>
+          <span>Written by <b>Pavel Kerbel</b>, creator of Metatron and co-author of the Context Inheritance study.</span>
+        </div>
+      </div>
+
+    </div>
+  </article>
+</main>
+
+<!-- ============ FOOTER ============ -->
+<footer class="foot">
+  <div class="wrap">
+    <div class="foot-inner">
+      <div class="foot-brand">
+        <a class="brand" href="/"><span data-cube-mark style="width:26px;height:26px;display:block"></span>Metatron</a>
+        <p>Git-native engineering memory for AI coding agents. Reviewed decisions live with the code, so agents inherit what the team learned.</p>
+        <div class="foot-social" style="display:flex;gap:14px;margin-top:16px">
+          <a href="https://github.com/kerbelp/metatron" target="_blank" rel="noopener" aria-label="GitHub" style="color:#8aa39c;display:inline-flex"><svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.7.5.5 5.7.5 12c0 5.1 3.3 9.4 7.9 10.9.6.1.8-.3.8-.6v-2c-3.2.7-3.9-1.5-3.9-1.5-.5-1.3-1.3-1.7-1.3-1.7-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.7 1.3 3.4 1 .1-.8.4-1.3.7-1.6-2.6-.3-5.3-1.3-5.3-5.7 0-1.3.5-2.3 1.2-3.1-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0c2.3-1.5 3.3-1.2 3.3-1.2.6 1.6.2 2.8.1 3.1.8.8 1.2 1.8 1.2 3.1 0 4.4-2.7 5.4-5.3 5.7.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6 4.6-1.5 7.9-5.8 7.9-10.9C23.5 5.7 18.3.5 12 .5Z"/></svg></a>
+          <a href="https://www.youtube.com/@getmetatron" target="_blank" rel="noopener" aria-label="YouTube" style="color:#8aa39c;display:inline-flex"><svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M23.5 6.2a3 3 0 0 0-2.11-2.12C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.39.58A3 3 0 0 0 .5 6.2 31.1 31.1 0 0 0 0 12a31.1 31.1 0 0 0 .5 5.8 3 3 0 0 0 2.11 2.12C4.5 20.5 12 20.5 12 20.5s7.5 0 9.39-.58A3 3 0 0 0 23.5 17.8 31.1 31.1 0 0 0 24 12a31.1 31.1 0 0 0-.5-5.8ZM9.6 15.6V8.4l6.3 3.6-6.3 3.6Z"/></svg></a>
+        </div>
+      </div>
+      <div class="foot-cols">
+        <div class="foot-col">
+          <h5>Product</h5>
+          <a href="/#problem">The problem</a>
+          <a href="/#how">How it works</a>
+          <a href="/#anatomy">Anatomy of a decision</a>
+          <a href="/#opensource">Open-source</a>
+        </div>
+        <div class="foot-col">
+          <h5>Resources</h5>
+          <a href="/blog/">Blog</a>
+          <a href="/docs/">Documentation</a>
+          <a href="https://github.com/kerbelp/metatron" target="_blank" rel="noopener">GitHub repo</a>
+          <a href="https://youtu.be/RdPn6OMtfOs" target="_blank" rel="noopener">Demo video</a>
+        </div>
+        <div class="foot-col">
+          <h5>Contact</h5>
+          <a href="mailto:hello@getmetatron.com">hello@getmetatron.com</a>
+          <a href="mailto:hello@getmetatron.com?subject=Metatron%20hosted%20interest">Hosted version?</a>
+        </div>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>© 2026 Metatron · MIT licensed</span>
+      <span>Files-first · Git-native · MCP optional</span>
+    </div>
+  </div>
+</footer>
+
+<script src="/metatron.js"></script>
+</body>
+</html>
