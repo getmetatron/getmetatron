@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 570" role="img" aria-labelledby="title desc">
+  <title id="title">Ripwire and Metatron context layers</title>
+  <desc id="desc">A task branches to Ripwire and Metatron. Ripwire returns relevant symbols, call structure, tests, and blast radius. Metatron returns reviewed decisions, rationale, previous failures, and conventions. Both feed a coding agent.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0d1415"/>
+      <stop offset="1" stop-color="#08090a"/>
+    </linearGradient>
+    <linearGradient id="rw" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#172531"/>
+      <stop offset="1" stop-color="#10181e"/>
+    </linearGradient>
+    <linearGradient id="mtx" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#123228"/>
+      <stop offset="1" stop-color="#0d1c18"/>
+    </linearGradient>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+      <path d="M0 0L10 5L0 10Z" fill="#73847f"/>
+    </marker>
+  </defs>
+  <rect width="1100" height="570" rx="20" fill="url(#bg)"/>
+  <g font-family="Hanken Grotesk, system-ui, sans-serif">
+    <rect x="420" y="34" width="260" height="72" rx="16" fill="#11191a" stroke="#52625e"/>
+    <text x="550" y="78" text-anchor="middle" fill="#f0f4f2" font-size="26" font-weight="600">Engineering task</text>
+
+    <path d="M510 106C510 145 300 141 300 178" fill="none" stroke="#73847f" stroke-width="2" marker-end="url(#arrow)"/>
+    <path d="M590 106C590 145 800 141 800 178" fill="none" stroke="#73847f" stroke-width="2" marker-end="url(#arrow)"/>
+
+    <rect x="85" y="185" width="430" height="235" rx="18" fill="url(#rw)" stroke="#4e7892"/>
+    <text x="120" y="230" fill="#8ac8ee" font-size="27" font-weight="700">Ripwire</text>
+    <text x="120" y="260" fill="#aab7bd" font-size="17">Derived context from the current tree</text>
+    <g fill="#d6e0e3" font-size="19">
+      <text x="120" y="307">• relevant symbols and bodies</text>
+      <text x="120" y="340">• callers, callees, and uses</text>
+      <text x="120" y="373">• blast radius and test selection</text>
+      <text x="120" y="406">• quality, churn, and field notes</text>
+    </g>
+
+    <rect x="585" y="185" width="430" height="235" rx="18" fill="url(#mtx)" stroke="#35a97d"/>
+    <text x="620" y="230" fill="#58ddb0" font-size="27" font-weight="700">Metatron / RCL</text>
+    <text x="620" y="260" fill="#aab7bd" font-size="17">Inherited context from previous work</text>
+    <g fill="#d6e0e3" font-size="19">
+      <text x="620" y="307">• reviewed decisions and scope</text>
+      <text x="620" y="340">• rationale and source references</text>
+      <text x="620" y="373">• previous failures and constraints</text>
+      <text x="620" y="406">• conventions and feedback</text>
+    </g>
+
+    <path d="M300 420C300 466 465 456 487 481" fill="none" stroke="#73847f" stroke-width="2" marker-end="url(#arrow)"/>
+    <path d="M800 420C800 466 635 456 613 481" fill="none" stroke="#73847f" stroke-width="2" marker-end="url(#arrow)"/>
+
+    <rect x="420" y="478" width="260" height="62" rx="16" fill="#15251f" stroke="#34d399"/>
+    <text x="550" y="517" text-anchor="middle" fill="#f0f4f2" font-size="25" font-weight="600">Coding agent</text>
+  </g>
+</svg>

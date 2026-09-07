@@ -16,9 +16,16 @@
   </url>
   <url>
     <loc>https://getmetatron.com/blog/</loc>
-    <lastmod>2026-09-06</lastmod>
+    <lastmod>2026-09-07</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://getmetatron.com/blog/ripwire-and-metatron/</loc>
+    <lastmod>2026-09-07</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.7</priority>
+    <image:image><image:loc>https://getmetatron.com/public/images/og/ripwire-and-metatron.png</image:loc></image:image>
   </url>
   <url>
     <loc>https://getmetatron.com/blog/graft-vs-metatron/</loc>

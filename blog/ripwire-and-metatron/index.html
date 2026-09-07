@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-0P4SKXFNWL"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-0P4SKXFNWL');
+</script>
+
+<title>Ripwire and Metatron: code intelligence vs repository memory</title>
+<meta name="description" content="Ripwire derives a map of the repository today. Metatron preserves what engineers and agents learned yesterday. Why coding agents may need both kinds of context." />
+<link rel="canonical" href="https://getmetatron.com/blog/ripwire-and-metatron/" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&amp;family=Hanken+Grotesk:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="/styles.css" />
+<link rel="stylesheet" href="/blog.css" />
+
+<link rel="icon" href="/public/images/favicon.ico" sizes="any" />
+<link rel="icon" type="image/png" sizes="32x32" href="/public/images/favicon-32x32.png" />
+<link rel="icon" type="image/png" sizes="16x16" href="/public/images/favicon-16x16.png" />
+<link rel="apple-touch-icon" sizes="180x180" href="/public/images/apple-touch-icon.png" />
+
+<!-- Open Graph -->
+<meta property="og:type" content="article" />
+<meta property="og:site_name" content="Metatron" />
+<meta property="og:url" content="https://getmetatron.com/blog/ripwire-and-metatron/" />
+<meta property="og:title" content="Ripwire and Metatron: code intelligence meets repository memory" />
+<meta property="og:description" content="Why AI coding agents may need both derived context and inherited context—and why Ripwire notes make the boundary especially interesting." />
+<meta property="og:image" content="https://getmetatron.com/public/images/og/ripwire-and-metatron.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content="Ripwire and Metatron as complementary repository context layers" />
+<meta property="article:published_time" content="2026-09-07" />
+<meta property="article:modified_time" content="2026-09-07" />
+<meta property="article:author" content="Pavel Kerbel" />
+
+<!-- Twitter / X -->
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Ripwire and Metatron: code intelligence meets repository memory" />
+<meta name="twitter:description" content="Ripwire maps what a repository contains. Metatron preserves what the repository has learned. The interesting part is where the layers overlap." />
+<meta name="twitter:image" content="https://getmetatron.com/public/images/og/ripwire-and-metatron.png" />
+
+<!-- JSON-LD -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Ripwire and Metatron: Code Intelligence Meets Repository Memory",
+  "alternativeHeadline": "Why AI coding agents may need both derived context and inherited context",
+  "description": "Ripwire derives a map of the repository today. Metatron preserves what engineers and agents learned yesterday. A technical comparison of two complementary context layers.",
+  "image": "https://getmetatron.com/public/images/og/ripwire-and-metatron.png",
+  "datePublished": "2026-09-07",
+  "dateModified": "2026-09-07",
+  "author": { "@type": "Person", "name": "Pavel Kerbel", "url": "https://pavelkerbel.com" },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Metatron",
+    "logo": { "@type": "ImageObject", "url": "https://getmetatron.com/public/images/apple-touch-icon.png" }
+  },
+  "about": [
+    { "@type": "SoftwareApplication", "name": "Ripwire", "url": "https://github.com/redhat-et/ripwire" },
+    { "@type": "SoftwareApplication", "name": "Metatron", "url": "https://github.com/kerbelp/metatron" },
+    { "@type": "Thing", "name": "Repository Context Layer", "url": "https://github.com/getmetatron/context-md" }
+  ],
+  "mainEntityOfPage": { "@type": "WebPage", "@id": "https://getmetatron.com/blog/ripwire-and-metatron/" }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://getmetatron.com/" },
+    { "@type": "ListItem", "position": 2, "name": "Blog", "item": "https://getmetatron.com/blog/" },
+    { "@type": "ListItem", "position": 3, "name": "Ripwire and Metatron", "item": "https://getmetatron.com/blog/ripwire-and-metatron/" }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What is the main difference between Ripwire and Metatron?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Ripwire primarily derives structural context from the current repository: relevant symbols, calls, blast radius, tests, and quality signals. Metatron primarily maintains reviewed engineering knowledge: decisions, rationale, constraints, rejected approaches, and lessons. Ripwire notes create meaningful overlap between the two." }
+    },
+    {
+      "@type": "Question",
+      "name": "Does Ripwire support persistent repository memory?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Yes. Ripwire's .ripwire_notes file stores notes attached to files or canonical symbol IDs, stamps new notes with Git commit and branch provenance when available, and automatically surfaces them in later CLI and MCP retrieval. Ripwire currently treats them as field notes rather than a governed candidate-to-canonical knowledge lifecycle." }
+    },
+    {
+      "@type": "Question",
+      "name": "Can Ripwire and Metatron be used together?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Conceptually, yes. Ripwire can supply a token-budgeted structural work packet while Metatron supplies relevant reviewed decisions and prior lessons. The coding agent receives both current code structure and inherited engineering context." }
+    }
+  ]
+}
+</script>
+</head>
+<body>
+
+<header class="nav">
+  <div class="nav-inner">
+    <a class="brand" href="/" aria-label="Metatron home">
+      <span data-cube-mark style="width:26px;height:26px;display:block"></span>
+      Metatron
+    </a>
+    <nav class="nav-links" aria-label="Primary">
+      <a href="/#problem">Problem</a>
+      <a href="/#how">How it works</a>
+      <a href="/#ui">The UI</a>
+      <a href="/blog/">Blog</a>
+      <a href="/docs/">Docs</a>
+    </nav>
+    <div class="nav-cta">
+      <a class="btn btn-ghost btn-sm" href="https://github.com/kerbelp/metatron" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.7.5.5 5.7.5 12c0 5.1 3.3 9.4 7.9 10.9.6.1.8-.3.8-.6v-2c-3.2.7-3.9-1.5-3.9-1.5-.5-1.3-1.3-1.7-1.3-1.7-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.7 1.3 3.4 1 .1-.8.4-1.3.7-1.6-2.6-.3-5.3-1.3-5.3-5.7 0-1.3.5-2.3 1.2-3.1-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0c2.3-1.5 3.3-1.2 3.3-1.2.6 1.6.2 2.8.1 3.1.8.8 1.2 1.8 1.2 3.1 0 4.4-2.7 5.4-5.3 5.7.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6 4.6-1.5 7.9-5.8 7.9-10.9C23.5 5.7 18.3.5 12 .5Z"/></svg>
+        GitHub
+      </a>
+      <a class="btn btn-primary btn-sm" href="/#updates">Get updates</a>
+    </div>
+    <button class="nav-burger" aria-label="Menu">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+    </button>
+  </div>
+</header>
+
+<main class="blog-main" id="top">
+  <article class="wrap blog-wrap">
+
+    <div class="crumb">
+      <a href="/">Home</a><span>/</span><a href="/blog/">Blog</a><span>/</span>Ripwire and Metatron
+    </div>
+
+    <header class="article-head">
+      <span class="kicker">Research</span>
+      <h1>Ripwire and Metatron: code intelligence meets repository memory</h1>
+      <div class="article-meta">
+        <span>Pavel Kerbel</span>
+        <span class="dot">·</span>
+        <time datetime="2026-09-07">September 7, 2026</time>
+        <span class="dot">·</span>
+        <span>16 min read</span>
+      </div>
+      <p class="article-lede">
+        <a href="https://github.com/redhat-et/ripwire" target="_blank" rel="noopener">Ripwire</a>
+        maps what a repository contains.
+        <a href="https://github.com/kerbelp/metatron" target="_blank" rel="noopener">Metatron</a>
+        preserves what the repository has learned. The distinction is useful—but Ripwire's
+        new persistent notes make the boundary much more interesting than that slogan suggests.
+      </p>
+    </header>
+
+    <div class="prose">
+
+      <p style="font-size:.9em;color:#8aa39c">
+        <strong>Source note:</strong> I reviewed Ripwire at
+        <a href="https://github.com/redhat-et/ripwire/tree/c7914e8dc8429a318ffe24f857077e2b1d52d62e" target="_blank" rel="noopener"><code>c7914e8</code></a>,
+        Metatron 0.13.0 at
+        <a href="https://github.com/kerbelp/metatron/tree/8cd80db5fbb0bdf9fa64642ff7b4020708506a83" target="_blank" rel="noopener"><code>8cd80db</code></a>,
+        and the RCL paper/artifact at
+        <a href="https://github.com/getmetatron/context-md/tree/686a1cf20406c52839bf890202d2c9615cc0f5e5" target="_blank" rel="noopener"><code>686a1cf</code></a>
+        on September 7, 2026. Ripwire is moving quickly; the pinned links preserve the
+        evidence behind this comparison, while the project root shows the latest behavior.
+      </p>
+
+      <h2>One cold-start tax, two kinds of context</h2>
+      <p>
+        A coding agent entering an unfamiliar repository has two different deficits. First,
+        it does not know the implementation: which symbols matter, who calls them, how a
+        change propagates, or which tests exercise the affected path. Second, it does not
+        know the history: why the implementation is shaped this way, which cleaner-looking
+        alternatives already failed, or which production constraint is not visible in the
+        type system.
+      </p>
+      <p>
+        Both deficits produce the same outward behavior. The agent greps, opens files, follows
+        references, forms a theory, and sometimes repeats an experiment that somebody ran six
+        months ago. But the missing information has different origins.
+      </p>
+      <div class="callout">
+        <strong>Ripwire primarily derives context from the repository as it exists now.</strong><br />
+        <strong>Metatron primarily carries context forward from work that happened before.</strong>
+      </div>
+      <p>
+        In shorthand: Ripwire gives agents code intelligence; Metatron gives repositories
+        institutional memory. “Primarily” matters. Ripwire now persists agent-authored field
+        notes, and Metatron can bootstrap candidates from structural and Git signals. The
+        projects overlap. They simply put their architectural weight on different sides of
+        the same boundary.
+      </p>
+
+      <h2>Ripwire derives a working model of the current tree</h2>
+      <p>
+        Ripwire describes its pipeline as
+        <code>ingest → graph → rank → serialize → CLI / MCP</code>. The
+        <a href="https://github.com/redhat-et/ripwire/blob/c7914e8dc8429a318ffe24f857077e2b1d52d62e/docs/ARCHITECTURE.md" target="_blank" rel="noopener">architecture document</a>
+        is unusually explicit about what each stage can and cannot establish. It crawls the
+        tree deterministically, extracts symbols and references with vendored tree-sitter
+        queries for 21 languages/configuration formats, resolves references into an
+        intentionally approximate call graph, and ranks that graph. Ambiguous name resolution
+        is not silently collapsed: multiple candidates receive split edges, uncertainty is
+        reported, and a SCIP index can overlay compiler-grade targets where one exists.
+      </p>
+      <p>
+        Structural importance and task relevance are separate signals. Personalized PageRank
+        provides the repository map; task retrieval uses lexical evidence over names,
+        subtokens, documentation, and bodies. The default task router selects a name-exact lane
+        for identifier-shaped queries and a subtoken-plus-body BM25 lane for prose. Git adds
+        another view: churn, changed-file personalization, co-change relationships, and the
+        revision against which an answer was generated.
+      </p>
+      <p>
+        The result is a set of practical answers that line up with the questions an agent asks
+        before editing:
+      </p>
+      <ul>
+        <li><code>--for="task"</code> ranks the symbols and files likely to matter, annotating them with reuse, complexity, churn, test reach, and change amplification.</li>
+        <li><code>--expand=SYM</code> returns the requested body, sibling symbols, imports, and direct callee signatures without requiring a whole-file read when the bundle is cheaper.</li>
+        <li><code>--callers</code>, <code>--callees</code>, and <code>--uses</code> expose the immediate neighborhood.</li>
+        <li><code>--impact=SYM</code> walks the reverse call graph for a transitive blast radius, explicitly treating its counts as floors because dynamic dispatch and indirect calls remain blind spots.</li>
+        <li><code>--test-gate</code> combines changed symbols, graph reach, test symbols, script literals, and declared manifest evidence to name tests to run and affected code with no indexed test reach.</li>
+      </ul>
+      <p>
+        These commands are documented with their output and caveats in
+        <a href="https://github.com/redhat-et/ripwire/blob/c7914e8dc8429a318ffe24f857077e2b1d52d62e/docs/COMMANDS.md" target="_blank" rel="noopener"><code>docs/COMMANDS.md</code></a>.
+        The tool also reaches beyond navigation. <code>--quality-panel</code> joins independent
+        structural, lexical, confusing-idiom, history, colocation, and non-local-state lenses;
+        <code>--quality-delta</code> reports quality signals that became worse relative to Git.
+        The same graph is available through a persistent
+        <a href="https://github.com/redhat-et/ripwire/blob/c7914e8dc8429a318ffe24f857077e2b1d52d62e/docs/COMMANDS.md#--mcp" target="_blank" rel="noopener">MCP server</a>
+        over stdio or Streamable HTTP.
+      </p>
+      <p>
+        The agent-level benefit is not mysterious. Without a map, a model spends context on
+        exploratory grep results, whole files, wrong turns, and repeated calls for callers and
+        tests. Ripwire performs those joins deterministically and emits a ranked, bounded answer.
+        It does not make reading source unnecessary. It makes the expensive question “what
+        should I read?” cheaper to answer.
+      </p>
+
+      <h2><code>--pack-task</code> is the clearest expression of that design</h2>
+      <p>
+        Ripwire's
+        <a href="https://github.com/redhat-et/ripwire/blob/c7914e8dc8429a318ffe24f857077e2b1d52d62e/docs/COMMANDS.md#--pack-tasktask" target="_blank" rel="noopener"><code>--pack-task</code></a>
+        command assembles the orientation loop in one call. Under a shared default budget of
+        6,000 estimated tokens, it emits a routed ranking, full bodies for top candidates,
+        one-hop caller signatures, field notes, and relevant tests. The quotas are fixed up
+        front—40% ranking, 30% bodies, 15% callers, 5% notes, 10% tests—and unused budget rolls
+        forward. Every truncated section says so.
+      </p>
+      <p>
+        That is more than a compact repository map. It is a task-shaped work packet. It answers:
+        start here, read these implementations, understand these callers, remember these local
+        facts, and verify with these tests. It is also the point where Ripwire's structural
+        context and persistent memory already meet.
+      </p>
+
+      <h2>Some engineering knowledge cannot be re-derived</h2>
+      <p>
+        Consider two statements:
+      </p>
+      <pre><code>A calls B.
+
+We deliberately avoided C because it caused X in production,
+even though C appears cleaner.</code></pre>
+      <p>
+        The first is a property of the current program. A parser and resolver can derive it,
+        subject to familiar static-analysis limits. If the code changes, recompute the answer.
+      </p>
+      <p>
+        The second is a property of the engineering process. The current tree may contain no
+        evidence that C ever existed. A test may encode the boundary without explaining it. A
+        commit may show the removal without preserving the production symptom. Even a perfectly
+        reconstructed AST cannot recover a counterfactual the repository never recorded.
+      </p>
+      <p>
+        This missing class includes architectural rationale, rejected approaches, debugging
+        discoveries, non-obvious operational constraints, production lessons, conventions,
+        known traps, and the reasons behind unusual implementation choices. A capable model can
+        infer a plausible explanation. Plausibility is exactly the danger: institutional memory
+        must distinguish “the team learned this” from “the agent invented a coherent story.”
+      </p>
+
+      <h2>Ripwire notes cross part of that boundary</h2>
+      <p>
+        This is the most interesting part of the comparison. Ripwire's
+        <a href="https://github.com/redhat-et/ripwire/blob/c7914e8dc8429a318ffe24f857077e2b1d52d62e/.ripwire_notes" target="_blank" rel="noopener"><code>.ripwire_notes</code></a>
+        is a committed, sorted, repository-root file. A note targets either a file or a symbol.
+        On write, <code>--note-add</code> accepts several symbol spellings, resolves the target,
+        and canonicalizes an unambiguous symbol to the same ID used by retrieval—roughly
+        <code>path::scope::name</code>. Ambiguous symbols are refused rather than attached to an
+        arbitrary definition. A path may be recorded before the file exists, but it is marked
+        dangling until something matches it.
+      </p>
+      <p>
+        New notes use Git's committer date and, when Git information is available, carry the full
+        HEAD SHA and branch where the observation was recorded. A claim such as “fixed” is
+        therefore anchored to the revision where it was believed true. <code>--notes</code> lists
+        the store and dangling targets. More importantly, notes are not passive documentation:
+        they automatically appear on matching symbols and files in future <code>--for</code> and
+        <code>--expand</code> results, as well as the corresponding MCP retrieval tools.
+      </p>
+      <p>
+        Ripwire even nudges the author toward decision-shaped text. If a note contains no causal
+        marker such as “because,” “chose,” “over,” or “instead,” the writer receives a gentle tip.
+        The note still lands—the hint is guidance, not a gate. The behavior and its limits are
+        specified directly in the
+        <a href="https://github.com/redhat-et/ripwire/blob/c7914e8dc8429a318ffe24f857077e2b1d52d62e/docs/COMMANDS.md#--note-addtarget-text" target="_blank" rel="noopener"><code>--note-add</code> and <code>--notes</code> documentation</a>.
+      </p>
+      <div class="callout">
+        <strong><code>.ripwire_notes</code> is not merely annotation metadata.</strong>
+        It is persistent, Git-provenanced, automatically retrieved repository memory attached
+        to canonical structural identities.
+      </div>
+      <p>
+        That changes the comparison. Ripwire no longer lives entirely in the category of
+        disposable derived indexes. It can preserve facts the parser did not discover and return
+        them at the moment an agent encounters the relevant code.
+      </p>
+
+      <h2>Metatron puts the knowledge lifecycle at the center</h2>
+      <p>
+        Metatron's primary unit is a structured engineering decision: a <code>pattern</code>, its
+        <code>scope</code>, the <code>rationale</code>, a <code>confidence</code> level, and
+        <code>source_refs</code>. In the default files-first mode, each decision is a Markdown file
+        under <code>context/</code>, versioned beside the code and discoverable through a root
+        <code>context.md</code>. MCP is an optional relevance-ranked serving layer rather than a
+        requirement. The
+        <a href="https://github.com/kerbelp/metatron/blob/8cd80db5fbb0bdf9fa64642ff7b4020708506a83/README.md" target="_blank" rel="noopener">Metatron README</a>
+        documents both modes and their shared data model.
+      </p>
+      <p>
+        The lifecycle is the product boundary:
+      </p>
+      <pre><code>agent discovers something
+        ↓
+candidate knowledge
+        ↓
+human review / promotion
+        ↓
+canonical repository knowledge
+        ↓
+future agents consume it
+        ↓
+feedback and refinement</code></pre>
+      <p>
+        The exact review mechanism is configurable. With Metatron's default
+        <code>review_gate = "pr"</code>, an agent writes a decision directly under
+        <code>context/decisions/</code> on its working branch; human approval of the pull request is
+        the curation act. With <code>review_gate = "candidates"</code>, the proposal first lives in
+        <code>context/candidate/</code> and promotion is a separate reviewed move. In MCP mode,
+        ingestion and feedback refinement likewise create candidates, never canonical decisions.
+      </p>
+      <p>
+        Metatron records more than acceptance. Scope controls where a decision applies. Rationale
+        preserves the causal explanation. Source references let a reviewer inspect the evidence.
+        Confidence expresses how strongly that evidence supports the rule. Agent feedback can
+        change ordering among already-canonical, equally relevant decisions, but cannot promote,
+        demote, or rewrite knowledge across the canonical boundary. Missing-context reports are
+        captured, reshaped into structured candidates, and returned to review.
+      </p>
+      <p>
+        That review boundary matters because persistent agent memory has asymmetric failure costs.
+        A wrong search result wastes one session. A wrong standing instruction can shape every
+        future patch. Automatic memory can turn a single mistaken inference into a repository-wide
+        convention; review turns persistence from repetition into governance.
+      </p>
+      <p>
+        A team can of course review <code>.ripwire_notes</code> diffs in ordinary pull requests, and
+        many will. The narrower distinction is that Ripwire's current note abstraction does not
+        itself encode candidate versus canonical status, promotion, structured confidence, or a
+        feedback/refinement workflow. Metatron makes those states and transitions explicit because
+        its central problem is maintaining institutional knowledge, not only storing observations.
+      </p>
+
+      <h2>The benchmarks ask different questions</h2>
+      <p>
+        The projects' numbers are easy to place in one table and easy to misread. Ripwire primarily
+        evaluates whether a deterministic representation retrieves the code an issue requires, and
+        how much context that retrieval costs. The Metatron paper primarily evaluates whether
+        knowledge from earlier repository work transfers to a later agent. Those are adjacent
+        hypotheses, not competing estimates of one effect.
+      </p>
+
+      <h3>Ripwire: representation and retrieval of the current codebase</h3>
+      <p>
+        On Ripwire's current 60-instance, Python-dominant held-out LocBench comparison, strict
+        <code>file@10</code>—all gold files present in the top ten—was 58.3%, with 85.0%
+        <code>any@10</code>. The best alternative in that particular comparison reached 40.0%
+        strict and 63.3% any. Ripwire reports a 0.31-second median index build and a 0.108-second
+        median query for that run. The
+        <a href="https://github.com/redhat-et/ripwire/blob/c7914e8dc8429a318ffe24f857077e2b1d52d62e/README.md#graph-ranked-retrieval-it-finds-the-right-files-more-often-than-the-alternatives" target="_blank" rel="noopener">README publishes the full table, including losses and competitor caveats</a>.
+      </p>
+      <p>
+        A separate, wider held-out comparison measures Ripwire's shipped routed <code>--for</code>
+        against its own pre-routing baseline: 243 instances across 78 repositories, 60.9% versus
+        27.6% strict <code>file@10</code>, with a 25.0-point clustered-bootstrap lower bound on the
+        33.3-point paired gain. The routed form also used 39.4% fewer tokens at the production
+        ceiling. The difficult edge is visible in the strata: 73.4% strict for single-file gold,
+        18.2% for multi-file gold. The corrected protocol, split, metrics, and limitations live in
+        <a href="https://github.com/redhat-et/ripwire/blob/c7914e8dc8429a318ffe24f857077e2b1d52d62e/bench/locbench/README.md" target="_blank" rel="noopener"><code>bench/locbench/README.md</code></a>.
+      </p>
+      <p>
+        Those are localization results. They support the claim that Ripwire can give an agent a
+        better, cheaper starting set than unshaped search. They do not by themselves show that an
+        agent fixes more bugs.
+      </p>
+      <p>
+        Ripwire's historical
+        <a href="https://github.com/redhat-et/ripwire/blob/c7914e8dc8429a318ffe24f857077e2b1d52d62e/bench/ANSWERQUALITY.md#3-end-to-end-pilot--run-here-n2-the-real-fix-the-failing-test-loop" target="_blank" rel="noopener"><code>bench/ANSWERQUALITY.md</code></a>
+        records a private two-bug agent A/B. Both baseline and Ripwire solved 2/2; the Ripwire arm
+        used about 88K tokens versus 118K and localized with roughly one command rather than about
+        four grep/read steps. That is directionally consistent with an efficiency claim, but N=2,
+        named-symptom bugs, and a private corpus cannot establish a resolve-rate effect.
+      </p>
+      <p>
+        The repository's newer, centralized
+        <a href="https://github.com/redhat-et/ripwire/blob/c7914e8dc8429a318ffe24f857077e2b1d52d62e/docs/EVALS.md#8-claims-this-project-does-not-publish" target="_blank" rel="noopener">evaluation ledger</a>
+        is stricter still: it explicitly withholds any claim that Ripwire changes whether an agent
+        solves a task, says the planned SWE-bench evaluator has not run, and treats retrieval quality
+        as a proxy whose relationship to task success remains to be demonstrated. That is the right
+        way to read Ripwire's current evidence.
+      </p>
+
+      <h3>Metatron/RCL: transfer from previous repository work</h3>
+      <p>
+        <a href="https://github.com/getmetatron/context-md/blob/686a1cf20406c52839bf890202d2c9615cc0f5e5/whitepaper/repository-context-layer-paper.pdf" target="_blank" rel="noopener"><em>Context Inheritance: A Git-Native Architecture and Pre-registered Study of Repository Context for AI Coding Agents</em></a>
+        asks a different question: can context learned or authored before task B change how an agent
+        performs task B?
+      </p>
+      <p>
+        On topic-matched SWE-bench Verified tasks, blind frontier-authored context raised an 8B local
+        model's gold-file localization from 21.1% to 47.2%: +26.1 percentage points,
+        <em>p</em>&lt;0.0001. The same executor's self-authored lessons moved localization by 0.0
+        points. Resolve remained low at that tier; the result is about navigation, not doubled
+        bug-fixing success. The paper interprets this as a capability-dependent author/reader pattern:
+        weaker agents can inherit useful context from stronger authors, but did not benefit from the
+        lessons they wrote themselves in this setup.
+      </p>
+      <p>
+        With a frontier executor on 16 constraint-sharing pairs across 11 groups, failure-derived
+        lifecycle context moved resolve from 58.3% to 72.9% (+14.6 points). The raw paired
+        <em>p</em>-value was 0.041, but 0.081 after the pre-registered Holm correction, so the current
+        paper reports the direction rather than a confirmed effect. In the same regime, tokens per
+        resolved task fell from 81.8K to 55.7K (−32%); because that ratio depends on the directional
+        resolve difference, it is an economic observation for this sample rather than a settled
+        general effect.
+      </p>
+      <p>
+        The paper also reports a ceiling. On a broader random 88-instance sample, the frontier
+        no-context baseline already resolved 90.9%, and no delivery condition improved it. Context
+        helps only when it carries knowledge the reader needs and the task actually reuses. The full
+        protocol, transcripts, audits, and reproduction scripts are in the
+        <a href="https://github.com/getmetatron/context-md/tree/686a1cf20406c52839bf890202d2c9615cc0f5e5/experiment" target="_blank" rel="noopener">public experiment artifact</a>.
+      </p>
+      <p>
+        Two caveats are essential. The study evaluated the Repository Context Layer architecture
+        through a minimal harness, not Metatron's product end to end. Its study context was
+        blind-authored or generated inside the experimental lifecycle; it did not test Metatron's
+        automatic <code>ingest</code> pipeline. Ripwire's localization numbers therefore neither
+        validate nor contradict the RCL transfer claim, and the RCL results say nothing about
+        Ripwire's relative retrieval quality.
+      </p>
+
+      <h2>How the two layers could compose</h2>
+      <p>
+        Suppose an agent must change token refresh behavior. Ripwire could turn the task into a
+        structural packet:
+      </p>
+      <pre><code>start at refreshToken
+inspect these callers
+these downstream symbols sit in the blast radius
+these tests reach the changed path</code></pre>
+      <p>
+        Metatron could add the experiential packet:
+      </p>
+      <pre><code>do not rotate tokens inside the database transaction
+a previous implementation caused lock contention
+publish the session event only after commit
+follow the newer auth service, not the legacy worker</code></pre>
+      <p>
+        The combined architecture is straightforward:
+      </p>
+      <p>
+        <img src="./context-layers.svg" alt="A task flows in parallel through Ripwire for relevant symbols, call graph, tests, and blast radius, and through Metatron for reviewed decisions, rationale, previous failures, and conventions; both context streams feed a coding agent" style="width:100%;border-radius:12px;border:1px solid rgba(45,212,191,.14)" loading="lazy" />
+      </p>
+      <p>
+        Ripwire supplies structural context. Metatron supplies experiential context. Ripwire's
+        token-budgeted <code>--pack-task</code> makes this composition conceptually natural: reserve
+        a bounded share for the current code surface, retrieve a bounded share of relevant canonical
+        decisions, and let the agent spend its remaining budget on implementation and verification.
+        In a tighter integration, Ripwire's canonical symbol IDs and affected-file set could even become
+        scope signals for retrieving institutional knowledge.
+      </p>
+
+      <h2>The competitive overlap is real</h2>
+      <p>
+        If Ripwire evolves field notes along a path like this:
+      </p>
+      <pre><code>notes
+  → candidate knowledge
+  → explicit provenance
+  → review
+  → canonical decisions
+  → relevance retrieval
+  → feedback
+  → supersession and staleness</code></pre>
+      <p>
+        then it moves much further into Repository Context Layer territory. That would not be a
+        rhetorical reclassification; it would be a change in the trust model. The system would no
+        longer only remember what an agent wrote. It would manage which claims the repository is
+        willing to teach every future agent, why, for which scope, based on what evidence, and until
+        when.
+      </p>
+      <p>
+        Conversely, Metatron probably should not become another AST, call-graph, or indexing engine.
+        Structural analysis is language-specific, full of resolution edge cases, and expensive to
+        make honest. Ripwire's explicit ambiguity, completeness, and token-budget contracts show how
+        deep that work goes. A repository-memory layer can consume mature structural tools as inputs
+        and remain focused on durable engineering knowledge.
+      </p>
+
+      <h2>Derived context and inherited context need different rules</h2>
+      <p>
+        The broader architectural pattern is not “two databases.” It is two categories of context
+        with different freshness, failure, and governance properties.
+      </p>
+      <div style="overflow-x:auto;margin:24px 0">
+        <table style="width:100%;border-collapse:collapse;font-size:.94em">
+          <thead>
+            <tr>
+              <th style="text-align:left;padding:12px;border-bottom:1px solid rgba(138,163,156,.35)"></th>
+              <th style="text-align:left;padding:12px;border-bottom:1px solid rgba(138,163,156,.35)">Derived context</th>
+              <th style="text-align:left;padding:12px;border-bottom:1px solid rgba(138,163,156,.35)">Inherited context</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style="vertical-align:top;padding:12px;border-bottom:1px solid rgba(138,163,156,.18)"><strong>Source</strong></td>
+              <td style="vertical-align:top;padding:12px;border-bottom:1px solid rgba(138,163,156,.18)">Current files, syntax, graph relationships, tests, Git state</td>
+              <td style="vertical-align:top;padding:12px;border-bottom:1px solid rgba(138,163,156,.18)">Prior debugging, decisions, incidents, review, operational experience</td>
+            </tr>
+            <tr>
+              <td style="vertical-align:top;padding:12px;border-bottom:1px solid rgba(138,163,156,.18)"><strong>Freshness strategy</strong></td>
+              <td style="vertical-align:top;padding:12px;border-bottom:1px solid rgba(138,163,156,.18)">Recompute from the checked-out tree</td>
+              <td style="vertical-align:top;padding:12px;border-bottom:1px solid rgba(138,163,156,.18)">Version, review, revise, supersede</td>
+            </tr>
+            <tr>
+              <td style="vertical-align:top;padding:12px;border-bottom:1px solid rgba(138,163,156,.18)"><strong>Typical failure</strong></td>
+              <td style="vertical-align:top;padding:12px;border-bottom:1px solid rgba(138,163,156,.18)">Incomplete or imprecise analysis: a hidden dynamic call, a ranking miss</td>
+              <td style="vertical-align:top;padding:12px;border-bottom:1px solid rgba(138,163,156,.18)">Wrong, stale, or over-generalized institutional instruction</td>
+            </tr>
+            <tr>
+              <td style="vertical-align:top;padding:12px;border-bottom:1px solid rgba(138,163,156,.18)"><strong>Trust mechanism</strong></td>
+              <td style="vertical-align:top;padding:12px;border-bottom:1px solid rgba(138,163,156,.18)">Determinism, coverage disclosure, uncertainty, reproducibility</td>
+              <td style="vertical-align:top;padding:12px;border-bottom:1px solid rgba(138,163,156,.18)">Provenance, scope, confidence, human review, audit history</td>
+            </tr>
+            <tr>
+              <td style="vertical-align:top;padding:12px"><strong>Optimization target</strong></td>
+              <td style="vertical-align:top;padding:12px">Reduce search and reconstruct the present cheaply</td>
+              <td style="vertical-align:top;padding:12px">Reduce rediscovery and carry lessons across time</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p>
+        Derived context is disposable by design. If the code changes, throw the map away and rebuild
+        it. Automatic generation is safe enough when the output is reproducible and its uncertainty
+        is visible, because source remains the authority.
+      </p>
+      <p>
+        Inherited context is authoritative by design. Future agents may act on a warning even when
+        nothing in the current task independently points to it. That makes write quality, provenance,
+        review, scope, and staleness first-class concerns. The value comes from surviving longer than
+        one analysis run; so does the risk.
+      </p>
+      <p>
+        Coding-agent systems will likely need both. Without derived context, an agent wastes work
+        reconstructing a large codebase. Without inherited context, it efficiently navigates toward
+        mistakes the team already knows how to avoid.
+      </p>
+
+      <h2>FAQ</h2>
+      <p><strong>What is the main difference between Ripwire and Metatron?</strong><br />
+        Ripwire primarily derives structural context from the current repository: symbols, calls,
+        relevant code, tests, blast radius, and quality signals. Metatron primarily maintains
+        reviewed engineering knowledge: decisions, rationale, constraints, rejected approaches,
+        and lessons. Ripwire notes create meaningful overlap between the two.</p>
+      <p><strong>Does Ripwire already have repository memory?</strong><br />
+        Yes. <code>.ripwire_notes</code> is committed, attached to files or canonical symbol IDs,
+        Git-provenanced, and automatically recalled. The open distinction is governance: Ripwire's
+        note abstraction stores field observations, while Metatron models a candidate-to-canonical
+        knowledge lifecycle with structured evidence and review.</p>
+      <p><strong>Can the systems be used together?</strong><br />
+        Conceptually, yes. Ripwire can prepare a bounded structural work packet; Metatron can add
+        relevant reviewed decisions and prior failures. A coding agent can consume both without
+        either layer pretending to replace the other.</p>
+
+      <hr />
+
+      <p>
+        Repositories used by coding agents may increasingly contain two forms of machine-readable
+        context: what can be derived from the code today, and what previous engineers and agents
+        learned yesterday.
+      </p>
+      <p>
+        Ripwire is an interesting example of the first category beginning to reach toward the
+        second. Metatron starts from the second. The most interesting future may be where those
+        layers meet.
+      </p>
+
+      <div class="article-foot">
+        <div class="foot-links">
+          <a class="btn btn-ghost btn-sm" href="https://github.com/redhat-et/ripwire" target="_blank" rel="noopener">Explore Ripwire</a>
+          <a class="btn btn-ghost btn-sm" href="https://github.com/kerbelp/metatron" target="_blank" rel="noopener">Explore Metatron</a>
+          <a class="btn btn-ghost btn-sm" href="https://github.com/getmetatron/context-md/blob/686a1cf20406c52839bf890202d2c9615cc0f5e5/whitepaper/repository-context-layer-paper.pdf" target="_blank" rel="noopener">Read the RCL paper</a>
+          <a class="btn btn-ghost btn-sm" href="https://github.com/getmetatron/context-md/tree/686a1cf20406c52839bf890202d2c9615cc0f5e5/experiment" target="_blank" rel="noopener">Inspect the research artifact</a>
+        </div>
+        <div class="article-byline">
+          <span class="mark"><span data-cube-mark style="width:20px;height:20px;display:block"></span></span>
+          <span>Written by <b>Pavel Kerbel</b>, creator of Metatron and co-author of the Context Inheritance study.</span>
+        </div>
+      </div>
+
+    </div>
+  </article>
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <div class="foot-inner">
+      <div class="foot-brand">
+        <a class="brand" href="/"><span data-cube-mark style="width:26px;height:26px;display:block"></span>Metatron</a>
+        <p>Git-native engineering memory for AI coding agents. Reviewed decisions live with the code, so agents inherit what the team learned.</p>
+        <div class="foot-social" style="display:flex;gap:14px;margin-top:16px">
+          <a href="https://github.com/kerbelp/metatron" target="_blank" rel="noopener" aria-label="GitHub" style="color:#8aa39c;display:inline-flex"><svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.7.5.5 5.7.5 12c0 5.1 3.3 9.4 7.9 10.9.6.1.8-.3.8-.6v-2c-3.2.7-3.9-1.5-3.9-1.5-.5-1.3-1.3-1.7-1.3-1.7-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.7 1.3 3.4 1 .1-.8.4-1.3.7-1.6-2.6-.3-5.3-1.3-5.3-5.7 0-1.3.5-2.3 1.2-3.1-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0c2.3-1.5 3.3-1.2 3.3-1.2.6 1.6.2 2.8.1 3.1.8.8 1.2 1.8 1.2 3.1 0 4.4-2.7 5.4-5.3 5.7.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6 4.6-1.5 7.9-5.8 7.9-10.9C23.5 5.7 18.3.5 12 .5Z"/></svg></a>
+          <a href="https://www.youtube.com/@getmetatron" target="_blank" rel="noopener" aria-label="YouTube" style="color:#8aa39c;display:inline-flex"><svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M23.5 6.2a3 3 0 0 0-2.11-2.12C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.39.58A3 3 0 0 0 .5 6.2 31.1 31.1 0 0 0 0 12a31.1 31.1 0 0 0 .5 5.8 3 3 0 0 0 2.11 2.12C4.5 20.5 12 20.5 12 20.5s7.5 0 9.39-.58A3 3 0 0 0 24 17.8 31.1 31.1 0 0 0 24 12a31.1 31.1 0 0 0-.5-5.8ZM9.6 15.6V8.4l6.3 3.6-6.3 3.6Z"/></svg></a>
+        </div>
+      </div>
+      <div class="foot-cols">
+        <div class="foot-col">
+          <h5>Product</h5>
+          <a href="/#problem">The problem</a>
+          <a href="/#how">How it works</a>
+          <a href="/#anatomy">Anatomy of a decision</a>
+          <a href="/#opensource">Open-source</a>
+        </div>
+        <div class="foot-col">
+          <h5>Resources</h5>
+          <a href="/blog/">Blog</a>
+          <a href="/docs/">Documentation</a>
+          <a href="https://github.com/kerbelp/metatron" target="_blank" rel="noopener">GitHub repo</a>
+          <a href="https://youtu.be/RdPn6OMtfOs" target="_blank" rel="noopener">Demo video</a>
+        </div>
+        <div class="foot-col">
+          <h5>Contact</h5>
+          <a href="mailto:hello@getmetatron.com">hello@getmetatron.com</a>
+          <a href="mailto:hello@getmetatron.com?subject=Metatron%20hosted%20interest">Hosted version?</a>
+        </div>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>© 2026 Metatron · MIT licensed</span>
+      <span>Files-first · Git-native · MCP optional</span>
+    </div>
+  </div>
+</footer>
+
+<script src="/metatron.js"></script>
+</body>
+</html>
