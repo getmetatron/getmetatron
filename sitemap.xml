@@ -16,7 +16,7 @@
   </url>
   <url>
     <loc>https://getmetatron.com/blog/</loc>
-    <lastmod>2026-09-07</lastmod>
+    <lastmod>2026-09-30</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -57,5 +57,12 @@
     <changefreq>yearly</changefreq>
     <priority>0.7</priority>
     <image:image><image:loc>https://getmetatron.com/public/images/og/why-i-built-metatron.png</image:loc></image:image>
+  </url>
+  <url>
+    <loc>https://getmetatron.com/blog/tests-pass-team-decisions/</loc>
+    <lastmod>2026-09-30</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.7</priority>
+    <image:image><image:loc>https://getmetatron.com/public/images/og/tests-pass-team-decisions.png</image:loc></image:image>
   </url>
 </urlset>

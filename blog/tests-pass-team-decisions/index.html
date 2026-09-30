@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-0P4SKXFNWL"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-0P4SKXFNWL');
+</script>
+
+<title>The tests passed. The payment ran twice. | Metatron</title>
+<meta name="description" content="A coding agent wrote passing tests but charged twice on a retry. See how three Metatron decision files changed the code, the tests, and the outcome." />
+<link rel="canonical" href="https://getmetatron.com/blog/tests-pass-team-decisions/" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&amp;family=Hanken+Grotesk:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="/styles.css" />
+<link rel="stylesheet" href="/blog.css" />
+
+<link rel="icon" href="/public/images/favicon.ico" sizes="any" />
+<link rel="icon" type="image/png" sizes="32x32" href="/public/images/favicon-32x32.png" />
+<link rel="icon" type="image/png" sizes="16x16" href="/public/images/favicon-16x16.png" />
+<link rel="apple-touch-icon" sizes="180x180" href="/public/images/apple-touch-icon.png" />
+
+
+<meta property="og:type" content="article" />
+<meta property="og:site_name" content="Metatron" />
+<meta property="og:url" content="https://getmetatron.com/blog/tests-pass-team-decisions/" />
+<meta property="og:title" content="The tests passed. The payment ran twice." />
+<meta property="og:description" content="A coding agent wrote passing tests but charged twice on a retry. See how three Metatron decision files changed the code, the tests, and the outcome." />
+<meta property="og:image" content="https://getmetatron.com/public/images/og/tests-pass-team-decisions.png" />
+<meta property="og:image:width" content="1280" />
+<meta property="og:image:height" content="720" />
+<meta property="og:image:alt" content="Tests pass. Paid twice? Two simulated charges without decisions, one with decisions." />
+<meta property="article:published_time" content="2026-09-30" />
+<meta property="article:modified_time" content="2026-09-30" />
+<meta property="article:author" content="Pavel Kerbel" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="The tests passed. The payment ran twice." />
+<meta name="twitter:description" content="A coding agent wrote passing tests but charged twice on a retry. See how three Metatron decision files changed the code, the tests, and the outcome." />
+<meta name="twitter:image" content="https://getmetatron.com/public/images/og/tests-pass-team-decisions.png" />
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "The tests passed. The payment ran twice.",
+  "description": "A coding agent wrote passing tests but charged twice on a retry. See how three Metatron decision files changed the code, the tests, and the outcome.",
+  "image": "https://getmetatron.com/public/images/og/tests-pass-team-decisions.png",
+  "datePublished": "2026-09-30",
+  "dateModified": "2026-09-30",
+  "author": {
+    "@type": "Person",
+    "name": "Pavel Kerbel",
+    "url": "https://pavelkerbel.com"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Metatron",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://getmetatron.com/public/images/apple-touch-icon.png"
+    }
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://getmetatron.com/blog/tests-pass-team-decisions/"
+  }
+}
+</script>
+<style>
+.checkout-article .table-wrap { overflow-x: auto; border: 1px solid var(--line-strong); border-radius: var(--radius-sm); }
+.checkout-article table { width: 100%; border-collapse: collapse; font-size: .88em; }
+.checkout-article th, .checkout-article td { padding: 13px 15px; text-align: left; border-bottom: 1px solid var(--line); vertical-align: top; }
+.checkout-article th { color: var(--ink); background: var(--bg-2); font-weight: 600; }
+.checkout-article td { color: var(--ink-soft); }
+.checkout-article tr:last-child td { border-bottom: 0; }
+.checkout-article td:last-child { color: var(--accent-bright); }
+.checkout-article .media-note { font-size: .88em; color: var(--ink-mute); }
+.demo-prompt { border: 1px solid var(--line-strong); border-radius: var(--radius-sm); padding: 16px 20px; background: var(--bg-1); }
+.demo-prompt summary { cursor: pointer; color: var(--accent); font-weight: 600; }
+.demo-prompt pre { white-space: pre-wrap; overflow-wrap: anywhere; border: 0; padding: 0; margin-top: 20px; }
+@media (max-width: 480px) { .checkout-article th, .checkout-article td { padding: 10px 9px; } .checkout-article table { font-size: .78em; } }
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <div class="nav-inner">
+    <a class="brand" href="/" aria-label="Metatron home">
+      <span data-cube-mark style="width:26px;height:26px;display:block"></span>
+      Metatron
+    </a>
+    <nav class="nav-links" aria-label="Primary">
+      <a href="/#problem">Problem</a>
+      <a href="/#how">How it works</a>
+      <a href="/#ui">The UI</a>
+      <a href="/blog/">Blog</a>
+      <a href="/docs/">Docs</a>
+    </nav>
+    <div class="nav-cta">
+      <a class="btn btn-ghost btn-sm" href="https://github.com/kerbelp/metatron" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.7.5.5 5.7.5 12c0 5.1 3.3 9.4 7.9 10.9.6.1.8-.3.8-.6v-2c-3.2.7-3.9-1.5-3.9-1.5-.5-1.3-1.3-1.7-1.3-1.7-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.7 1.3 3.4 1 .1-.8.4-1.3.7-1.6-2.6-.3-5.3-1.3-5.3-5.7 0-1.3.5-2.3 1.2-3.1-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0c2.3-1.5 3.3-1.2 3.3-1.2.6 1.6.2 2.8.1 3.1.8.8 1.2 1.8 1.2 3.1 0 4.4-2.7 5.4-5.3 5.7.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6 4.6-1.5 7.9-5.8 7.9-10.9C23.5 5.7 18.3.5 12 .5Z"/></svg>
+        GitHub
+      </a>
+      <a class="btn btn-primary btn-sm" href="/#updates">Get updates</a>
+    </div>
+    <button class="nav-burger" aria-label="Menu">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+    </button>
+  </div>
+</header>
+
+<main class="blog-main" id="top">
+<article class="wrap blog-wrap checkout-article">
+  <div class="crumb"><a href="/">Home</a><span>/</span><a href="/blog/">Blog</a><span>/</span>Checkout demo</div>
+  <header class="article-head">
+    <span class="kicker">Demo · Repository decisions</span>
+    <h1>The tests passed. The payment ran twice.</h1>
+    <div class="article-meta"><span>Pavel Kerbel</span><span class="dot">·</span><time datetime="2026-09-30">September 30, 2026</time><span class="dot">·</span><span>6 min read</span></div>
+    <p class="article-lede">A checkout feature passed every test its coding agent wrote. Retrying the same request still created a second charge. A separate session with three stored team decisions produced code that handled the retry correctly.</p>
+  </header>
+  <div class="prose">
+    <p>A retry should not become a second purchase. Your team may already know that rule. The question is whether your coding agent has it available when it implements the endpoint.</p>
+    <p>We built Acme Checkout, a small fictional reference app, to make that gap visible. Two Haiku 4.5 sessions received the same feature prompt, starting code, and tools. Both implemented the endpoint and wrote passing tests. One session also received three team policies as Metatron decision files in the repository.</p>
+    <p>Then we submitted the same simulated $12.99 payment twice, with the same client request key.</p>
+    <div class="table-wrap"><table><thead><tr><th>Same request, retried once</th><th>Without decisions</th><th>With decisions</th></tr></thead><tbody><tr><td>Charge IDs returned</td><td><code>ch_1</code>, <code>ch_2</code></td><td><code>ch_1</code>, <code>ch_1</code></td></tr><tr><td>Simulated charges created</td><td>2</td><td>1</td></tr><tr><td>Simulated total</td><td>$25.98</td><td>$12.99</td></tr><tr><td>Agent’s own tests</td><td>Pass</td><td>Pass</td></tr></tbody></table></div>
+    <p class="media-note">The gateway is an offline, in-memory adapter. No real payments were made.</p>
+
+    <h2>Watch the code and the retry</h2>
+    <div class="video-embed"><iframe src="https://www.youtube-nocookie.com/embed/Kag_O2xGbcc" title="Metatron Part 2: the same checkout task with and without repository decisions" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>
+    <p class="media-note"><a href="https://youtu.be/Kag_O2xGbcc">Watch Part 2 on YouTube · 4 minutes.</a> See the complete prompt, recorded agent read events, unmodified agent patches, and checks rerun against those outputs.</p>
+
+    <h2>The short task left room for a missing rule</h2>
+    <p>The task asked for a payment endpoint: validate the input, call the supplied gateway, return the charge, and add meaningful tests. Both sessions received the same instructions to check for repository decisions before inspecting application code.</p>
+    <p>The shared prompt specified positive integer amounts, supported currencies, and invalid-input handling. The additional retry-key and error-format requirements lived in the decision files supplied to the context session.</p>
+    <details class="demo-prompt"><summary>Read the exact prompt used in both sessions</summary><pre><code>Before inspecting or editing application code, check whether context.md exists. If present, read it and the decision files it lists, and follow those repository policies. State which decisions you used.
+
+Implement checkout.api.create_payment(request, gateway) for POST /payments using the supplied Request, Response and payment adapter.
+
+The request body contains amount and currency. Return status 201 with the gateway&#x27;s charge data for a valid payment, or status 400 for invalid input. Use the injected gateway and preserve the public signatures. Add meaningful behavior tests in tests/test_create_payment.py and run them along with the existing tests. Do not add dependencies or modify the gateway, HTTP types, existing tests, or repository decisions. Implement the source function as well as the tests.
+
+Request.body is already parsed JSON. Accept only a dictionary body, a positive integer amount (not a boolean), and currency &quot;usd&quot; or &quot;eur&quot;. Return 400 for malformed bodies or invalid value types, including list/dict currencies. Use the actual provided Request and Response fields.
+
+Run tests with ./run-tests tests/test_create_payment.py or ./run-tests tests. The wrapper uses the prepared local Python environment. Do not edit the wrapper, access the network, install dependencies, or commit.</code></pre></details>
+    <p>The baseline met its feature brief. Its fourteen new tests and the four existing gateway tests passed. Its implementation called:</p>
+    <pre><code>charge = gateway.create_charge(amount, currency)</code></pre>
+    <p>The gateway already supported retry keys, but its interface made them optional. The API’s requirement to use a client-owned key was a team policy. That requirement needed to reach the agent.</p>
+
+    <h2>A decision carries the rule and the reason</h2>
+    <p>The context session’s repository index linked to three files: client-owned idempotency, integer money, and a shared API error format. The first decision made the retry behavior explicit.</p>
+    <blockquote><p>Repeating the same client request must reuse its charge, while two distinct client keys must permit two intentional identical payments.</p></blockquote>
+    <p>The same file required the endpoint to reject missing or blank keys before calling the gateway and to pass the supplied key unchanged. Its rationale explained both sides: avoid charging twice on a retry, while allowing a customer to make an intentional second purchase.</p>
+    <p>That distinction matters. Deduplicating by payment amount and currency would collapse two legitimate purchases. Generating a new key for every request would allow the retry to create another charge.</p>
+    <p>Metatron keeps this kind of operating knowledge in readable repository files, where a team can review the rule and its rationale together.</p>
+
+    <h2>The agent read the files and changed the behavior</h2>
+    <p>The recorded tool trace shows successful reads of the index and all three decisions before the context session’s first code edit. Its resulting charge call included the client key:</p>
+    <pre><code>charge = gateway.create_charge(amount, currency, idempotency_key)</code></pre>
+    <p>The agent also wrote a regression test that calls the endpoint twice with the same request. These are the key assertions from that test:</p>
+    <pre><code>first = create_payment(request, gateway)
+second = create_payment(request, gateway)
+assert first.body == second.body
+assert len(gateway.charges) == 1</code></pre>
+    <p>All twenty-six new tests passed, alongside the four existing tests. The new tests also failed against the original unimplemented endpoint. The policy had reached both the feature and the tests written for it.</p>
+
+    <h2>The independent checks agreed</h2>
+    <p>We evaluated both implementations with eleven policy checks kept outside the agents’ working directories. They covered valid input, malformed input, retry behavior, key handling, intentional repeat purchases, and error responses.</p>
+    <div class="table-wrap"><table><thead><tr><th>Trial</th><th>Without decisions</th><th>With decisions</th></tr></thead><tbody><tr><td>First paired run</td><td>5/11</td><td>11/11</td></tr><tr><td>Unchanged repeat</td><td>5/11</td><td>11/11</td></tr></tbody></table></div>
+    <p>The second pair used the same prompt, policies, model, and checks. The duplicate-charge replay matched too: two simulated charges without the decisions, one with them. We made no manual repairs to either agent’s patch.</p>
+    <p>This is a selected reference demonstration, developed through exploratory trials. It shows an agent following additional supplied team requirements; it does not establish an average improvement across coding tasks or a unique advantage over every other way of providing those requirements.</p>
+
+    <h2>Set up the decisions before the next task</h2>
+    <p>Part 1 shows how those rules become repository files. It starts with the Acme Checkout fixture, runs <code>metatron context setup</code>, and shows the generated changes. The files-first workflow needs no Metatron server or MCP connection.</p>
+    <div class="video-embed"><iframe src="https://www.youtube-nocookie.com/embed/_lxpCd0Uv6w" title="Metatron Part 1: repository setup and decision creation" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>
+    <p class="media-note"><a href="https://youtu.be/_lxpCd0Uv6w">Watch Part 1 on YouTube · 3½ minutes.</a> Setup, the full authoring prompt, decision diffs, and validation.</p>
+    <p>We then give the agent the three declared team rules and ask it to capture each rule with its rationale. The video follows the authoring step with the actual decision diffs and the updated index, then runs <code>metatron files lint --path context/decisions</code> to check the format.</p>
+    <p>That check validates the files’ structure. Human review still decides whether the rules are right. With the default <code>pr</code> review gate, decision files are authored on a working branch and become canonical through a reviewed pull request. The video stops with the files ready for that review; the application and tests remain unchanged.</p>
+    <p class="media-note">The setup walkthrough was recorded after the comparison trials. It uses the same policy wording, organized under the documented Pattern and Rationale headings. These episodes show declared requirements becoming files and guiding a task; they do not show an agent learning a policy from an earlier failure.</p>
+
+    <h2>Give the next session the decisions it needs</h2>
+    <p>A passing test suite tells you the implementation meets the expectations those tests encode. In this demo, the context session had the team’s retry policy available, read it, implemented it, and tested it.</p>
+    <p>Think about a rule your reviewers repeatedly have to explain: which adapter a feature must use, how retries should behave, or why an apparently simpler approach is wrong for your system. Record the rule and its reason, then make that decision available before the next agent starts editing.</p>
+    <div class="article-foot"><div class="foot-links">
+      <a class="btn btn-primary" href="/docs/#files-first">Set up your first decision →</a>
+      <a class="btn btn-ghost" href="https://github.com/kerbelp/metatron">Explore Metatron on GitHub</a>
+    </div><div class="article-byline"><span>Written by <b>Pavel Kerbel</b>, creator of Metatron.</span></div></div>
+  </div>
+</article>
+
+</main>
+<footer class="foot">
+  <div class="wrap">
+    <div class="foot-inner">
+      <div class="foot-brand">
+        <a class="brand" href="/"><span data-cube-mark style="width:26px;height:26px;display:block"></span>Metatron</a>
+        <p>Git-native engineering memory for AI coding agents. Reviewed decisions live with the code, so agents inherit what the team learned.</p>
+        <div class="foot-social" style="display:flex;gap:14px;margin-top:16px">
+          <a href="https://github.com/kerbelp/metatron" target="_blank" rel="noopener" aria-label="GitHub" style="color:#8aa39c;display:inline-flex"><svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.7.5.5 5.7.5 12c0 5.1 3.3 9.4 7.9 10.9.6.1.8-.3.8-.6v-2c-3.2.7-3.9-1.5-3.9-1.5-.5-1.3-1.3-1.7-1.3-1.7-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.7 1.3 3.4 1 .1-.8.4-1.3.7-1.6-2.6-.3-5.3-1.3-5.3-5.7 0-1.3.5-2.3 1.2-3.1-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0c2.3-1.5 3.3-1.2 3.3-1.2.6 1.6.2 2.8.1 3.1.8.8 1.2 1.8 1.2 3.1 0 4.4-2.7 5.4-5.3 5.7.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6 4.6-1.5 7.9-5.8 7.9-10.9C23.5 5.7 18.3.5 12 .5Z"/></svg></a>
+          <a href="https://www.youtube.com/@getmetatron" target="_blank" rel="noopener" aria-label="YouTube" style="color:#8aa39c;display:inline-flex"><svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M23.5 6.2a3 3 0 0 0-2.11-2.12C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.39.58A3 3 0 0 0 .5 6.2 31.1 31.1 0 0 0 0 12a31.1 31.1 0 0 0 .5 5.8 3 3 0 0 0 2.11 2.12C4.5 20.5 12 20.5 12 20.5s7.5 0 9.39-.58A3 3 0 0 0 24 17.8 31.1 31.1 0 0 0 24 12a31.1 31.1 0 0 0-.5-5.8ZM9.6 15.6V8.4l6.3 3.6-6.3 3.6Z"/></svg></a>
+        </div>
+      </div>
+      <div class="foot-cols">
+        <div class="foot-col">
+          <h5>Product</h5>
+          <a href="/#problem">The problem</a>
+          <a href="/#how">How it works</a>
+          <a href="/#anatomy">Anatomy of a decision</a>
+          <a href="/#opensource">Open-source</a>
+        </div>
+        <div class="foot-col">
+          <h5>Resources</h5>
+          <a href="/blog/">Blog</a>
+          <a href="/docs/">Documentation</a>
+          <a href="https://github.com/kerbelp/metatron" target="_blank" rel="noopener">GitHub repo</a>
+          <a href="https://youtu.be/Kag_O2xGbcc" target="_blank" rel="noopener">Demo video</a>
+        </div>
+        <div class="foot-col">
+          <h5>Contact</h5>
+          <a href="mailto:hello@getmetatron.com">hello@getmetatron.com</a>
+          <a href="mailto:hello@getmetatron.com?subject=Metatron%20hosted%20interest">Hosted version?</a>
+        </div>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>© 2026 Metatron · MIT licensed</span>
+      <span>Files-first · Git-native · MCP optional</span>
+    </div>
+  </div>
+</footer>
+
+<script src="/metatron.js"></script>
+</body>
+</html>
