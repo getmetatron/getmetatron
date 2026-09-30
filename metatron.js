@@ -548,7 +548,7 @@
         if (open) links.removeAttribute("style");
       });
       links.querySelectorAll("a").forEach(function (a) {
-        a.addEventListener("click", function () { if (window.innerWidth <= 820) links.removeAttribute("style"); });
+        a.addEventListener("click", function () { if (window.innerWidth <= 1100) links.removeAttribute("style"); });
       });
     }
 
