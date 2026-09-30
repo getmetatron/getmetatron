@@ -3,7 +3,7 @@
         xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   <url>
     <loc>https://getmetatron.com/</loc>
-    <lastmod>2026-06-08</lastmod>
+    <lastmod>2026-09-30</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
     <image:image><image:loc>https://getmetatron.com/public/images/og-image.png</image:loc></image:image>
@@ -64,5 +64,11 @@
     <changefreq>yearly</changefreq>
     <priority>0.7</priority>
     <image:image><image:loc>https://getmetatron.com/public/images/og/tests-pass-team-decisions.png</image:loc></image:image>
+  </url>
+  <url>
+    <loc>https://getmetatron.com/about/</loc>
+    <lastmod>2026-09-30</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
   </url>
 </urlset>
