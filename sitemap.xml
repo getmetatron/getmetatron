@@ -16,7 +16,7 @@
   </url>
   <url>
     <loc>https://getmetatron.com/blog/</loc>
-    <lastmod>2026-09-30</lastmod>
+    <lastmod>2026-10-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -70,5 +70,12 @@
     <lastmod>2026-09-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://getmetatron.com/talks/context-inheritance/</loc>
+    <lastmod>2026-10-11</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.7</priority>
+    <image:image><image:loc>https://getmetatron.com/talks/context-inheritance/slides/01.webp</image:loc></image:image>
   </url>
 </urlset>

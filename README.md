@@ -20,6 +20,13 @@ the CDN; everything else is local.
 ## Pages
 
 - `index.html` — the marketing landing page.
+- `talks/context-inheritance/` — AgenticDev 2026 slide viewer: 18 talk slides plus
+  6 backup slides, fullscreen/keyboard/touch navigation, original PDF download,
+  and opt-in offline saving. All viewer assets are local. The service worker is
+  scoped to this talk only. When replacing deck assets, update the cache version
+  in `sw.js` and the slide count in both `sw.js` and the page; `slides.js` holds
+  titles and extracted slide text. Slide images are lossless WebP renders of the
+  PDF at 2560 × 1440.
 - `docs/index.html` — the documentation page (served at `/docs`), grounded in the
   Metatron CLI/MCP surface. Note it uses **root-absolute** asset paths
   (`/styles.css`, `/docs.css`, `/metatron.js`), so it expects to be deployed at the
